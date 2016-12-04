@@ -1,5 +1,7 @@
 # svelte-loader
 
+[![Build Status](https://travis-ci.org/nikku/svelte-loader.svg?branch=master)](https://travis-ci.org/nikku/svelte-loader)
+
 A [webpack](https://webpack.js.org) loader for [svelte](https://svelte.technology).
 
 
