@@ -1,0 +1,19 @@
+{
+  "name": "svelte-loader-example",
+  "version": "0.0.0",
+  "description": "Example using svelte-loader",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bundle": "webpack"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.8",
+    "babel-preset-es2015": "^6.18.0",
+    "svelte-loader": "1.0.0",
+    "webpack": "^2.1.0-beta.27"
+  }
+}

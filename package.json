@@ -1,0 +1,30 @@
+{
+  "name": "svelte-loader",
+  "version": "1.0.0",
+  "author": "Nico Rehwaldt <git_nikku@nixis.de>",
+  "description": "A webpack loader for svelte",
+  "license": "MIT",
+  "scripts": {
+    "pretest": "npm run lint",
+    "test": "mocha --harmony --full-trace --check-leaks",
+    "lint": "eslint index.js test/**/*.js"
+  },
+  "keywords": [
+    "svelte",
+    "sveltejs",
+    "webpack-loader"
+  ],
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.11.1",
+    "eslint-plugin-mocha": "^4.7.0",
+    "mocha": "^3.2.0",
+    "sinon": "^1.17.6",
+    "sinon-chai": "^2.8.0",
+    "svelte": "^1.0.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nikku/svelte-loader.git"
+  }
+}
