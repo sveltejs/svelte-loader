@@ -1,6 +1,6 @@
 {
   "name": "svelte-loader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Nico Rehwaldt <git_nikku@nixis.de>",
   "description": "A webpack loader for svelte",
   "license": "MIT",
