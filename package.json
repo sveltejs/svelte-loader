@@ -23,6 +23,9 @@
     "sinon-chai": "^2.8.0",
     "svelte": "^1.0.7"
   },
+  "peerDependencies": {
+    "svelte": "^1.0.7"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:svelte/svelte-loader.git"
