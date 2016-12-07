@@ -66,6 +66,7 @@ describe('loader', function() {
 
       // es2015 statements remain
       expect(code).to.contain('import { hello } from \'./utils\';');
+      expect(code).to.contain('data() {');
     })
   );
 
