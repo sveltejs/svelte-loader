@@ -11,13 +11,7 @@ module.exports = function(source, map) {
     let { code, map } = compile(source, {
       filename: filename,
       format: query.format || 'es',
-      name: query.name,
-      onerror: (err) => {
-        this.emitError(err);
-      },
-      onwarn: (warn) => {
-        this.emitWarn(warn);
-      }
+      name: query.name
     });
 
     this.callback(null, code, map);
