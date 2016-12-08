@@ -1,15 +1,18 @@
 const { compile } = require('svelte');
+const { parseQuery } = require('loader-utils');
 
 module.exports = function(source, map) {
   this.cacheable();
 
   const filename = this.resourcePath;
+  const query = parseQuery(this.query);
 
   try {
     let { code, map } = compile(source, {
       // name: CamelCase component name
       filename: filename,
-      format: 'es',
+      format: query.format || 'es',
+      name: query.name,
       onerror: (err) => {
         console.log(err.message);
         this.emitError(err.message);

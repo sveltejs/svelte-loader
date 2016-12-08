@@ -15,7 +15,7 @@ const loader = require('../');
 
 describe('loader', function() {
 
-  function testLoader(fileName, callback) {
+  function testLoader(fileName, callback, query) {
 
     return function() {
 
@@ -29,6 +29,7 @@ describe('loader', function() {
         cacheable: cacheableSpy,
         callback: callbackSpy,
         filename: fileName,
+        query: query,
       }, fileContents, null);
 
       expect(callbackSpy).to.have.been.called;
@@ -81,6 +82,22 @@ describe('loader', function() {
       expect(code).to.exist;
       expect(map).to.exist;
     })
+  );
+
+
+  it('should compile Component to CJS if requested',
+    testLoader('test/fixtures/good.html', function(err, code, map) {
+      expect(err).not.to.exist;
+      expect(code).to.contain('module.exports = SvelteComponent;');
+    }, { format: 'cjs' })
+  );
+
+
+  it('should compile Component to UMD if requested',
+    testLoader('test/fixtures/good.html', function(err, code, map) {
+      expect(err).not.to.exist;
+      expect(code).to.contain('(global.FooComponent = factory());');
+    }, { format: 'umd', name: 'FooComponent' })
   );
 
 });
