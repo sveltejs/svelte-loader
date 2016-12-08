@@ -11,11 +11,11 @@ module.exports = function(source, map) {
       filename: filename,
       format: 'es',
       onerror: (err) => {
-        console.log(err.message);
+        console.error(err.message);
         this.emitError(err.message);
       },
       onwarn: (warn) => {
-        console.log(warn.message);
+        console.warn(warn.message);
         this.emitWarn(warn.message);
       }
     });
