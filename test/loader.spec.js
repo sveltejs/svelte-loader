@@ -19,17 +19,19 @@ describe('loader', function() {
 
     return function() {
 
+      const fileContents = readFile(fileName);
+
       const cacheableSpy = spy(function() { });
 
       const callbackSpy = spy(callback);
 
-      const fileContents = readFile(fileName);
-
       loader.call({
         cacheable: cacheableSpy,
         callback: callbackSpy,
+        emitWarn: function(warning) {},
+        emitError: function(e) {},
         filename: fileName,
-        query: query,
+        query,
       }, fileContents, null);
 
       expect(callbackSpy).to.have.been.called;
@@ -49,8 +51,16 @@ describe('loader', function() {
 
 
   it('should compile bad',
-    testLoader('test/fixtures/bad.html', function(err, code, map) {
+    testLoader('test/fixtures/bad.html', function(err, code, map, context) {
+
       expect(err).to.exist;
+
+      expect(err.message).to.eql(
+        'Expected }}} (1:18)\n' +
+        '1: <p>Count: {{{count}}</p>\n' +
+        '                     ^\n' +
+        '2: <button on:click=\'set({ count: count + 1 })\'>+1</button>'
+      );
 
       expect(code).not.to.exist;
       expect(map).not.to.exist;

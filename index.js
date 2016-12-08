@@ -9,22 +9,21 @@ module.exports = function(source, map) {
 
   try {
     let { code, map } = compile(source, {
-      // name: CamelCase component name
       filename: filename,
       format: query.format || 'es',
       name: query.name,
       onerror: (err) => {
-        console.log(err.message);
-        this.emitError(err.message);
+        this.emitError(err);
       },
       onwarn: (warn) => {
-        console.log(warn.message);
-        this.emitWarn(warn.message);
+        this.emitWarn(warn);
       }
     });
 
     this.callback(null, code, map);
   } catch (err) {
-    this.callback(err);
+    // wrap error to provide correct
+    // context when logging to console
+    this.callback(new Error(err.toString()));
   }
 };
