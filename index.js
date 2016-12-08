@@ -14,11 +14,11 @@ module.exports = function(source, map) {
       format: query.format || 'es',
       name: query.name,
       onerror: (err) => {
-        console.log(err.message);
+        console.error(err.message);
         this.emitError(err.message);
       },
       onwarn: (warn) => {
-        console.log(warn.message);
+        console.warn(warn.message);
         this.emitWarn(warn.message);
       }
     });
