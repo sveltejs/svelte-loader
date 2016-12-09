@@ -1,0 +1,19 @@
+<p>Count: {{count}}</p>
+<button on:click='set({ count: count + 1 })'>+1</button>
+​
+<style>
+  button {
+    width: 50px;
+    height: 50px;
+  }
+</style>
+
+<script>
+  export default {
+    data () {
+      return {
+        count: 0
+      };
+    }
+  };
+</script>

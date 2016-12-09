@@ -145,20 +145,44 @@ describe('loader', function() {
 
   describe('configuration via query', function() {
 
-    it('should configure CommonJS output',
-      testLoader('test/fixtures/good.html', function(err, code, map) {
-        expect(err).not.to.exist;
-        expect(code).to.contain('module.exports = SvelteComponent;');
-      }, { format: 'cjs' })
-    );
+    describe('output + name', function() {
+
+      it('should configure CommonJS',
+        testLoader('test/fixtures/good.html', function(err, code, map) {
+          expect(err).not.to.exist;
+          expect(code).to.contain('module.exports = SvelteComponent;');
+        }, { format: 'cjs' })
+      );
 
 
-    it('should configure named UMD output',
-      testLoader('test/fixtures/good.html', function(err, code, map) {
-        expect(err).not.to.exist;
-        expect(code).to.contain('(global.FooComponent = factory());');
-      }, { format: 'umd', name: 'FooComponent' })
-    );
+      it('should configure UMD + name',
+        testLoader('test/fixtures/good.html', function(err, code, map) {
+          expect(err).not.to.exist;
+          expect(code).to.contain('(global.FooComponent = factory());');
+        }, { format: 'umd', name: 'FooComponent' })
+      );
+
+    });
+
+
+    describe('css', function() {
+
+      it('should configure css (default)',
+        testLoader('test/fixtures/css.html', function(err, code, map) {
+          expect(err).not.to.exist;
+          expect(code).to.contain('if ( !addedCss ) addCss();');
+        })
+      );
+
+
+      it('should configure no css',
+        testLoader('test/fixtures/css.html', function(err, code, map) {
+          expect(err).not.to.exist;
+          expect(code).not.to.contain('if ( !addedCss ) addCss();');
+        }, { css: false })
+      );
+
+    });
 
   });
 

@@ -11,7 +11,8 @@ module.exports = function(source, map) {
     let { code, map } = compile(source, {
       filename: filename,
       format: query.format || 'es',
-      name: query.name
+      name: query.name,
+      css: query.css !== false,
     });
 
     this.callback(null, code, map);
