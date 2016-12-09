@@ -22,7 +22,7 @@
     "mocha": "^3.2.0",
     "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0",
-    "svelte": "^1.0.7"
+    "svelte": "^1.2.0"
   },
   "peerDependencies": {
     "svelte": "^1.0.7"
