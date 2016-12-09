@@ -100,6 +100,20 @@ describe('loader', function() {
     }, { format: 'umd', name: 'FooComponent' })
   );
 
+  it('should compile Component with css by default',
+    testLoader('test/fixtures/css.html', function(err, code, map) {
+      expect(err).not.to.exist;
+      expect(code).to.contain('if ( !addedCss ) addCss();');
+    })
+  );
+
+  it('should compile Component without css if requested',
+    testLoader('test/fixtures/css.html', function(err, code, map) {
+      expect(err).not.to.exist;
+      expect(code).not.to.contain('if ( !addedCss ) addCss();');
+    }, { css: false })
+  );
+
 });
 
 
