@@ -13,6 +13,7 @@ module.exports = function(source, map) {
       filename: filename,
       format: query.format || 'es',
       name: query.name,
+      css: query.css !== false,
       onerror: (err) => {
         console.log(err.message);
         this.emitError(err.message);
