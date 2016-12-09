@@ -72,7 +72,7 @@ describe('loader', function() {
   );
 
 
-  it('should compile Component with with nesting',
+  it('should compile Component with nesting',
     testLoader('test/fixtures/parent.html', function(err, code, map) {
       expect(err).not.to.exist;
 
