@@ -5,7 +5,7 @@
   "description": "A webpack loader for svelte",
   "license": "MIT",
   "scripts": {
-    "pretest": "npm run lint",
+    "all": "npm run lint && npm run test",
     "test": "mocha --harmony --full-trace --check-leaks",
     "lint": "eslint index.js test/**/*.js"
   },
