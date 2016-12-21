@@ -184,6 +184,30 @@ describe('loader', function() {
 
     });
 
+
+    describe('shared', function() {
+
+      it('should configure shared=false (default)',
+        testLoader('test/fixtures/good.html', function(err, code, map) {
+          expect(err).not.to.exist;
+
+          expect(code).not.to.contain('import {');
+          expect(code).not.to.contain('} from \'svelte/shared.js\'');
+        })
+      );
+
+
+      it('should configure shared=true',
+        testLoader('test/fixtures/good.html', function(err, code, map) {
+          expect(err).not.to.exist;
+
+          expect(code).to.contain('import {');
+          expect(code).to.contain('} from \'svelte/shared.js\'');
+        }, { shared: true })
+      );
+
+    });
+
   });
 
 });
