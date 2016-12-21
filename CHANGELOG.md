@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 1.2.0
+
+* Add option to specify shared output ([svelte#218](https://github.com/sveltejs/svelte/issues/218))
+
 ## 1.1.0
 
 * Add option to control CSS output (https://github.com/sveltejs/svelte-loader/pull/6)
