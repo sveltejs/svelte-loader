@@ -202,7 +202,7 @@ describe('loader', function() {
           expect(err).not.to.exist;
 
           expect(code).to.contain('import {');
-          expect(code).to.contain('} from \'svelte/shared.js\'');
+          expect(code).to.contain('} from "svelte/shared.js"');
         }, { shared: true })
       );
 
