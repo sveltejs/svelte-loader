@@ -10,6 +10,7 @@ module.exports = function(source, map) {
   try {
     let { code, map } = compile(source, {
       filename: filename,
+      generate: query.generate,
       format: query.format || 'es',
       shared: query.shared || false,
       name: query.name,
