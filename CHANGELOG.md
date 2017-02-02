@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 1.3.0
+
+* Pass through `options.generate` ([#10](https://github.com/sveltejs/svelte-loader/pull/10))
+
 ## 1.2.0
 
 * Add option to specify shared output ([svelte#218](https://github.com/sveltejs/svelte/issues/218))
