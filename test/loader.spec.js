@@ -208,6 +208,27 @@ describe('loader', function() {
 
     });
 
+    describe('generate', function() {
+
+      it('should configure generate=undefined (default)',
+        testLoader('test/fixtures/good.html', function(err, code, map) {
+          expect(err).not.to.exist;
+
+          expect(code).not.to.contain('SvelteComponent.render = function ( root, options ) {');
+        })
+      );
+
+
+      it('should configure generate=ssr',
+        testLoader('test/fixtures/good.html', function(err, code, map) {
+          expect(err).not.to.exist;
+
+          expect(code).to.contain('SvelteComponent.render = function ( root, options ) {');
+        }, { generate: 'ssr' })
+      );
+
+    });
+
   });
 
 });
