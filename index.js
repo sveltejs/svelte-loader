@@ -14,6 +14,7 @@ module.exports = function(source, map) {
       shared: query.shared || false,
       name: query.name,
       css: query.css !== false,
+      generate: query.generate || 'dom',
     });
 
     this.callback(null, code, map);
