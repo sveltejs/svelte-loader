@@ -18,14 +18,13 @@ function capitalize(str) {
 module.exports = function(source, map) {
   this.cacheable();
 
-  const filename = this.filename;
-  const options = Object.assign(getOptions(this) || {}, {
-    filename,
-    format: 'es',
-    shared: require.resolve('svelte/shared.js')
-  });
+  const options = getOptions(this) || {};
 
-  if (!options.name) options.name = capitalize(sanitize(filename));
+  options.filename = this.resourcePath;
+  options.format = this.version === 1 ? options.format || 'cjs' : 'es';
+  options.shared = options.format === 'es';
+
+  if (!options.name) options.name = capitalize(sanitize(options.filename));
 
   try {
     let { code, map } = compile(source, options);
