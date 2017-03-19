@@ -145,26 +145,6 @@ describe('loader', function() {
 
   describe('configuration via query', function() {
 
-    describe('output + name', function() {
-
-      it('should configure CommonJS',
-        testLoader('test/fixtures/good.html', function(err, code, map) {
-          expect(err).not.to.exist;
-          expect(code).to.contain('module.exports = SvelteComponent;');
-        }, { format: 'cjs' })
-      );
-
-
-      it('should configure UMD + name',
-        testLoader('test/fixtures/good.html', function(err, code, map) {
-          expect(err).not.to.exist;
-          expect(code).to.contain('(global.FooComponent = factory());');
-        }, { format: 'umd', name: 'FooComponent' })
-      );
-
-    });
-
-
     describe('css', function() {
 
       it('should configure css (default)',
@@ -184,29 +164,6 @@ describe('loader', function() {
 
     });
 
-
-    describe('shared', function() {
-
-      it('should configure shared=false (default)',
-        testLoader('test/fixtures/good.html', function(err, code, map) {
-          expect(err).not.to.exist;
-
-          expect(code).not.to.contain('import {');
-          expect(code).not.to.contain('} from \'svelte/shared.js\'');
-        })
-      );
-
-
-      it('should configure shared=true',
-        testLoader('test/fixtures/good.html', function(err, code, map) {
-          expect(err).not.to.exist;
-
-          expect(code).to.contain('import {');
-          expect(code).to.contain('} from "svelte/shared.js"');
-        }, { shared: true })
-      );
-
-    });
 
     describe('generate', function() {
 
