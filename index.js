@@ -4,15 +4,15 @@ const { getOptions } = require('loader-utils');
 module.exports = function(source, map) {
   this.cacheable();
 
-  const filename = this.resourcePath;
+  const filename = this.filename;
   const options = getOptions(this) || {};
 
   try {
     let { code, map } = compile(source, {
       filename: filename,
       generate: options.generate,
-      format: options.format || 'es',
-      shared: options.shared || false,
+      format: 'es',
+      shared: require.resolve('svelte/shared.js'),
       name: options.name,
       css: options.css !== false,
     });
