@@ -1,5 +1,10 @@
 # svelte-loader changelog
 
+## 2.0.0
+
+* Pass through all options, overriding `format` and `shared` ([#17](https://github.com/sveltejs/svelte-loader/issues/17))
+* Auto-generate best configuration for detected webpack version
+
 ## 1.3.1
 
 * Update loader-utils dependency
