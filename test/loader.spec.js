@@ -28,7 +28,7 @@ describe('loader', function() {
       loader.call({
         cacheable: cacheableSpy,
         callback: callbackSpy,
-        filename: fileName,
+        resourcePath: fileName,
         query,
       }, fileContents, null);
 
