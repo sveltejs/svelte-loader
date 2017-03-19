@@ -1,20 +1,20 @@
 const { compile } = require('svelte');
-const { parseQuery } = require('loader-utils');
+const { getOptions } = require('loader-utils');
 
 module.exports = function(source, map) {
   this.cacheable();
 
   const filename = this.resourcePath;
-  const query = parseQuery(this.query);
+  const options = getOptions(this) || {};
 
   try {
     let { code, map } = compile(source, {
       filename: filename,
-      generate: query.generate,
-      format: query.format || 'es',
-      shared: query.shared || false,
-      name: query.name,
-      css: query.css !== false,
+      generate: options.generate,
+      format: options.format || 'es',
+      shared: options.shared || false,
+      name: options.name,
+      css: options.css !== false,
     });
 
     this.callback(null, code, map);
