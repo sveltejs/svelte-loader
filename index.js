@@ -1,21 +1,34 @@
+const { basename, extname } = require('path');
 const { compile } = require('svelte');
 const { getOptions } = require('loader-utils');
+
+function sanitize(input) {
+  return basename(input)
+    .replace(extname(input), '')
+    .replace(/[^a-zA-Z_$0-9]+/g, '_')
+    .replace(/^_/, '')
+    .replace(/_$/, '')
+    .replace(/^(\d)/, '_$1');
+}
+
+function capitalize(str) {
+  return str[0].toUpperCase() + str.slice(1);
+}
 
 module.exports = function(source, map) {
   this.cacheable();
 
   const filename = this.filename;
-  const options = getOptions(this) || {};
+  const options = Object.assign(getOptions(this) || {}, {
+    filename,
+    format: 'es',
+    shared: require.resolve('svelte/shared.js')
+  });
+
+  if (!options.name) options.name = capitalize(sanitize(filename));
 
   try {
-    let { code, map } = compile(source, {
-      filename: filename,
-      generate: options.generate,
-      format: 'es',
-      shared: require.resolve('svelte/shared.js'),
-      name: options.name,
-      css: options.css !== false,
-    });
+    let { code, map } = compile(source, options);
 
     this.callback(null, code, map);
   } catch (err) {

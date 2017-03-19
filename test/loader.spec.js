@@ -171,7 +171,7 @@ describe('loader', function() {
         testLoader('test/fixtures/good.html', function(err, code, map) {
           expect(err).not.to.exist;
 
-          expect(code).not.to.contain('SvelteComponent.render = function ( root, options ) {');
+          expect(code).not.to.contain('.render = function ( root, options ) {');
         })
       );
 
@@ -180,7 +180,7 @@ describe('loader', function() {
         testLoader('test/fixtures/good.html', function(err, code, map) {
           expect(err).not.to.exist;
 
-          expect(code).to.contain('SvelteComponent.render = function ( root, options ) {');
+          expect(code).to.contain('.render = function ( root, options ) {');
         }, { generate: 'ssr' })
       );
 
