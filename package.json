@@ -14,11 +14,13 @@
     "sveltejs",
     "webpack-loader"
   ],
+  "dependencies": {
+    "loader-utils": "^0.2.16"
+  },
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^3.11.1",
     "eslint-plugin-mocha": "^4.7.0",
-    "loader-utils": "^0.2.16",
     "mocha": "^3.2.0",
     "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0",
