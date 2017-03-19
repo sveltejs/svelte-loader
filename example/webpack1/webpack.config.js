@@ -5,7 +5,7 @@ const babelSettings = JSON.parse(readFileSync('.babelrc'));
 
 module.exports = {
   entry: {
-    'index': [ './src/index.js' ]
+    'index': [ './src/index' ]
   },
   resolve: {
     extensions: [ '.js', '.html' ]
@@ -16,17 +16,17 @@ module.exports = {
     chunkFilename: '[name].[id].js'
   },
   module: {
-    rules: [
+    loaders: [
       {
         test: /\.(html|js)$/,
         exclude: /node_modules/,
-        use: 'babel-loader',
+        loader: 'babel-loader',
         query: babelSettings
       },
       {
         test: /\.html$/,
         exclude: /node_modules/,
-        use: 'svelte-loader'
+        loader: 'svelte-loader'
       }
     ]
   },
