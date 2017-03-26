@@ -15,7 +15,7 @@ const loader = require('../');
 
 describe('loader', function() {
 
-  function testLoader(fileName, callback, query) {
+  function testLoader(fileName, callback, query, version = 2) {
 
     return function() {
 
@@ -29,6 +29,7 @@ describe('loader', function() {
         cacheable: cacheableSpy,
         callback: callbackSpy,
         resourcePath: fileName,
+        version,
         query,
       }, fileContents, null);
 
@@ -164,6 +165,28 @@ describe('loader', function() {
 
     });
 
+    describe('shared', function() {
+
+      it('should configure shared=false (default)',
+        testLoader('test/fixtures/good.html', function(err, code, map) {
+          expect(err).not.to.exist;
+
+          expect(code).not.to.contain('import {');
+          expect(code).not.to.contain('svelte/shared.js');
+        }, {}, 1)
+      );
+
+
+      it('should configure shared=true',
+        testLoader('test/fixtures/good.html', function(err, code, map) {
+          expect(err).not.to.exist;
+
+          expect(code).to.contain('import {');
+          expect(code).to.contain('svelte/shared.js');
+        }, { shared: true })
+      );
+
+    });
 
     describe('generate', function() {
 
