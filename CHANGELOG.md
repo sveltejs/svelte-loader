@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.0.1
+
+* Resolve shared helpers path ([#19](https://github.com/sveltejs/svelte-loader/issues/19))
+
 ## 2.0.0
 
 * Pass through all options, overriding `format` and `shared` ([#17](https://github.com/sveltejs/svelte-loader/issues/17))
