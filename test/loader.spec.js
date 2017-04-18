@@ -151,7 +151,7 @@ describe('loader', function() {
       it('should configure css (default)',
         testLoader('test/fixtures/css.html', function(err, code, map) {
           expect(err).not.to.exist;
-          expect(code).to.contain('if ( !addedCss ) addCss();');
+          expect(code).to.contain('if ( !added_css ) add_css();');
         })
       );
 
@@ -159,7 +159,7 @@ describe('loader', function() {
       it('should configure no css',
         testLoader('test/fixtures/css.html', function(err, code, map) {
           expect(err).not.to.exist;
-          expect(code).not.to.contain('if ( !addedCss ) addCss();');
+          expect(code).not.to.contain('if ( !added_css ) add_css();');
         }, { css: false })
       );
 
