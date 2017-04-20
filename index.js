@@ -23,11 +23,18 @@ module.exports = function(source, map) {
   options.filename = this.resourcePath;
   options.format = this.version === 1 ? options.format || 'cjs' : 'es';
   options.shared = options.format === 'es' && require.resolve( 'svelte/shared.js' );
+  options.mapGeneratedSource = !!options.mapGeneratedSource;
 
   if (!options.name) options.name = capitalize(sanitize(options.filename));
 
   try {
     let { code, map } = compile(source, options);
+
+    map = Object.assign({}, map);
+
+    if (options.mapGeneratedSource) {
+      map.sourcesContent = [code];
+    }
 
     this.callback(null, code, map);
   } catch (err) {

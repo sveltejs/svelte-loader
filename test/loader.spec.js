@@ -49,6 +49,33 @@ describe('loader', function() {
   );
 
 
+  describe('sourcemap', function() {
+    it('should produce a sourcemap that is a "plain" object',
+      testLoader('test/fixtures/css.html', function(err, code, map) {
+        // expect(typeof map.toString).not.to.equal('function');
+        let proto = Object.getPrototypeOf(map);
+        let ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
+        let isPlainObject = typeof ctor == 'function' && ctor instanceof ctor &&  Function.prototype.toString.call(ctor) == Function.prototype.toString.call(Object);
+
+        expect(isPlainObject).to.equal(true);
+        expect(map).not.to.have.property('toUrl');
+      })
+    );
+
+    it('should set sourcesContent to the generated code when mapGeneratedSource is true',
+      testLoader('test/fixtures/css.html', function(err, code, map) {
+        expect(code).to.deep.equal(map.sourcesContent[0]);
+      }, { mapGeneratedSource: true })
+    );
+
+    it('should not set sourcesContent to the generated code by default',
+      testLoader('test/fixtures/css.html', function(err, code, map) {
+        expect(code).to.not.deep.equal(map.sourcesContent[0]);
+      })
+    );
+  });
+
+
   describe('error handling', function() {
 
     it('should handle parse error',

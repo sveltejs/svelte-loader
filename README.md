@@ -28,6 +28,10 @@ Configure inside your `webpack.config.js`:
 Checkout [example setup](./example).
 
 
+## Loader Options
+
+- `mapGeneratedSource`: use the generated-code as the "source" for code coverage tools (like Istanbul). Defaults to *false*.
+
 ## License
 
 MIT
