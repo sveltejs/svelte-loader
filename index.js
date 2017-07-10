@@ -33,7 +33,7 @@ module.exports = function(source, map) {
   } catch (err) {
     // wrap error to provide correct
     // context when logging to console
-    this.callback(new Error(err.toString() + '\n' + JSON.stringify(err.loc) + '\n' + err.frame));
+    this.emitError('\n' + '\n' + err.toString() + '\n' + err.filename + '\n' + err.frame + '\n');
 
   }
 };
