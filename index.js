@@ -34,6 +34,5 @@ module.exports = function(source, map) {
     // wrap error to provide correct
     // context when logging to console
     this.callback(new Error(err.toString() + '\n' + err.frame));
-
   }
 };
