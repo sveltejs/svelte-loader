@@ -57,7 +57,7 @@ describe('loader', function() {
         expect(err).to.exist;
 
         expect(err.message).to.eql(
-          'Expected }}} (1:18)\n' +
+          'ParseError: Expected }}}\n' +
           '1: <p>Count: {{{count}}</p>\n' +
           '                     ^\n' +
           '2: <button on:click=\'set({ count: count + 1 })\'>+1</button>'
@@ -75,7 +75,7 @@ describe('loader', function() {
         expect(err).to.exist;
 
         expect(err.message).to.eql(
-          'Unexpected token (5:7)\n' +
+          'ParseError: Unexpected token\n' +
           '3: <script>\n' +
           '4:   export {\n' +
           '5:     foo: \'BAR\'\n' +
@@ -96,7 +96,7 @@ describe('loader', function() {
         expect(err).to.exist;
 
         expect(err.message).to.eql(
-          'Computed properties can be function expressions or arrow function expressions (6:11)\n' +
+          'ValidationError: Computed properties can be function expressions or arrow function expressions\n' +
           '4:   export default {\n' +
           '5:     computed: {\n' +
           '6:       foo: \'BAR\'\n' +
@@ -151,7 +151,7 @@ describe('loader', function() {
       it('should configure css (default)',
         testLoader('test/fixtures/css.html', function(err, code, map) {
           expect(err).not.to.exist;
-          expect(code).to.contain('if ( !addedCss ) addCss();');
+          expect(code).to.contain('function add_css ()');
         })
       );
 
@@ -159,7 +159,7 @@ describe('loader', function() {
       it('should configure no css',
         testLoader('test/fixtures/css.html', function(err, code, map) {
           expect(err).not.to.exist;
-          expect(code).not.to.contain('if ( !addedCss ) addCss();');
+          expect(code).not.to.contain('function add_css ()');
         }, { css: false })
       );
 
@@ -203,7 +203,7 @@ describe('loader', function() {
         testLoader('test/fixtures/good.html', function(err, code, map) {
           expect(err).not.to.exist;
 
-          expect(code).to.contain('.render = function ( root, options ) {');
+          expect(code).to.contain('.render = function ( state, options ) {');
         }, { generate: 'ssr' })
       );
 
