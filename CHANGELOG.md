@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.1.0
+
+* Include code frame in error message ([#26](https://github.com/sveltejs/svelte-loader/pull/26))
+
 ## 2.0.1
 
 * Resolve shared helpers path ([#19](https://github.com/sveltejs/svelte-loader/issues/19))
