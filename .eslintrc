@@ -6,7 +6,6 @@
     "indent": [ 2, "tab", { "VariableDeclarator": { "var": 2, "let": 2, "const": 3 } } ],
     "no-unused-vars": [ 2, { "args": "none" } ],
     "space-before-function-paren": [ 2, "never" ],
-    "quotes": [ 2, "single" ],
     "semi": [ 2, "always" ],
     "no-console": 0,
     "mocha/no-exclusive-tests": 2

@@ -8,6 +8,10 @@ const loader = require('../');
 chai.use(sinonChai);
 const { expect } = chai;
 
+function d([str]) {
+	return str.replace(/^\t+/gm, '').trim();
+}
+
 describe('loader', () => {
 	function testLoader(fileName, callback, query, version = 2) {
 		return () => {
@@ -52,11 +56,11 @@ describe('loader', () => {
 			) {
 				expect(err).to.exist;
 
-				expect(err.message).to.eql(
-					'ParseError: Expected }}}\n' +
-						'1: <p>Count: {{{count}}</p>\n' +
-						'                     ^\n' +
-						"2: <button on:click='set({ count: count + 1 })'>+1</button>"
+				expect(err.message).to.eql(d`
+					ParseError: Expected }}}
+					1: <p>Count: {{{count}}</p>
+					                     ^
+					2: <button on:click='set({ count: count + 1 })'>+1</button>`
 				);
 
 				expect(code).not.to.exist;
@@ -74,14 +78,14 @@ describe('loader', () => {
 			) {
 				expect(err).to.exist;
 
-				expect(err.message).to.eql(
-					'ParseError: Unexpected token\n' +
-						'3: <script>\n' +
-						'4:   export {\n' +
-						"5:     foo: 'BAR'\n" +
-						'          ^\n' +
-						'6:   };\n' +
-						'7: </script>'
+				expect(err.message).to.eql(d`
+					ParseError: Unexpected token
+					3: <script>
+					4:   export {
+					5:     foo: 'BAR'
+					          ^
+					6:   };
+					7: </script>`
 				);
 
 				expect(code).not.to.exist;
@@ -99,14 +103,14 @@ describe('loader', () => {
 			) {
 				expect(err).to.exist;
 
-				expect(err.message).to.eql(
-					'ValidationError: Computed properties can be function expressions or arrow function expressions\n' +
-						'4:   export default {\n' +
-						'5:     computed: {\n' +
-						"6:       foo: 'BAR'\n" +
-						'              ^\n' +
-						'7:     }\n' +
-						'8:   };'
+				expect(err.message).to.eql(d`
+					ValidationError: Computed properties can be function expressions or arrow function expressions
+					4:   export default {
+					5:     computed: {
+					6:       foo: 'BAR'
+					              ^
+					7:     }
+					8:   };`
 				);
 
 				expect(code).not.to.exist;
@@ -125,7 +129,7 @@ describe('loader', () => {
 				expect(map).to.exist;
 
 				// es2015 statements remain
-				expect(code).to.contain("import { hello } from './utils';");
+				expect(code).to.contain(`import { hello } from './utils';`);
 				expect(code).to.contain('data() {');
 			})
 		);
@@ -136,7 +140,7 @@ describe('loader', () => {
 				expect(err).not.to.exist;
 
 				// es2015 statements remain
-				expect(code).to.contain("import Nested from './nested';");
+				expect(code).to.contain(`import Nested from './nested';`);
 
 				expect(code).to.exist;
 				expect(map).to.exist;
