@@ -225,6 +225,34 @@ describe('loader', () => {
 				)
 			);
 		});
+
+		describe('emitCss', function() {
+			it(
+				'should configure emitCss=false (default)',
+				testLoader(
+					'test/fixtures/css.html',
+					function(err, code, map) {
+						expect(err).not.to.exist;
+
+						expect(code).not.to.match(/require\('.+\.css'\);/);
+					},
+					{}
+				)
+			);
+
+			it(
+				'should configure emitCss=true',
+				testLoader(
+					'test/fixtures/css.html',
+					function(err, code, map) {
+						expect(err).not.to.exist;
+
+						expect(code).to.match(/require\('.+\.css'\);/);
+					},
+					{ emitCss: true }
+				)
+			);
+		});
 	});
 });
 
