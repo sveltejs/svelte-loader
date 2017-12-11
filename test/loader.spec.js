@@ -154,7 +154,7 @@ describe('loader', () => {
 				'should configure css (default)',
 				testLoader('test/fixtures/css.html', function(err, code, map) {
 					expect(err).not.to.exist;
-					expect(code).to.contain('function add_css ()');
+					expect(code).to.contain('function add_css()');
 				})
 			);
 
@@ -164,7 +164,7 @@ describe('loader', () => {
 					'test/fixtures/css.html',
 					function(err, code, map) {
 						expect(err).not.to.exist;
-						expect(code).not.to.contain('function add_css ()');
+						expect(code).not.to.contain('function add_css()');
 					},
 					{ css: false }
 				)
@@ -208,7 +208,7 @@ describe('loader', () => {
 				testLoader('test/fixtures/good.html', function(err, code, map) {
 					expect(err).not.to.exist;
 
-					expect(code).not.to.contain('.render = function ( root, options ) {');
+					expect(code).not.to.contain('.render = function(state, options = {}) {');
 				})
 			);
 
@@ -219,7 +219,7 @@ describe('loader', () => {
 					function(err, code, map) {
 						expect(err).not.to.exist;
 
-						expect(code).to.contain('.render = function ( state, options ) {');
+						expect(code).to.contain('.render = function(state, options = {}) {');
 					},
 					{ generate: 'ssr' }
 				)
