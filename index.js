@@ -1,7 +1,7 @@
 const { basename, extname } = require('path');
 const { compile } = require('svelte');
 const { getOptions } = require('loader-utils');
-const { appendFileSync } = require('fs');
+const { statSync, utimesSync, writeFileSync } = require('fs');
 const { fileSync } = require('tmp');
 
 function sanitize(input) {
@@ -27,8 +27,6 @@ module.exports = function(source, map) {
 	options.shared =
 		options.format === 'es' && require.resolve('svelte/shared.js');
 
-	if (options.emitCss) options.css = false;
-
 	if (!options.name) options.name = capitalize(sanitize(options.filename));
 
 	try {
@@ -37,8 +35,11 @@ module.exports = function(source, map) {
 		if (options.emitCss && css) {
 			const tmpobj = fileSync({ postfix: '.css' });
 			css += '\n/*# sourceMappingURL=' + cssMap.toUrl() + '*/';
-			appendFileSync(tmpobj.name, css);
 			code = code + `\nrequire('${tmpobj.name}');\n`;
+
+			writeFileSync(tmpobj.name, css);
+			const stats = statSync(tmpobj.name);
+			utimesSync(tmpobj.name, stats.atimeMs - 9999, stats.mtimeMs - 9999);
 		}
 
 		this.callback(null, code, map);
