@@ -25,7 +25,7 @@ Configure inside your `webpack.config.js`:
   ...
 ```
 
-Checkout [example setup](./example).
+Check out the [example project](https://github.com/sveltejs/template-webpack).
 
 ### Extracting CSS
 
