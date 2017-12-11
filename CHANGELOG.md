@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.2.0
+
+* Add `emitCss` option ([#28](https://github.com/sveltejs/svelte-loader/pull/28))
+
 ## 2.1.0
 
 * Include code frame in error message ([#26](https://github.com/sveltejs/svelte-loader/pull/26))
