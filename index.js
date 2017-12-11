@@ -27,6 +27,8 @@ module.exports = function(source, map) {
 	options.shared =
 		options.format === 'es' && require.resolve('svelte/shared.js');
 
+	if (options.emitCss) options.css = false;
+
 	if (!options.name) options.name = capitalize(sanitize(options.filename));
 
 	try {
