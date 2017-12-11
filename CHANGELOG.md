@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.2.1
+
+* Fix git fail
+
 ## 2.2.0
 
 * Add `emitCss` option ([#28](https://github.com/sveltejs/svelte-loader/pull/28))
