@@ -1,8 +1,8 @@
-const { basename, extname } = require('path');
+const { basename, extname, join } = require('path');
 const { compile } = require('svelte');
 const { getOptions } = require('loader-utils');
 const { statSync, utimesSync, writeFileSync } = require('fs');
-const { fileSync } = require('tmp');
+const { tmpdir } = require('os');
 
 function sanitize(input) {
 	return basename(input)
@@ -32,16 +32,17 @@ module.exports = function(source, map) {
 	if (!options.name) options.name = capitalize(sanitize(options.filename));
 
 	try {
-		let { code, map, css, cssMap } = compile(source, options);
+		let { code, map, css, cssMap, ast } = compile(source, options);
 
 		if (options.emitCss && css) {
-			const tmpobj = fileSync({ postfix: '.css' });
-			css += '\n/*# sourceMappingURL=' + cssMap.toUrl() + '*/';
-			code = code + `\nrequire('${tmpobj.name}');\n`;
+			const tmpFile = join(tmpdir(), 'svelte-' + ast.hash + '.css');
 
-			writeFileSync(tmpobj.name, css);
-			const stats = statSync(tmpobj.name);
-			utimesSync(tmpobj.name, stats.atimeMs - 9999, stats.mtimeMs - 9999);
+			css += '\n/*# sourceMappingURL=' + cssMap.toUrl() + '*/';
+			code = code + `\nrequire('${tmpFile}');\n`;
+
+			writeFileSync(tmpFile, css);
+			const stats = statSync(tmpFile);
+			utimesSync(tmpFile, stats.atimeMs - 9999, stats.mtimeMs - 9999);
 		}
 
 		this.callback(null, code, map);
