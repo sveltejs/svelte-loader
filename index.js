@@ -1,5 +1,5 @@
 const { basename, extname } = require('path');
-const { compile } = require('svelte');
+const { compile, preprocess } = require('svelte');
 const { getOptions } = require('loader-utils');
 const { statSync, utimesSync, writeFileSync } = require('fs');
 const { fileSync } = require('tmp');
@@ -20,7 +20,8 @@ function capitalize(str) {
 module.exports = function(source, map) {
 	this.cacheable();
 
-	const options = getOptions(this) || {};
+	const options = Object.assign({}, this.options, getOptions(this));
+	const callback = this.async();
 
 	options.filename = this.resourcePath;
 	options.format = this.version === 1 ? options.format || 'cjs' : 'es';
@@ -31,8 +32,8 @@ module.exports = function(source, map) {
 
 	if (!options.name) options.name = capitalize(sanitize(options.filename));
 
-	try {
-		let { code, map, css, cssMap } = compile(source, options);
+	preprocess(source, options).then(processed => {
+		let { code, map, css, cssMap } = compile(processed.toString(), options);
 
 		if (options.emitCss && css) {
 			const tmpobj = fileSync({ postfix: '.css' });
@@ -44,10 +45,10 @@ module.exports = function(source, map) {
 			utimesSync(tmpobj.name, stats.atimeMs - 9999, stats.mtimeMs - 9999);
 		}
 
-		this.callback(null, code, map);
-	} catch (err) {
-		// wrap error to provide correct
-		// context when logging to console
-		this.callback(new Error(`${err.name}: ${err.toString()}`));
-	}
+		callback(null, code, map);
+	}, err => callback(err)).catch(err => {
+      // wrap error to provide correct
+      // context when logging to console
+		callback(new Error(`${err.name}: ${err.toString()}`));
+	});
 };

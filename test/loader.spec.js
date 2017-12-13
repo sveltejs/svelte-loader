@@ -14,24 +14,32 @@ function d([str]) {
 
 describe('loader', () => {
 	function testLoader(fileName, callback, query, version = 2) {
-		return () => {
+		return (done) => {
+			function cb() {
+				try {
+					callback(...[].slice.call(arguments));
+				} catch (err) {
+					expect(callbackSpy).to.have.been.called;
+					return done(err);
+				}
+				expect(callbackSpy).to.have.been.called;
+				done();
+			}
+
 			const fileContents = readFile(fileName);
-			const cacheableSpy = spy(() => {});
-			const callbackSpy = spy(callback);
 
-			loader.call(
-				{
-					cacheable: cacheableSpy,
-					callback: callbackSpy,
-					resourcePath: fileName,
-					version,
-					query
-				},
-				fileContents,
-				null
-			);
+			const cacheableSpy = spy(function() { });
 
-			expect(callbackSpy).to.have.been.called;
+			const callbackSpy = spy(cb);
+
+			loader.call({
+				cacheable: cacheableSpy,
+				async: () => callbackSpy,
+				resourcePath: fileName,
+				version,
+				query,
+			}, fileContents, null);
+
 			expect(cacheableSpy).to.have.been.called;
 		};
 	}
