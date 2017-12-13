@@ -261,6 +261,79 @@ describe('loader', () => {
 				)
 			);
 		});
+
+		describe('preprocess', () => {
+			it('should preprocess successfully', (done) => {
+				function callback(err, code, map) {
+					expect(err).not.to.exist;
+					expect(code).to.exist;
+					expect(code).to.contain('button{width:50px;height:50px}');
+					expect(map).to.exist;
+				}
+
+				function cb() {
+					try {
+						callback(...[].slice.call(arguments));
+					} catch (err) {
+						expect(callbackSpy).to.have.been.called;
+						return done(err);
+					}
+					expect(callbackSpy).to.have.been.called;
+					done();
+				}
+
+				const fileContents = readFileSync('test/fixtures/style-valid.html',
+            'utf-8');
+				const cacheableSpy = spy(() => {
+				});
+				const callbackSpy = spy(cb);
+				const options = {
+					style: ({ content }) => {
+						return {
+							code: content.replace(/\$size/gi, '50px'),
+						};
+					},
+				};
+
+				loader.call(
+					{
+						cacheable: cacheableSpy,
+						async: () => callbackSpy,
+						resourcePath: 'test/fixtures/style-valid.html',
+						options,
+					},
+            fileContents,
+            null
+        );
+
+				expect(cacheableSpy).to.have.been.called;
+			});
+
+			it('should not preprocess successfully', () => {
+				const fileContents = readFileSync('test/fixtures/style-valid.html', 'utf-8');
+				const cacheableSpy = spy(() => {
+				});
+				const options = {
+					style: () => {
+						throw new Error('Error while preprocessing');
+					},
+				};
+
+				loader.call(
+					{
+						cacheable: cacheableSpy,
+						async: () => (err) => {
+							expect(err).to.exist;
+						},
+						resourcePath: 'test/fixtures/style-valid.html',
+						options,
+					},
+            fileContents,
+            null
+        );
+
+			});
+		});
 	});
 });
 
