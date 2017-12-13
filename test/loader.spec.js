@@ -57,7 +57,7 @@ describe('loader', () => {
 				expect(err).to.exist;
 
 				expect(err.message).to.eql(d`
-					ParseError: Expected }}}
+					ParseError: Expected }}} (1:18)
 					1: <p>Count: {{{count}}</p>
 					                     ^
 					2: <button on:click='set({ count: count + 1 })'>+1</button>`
@@ -79,7 +79,7 @@ describe('loader', () => {
 				expect(err).to.exist;
 
 				expect(err.message).to.eql(d`
-					ParseError: Unexpected token
+					ParseError: Unexpected token (5:7)
 					3: <script>
 					4:   export {
 					5:     foo: 'BAR'
@@ -104,7 +104,7 @@ describe('loader', () => {
 				expect(err).to.exist;
 
 				expect(err.message).to.eql(d`
-					ValidationError: Computed properties can be function expressions or arrow function expressions
+					ValidationError: Computed properties can be function expressions or arrow function expressions (6:11)
 					4:   export default {
 					5:     computed: {
 					6:       foo: 'BAR'
