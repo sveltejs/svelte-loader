@@ -5,12 +5,12 @@ const { statSync, utimesSync, writeFileSync } = require('fs');
 const { fileSync } = require('tmp');
 
 function sanitize(input) {
-	return basename(input)
-		.replace(extname(input), '')
-		.replace(/[^a-zA-Z_$0-9]+/g, '_')
-		.replace(/^_/, '')
-		.replace(/_$/, '')
-		.replace(/^(\d)/, '_$1');
+	return basename(input).
+			replace(extname(input), '').
+			replace(/[^a-zA-Z_$0-9]+/g, '_').
+			replace(/^_/, '').
+			replace(/_$/, '').
+			replace(/^(\d)/, '_$1');
 }
 
 function capitalize(str) {
@@ -26,7 +26,7 @@ module.exports = function(source, map) {
 	options.filename = this.resourcePath;
 	options.format = this.version === 1 ? options.format || 'cjs' : 'es';
 	options.shared =
-		options.format === 'es' && require.resolve('svelte/shared.js');
+			options.format === 'es' && require.resolve('svelte/shared.js');
 
 	if (options.emitCss) options.css = false;
 
@@ -47,8 +47,8 @@ module.exports = function(source, map) {
 
 		callback(null, code, map);
 	}, err => callback(err)).catch(err => {
-      // wrap error to provide correct
-      // context when logging to console
+		// wrap error to provide correct
+		// context when logging to console
 		callback(new Error(`${err.name}: ${err.toString()}`));
 	});
 };
