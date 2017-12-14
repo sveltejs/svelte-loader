@@ -41,8 +41,8 @@ module.exports = function(source, map) {
 			code = code + `\nrequire('${tmpobj.name}');\n`;
 
 			writeFileSync(tmpobj.name, css);
-			const stats = statSync(tmpobj.name);
-			utimesSync(tmpobj.name, stats.atimeMs - 9999, stats.mtimeMs - 9999);
+			const { atime, mtime } = statSync(tmpobj.name);
+			utimesSync(tmpobj.name, atime.getTime() - 9999, mtime.getTime() - 9999);
 		}
 
 		callback(null, code, map);
