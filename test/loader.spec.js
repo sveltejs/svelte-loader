@@ -14,35 +14,44 @@ function d([str]) {
 
 describe('loader', () => {
 	function testLoader(fileName, callback, query, version = 2) {
-		return () => {
+		return (done) => {
+			function cb() {
+				try {
+					callback(...[].slice.call(arguments));
+				} catch (err) {
+					expect(callbackSpy).to.have.been.called;
+					return done(err);
+				}
+				expect(callbackSpy).to.have.been.called;
+				done();
+			}
+
 			const fileContents = readFile(fileName);
-			const cacheableSpy = spy(() => {});
-			const callbackSpy = spy(callback);
 
-			loader.call(
-				{
-					cacheable: cacheableSpy,
-					callback: callbackSpy,
-					resourcePath: fileName,
-					version,
-					query
-				},
-				fileContents,
-				null
-			);
+			const cacheableSpy = spy(function() {
+			});
 
-			expect(callbackSpy).to.have.been.called;
+			const callbackSpy = spy(cb);
+
+			loader.call({
+				cacheable: cacheableSpy,
+				async: () => callbackSpy,
+				resourcePath: fileName,
+				version,
+				query,
+			}, fileContents, null);
+
 			expect(cacheableSpy).to.have.been.called;
 		};
 	}
 
 	it(
-		'should compile',
-		testLoader('test/fixtures/good.html', function(err, code, map) {
-			expect(err).not.to.exist;
-			expect(code).to.exist;
-			expect(map).to.exist;
-		})
+			'should compile',
+			testLoader('test/fixtures/good.html', function(err, code, map) {
+				expect(err).not.to.exist;
+				expect(code).to.exist;
+				expect(map).to.exist;
+			})
 	);
 
 	describe('error handling', () => {
@@ -61,7 +70,7 @@ describe('loader', () => {
 					1: <p>Count: {{{count}}</p>
 					                     ^
 					2: <button on:click='set({ count: count + 1 })'>+1</button>`
-				);
+					);
 
 				expect(code).not.to.exist;
 				expect(map).not.to.exist;
@@ -86,7 +95,7 @@ describe('loader', () => {
 					          ^
 					6:   };
 					7: </script>`
-				);
+					);
 
 				expect(code).not.to.exist;
 				expect(map).not.to.exist;
@@ -111,7 +120,7 @@ describe('loader', () => {
 					              ^
 					7:     }
 					8:   };`
-				);
+					);
 
 				expect(code).not.to.exist;
 				expect(map).not.to.exist;
@@ -121,137 +130,216 @@ describe('loader', () => {
 
 	describe('ES2015 features', () => {
 		it(
-			'should keep imports / methods',
-			testLoader('test/fixtures/es2015.html', function(err, code, map) {
-				expect(err).not.to.exist;
+				'should keep imports / methods',
+				testLoader('test/fixtures/es2015.html', function(err, code, map) {
+					expect(err).not.to.exist;
 
-				expect(code).to.exist;
-				expect(map).to.exist;
+					expect(code).to.exist;
+					expect(map).to.exist;
 
-				// es2015 statements remain
-				expect(code).to.contain(`import { hello } from './utils';`);
-				expect(code).to.contain('data() {');
-			})
+					// es2015 statements remain
+					expect(code).to.contain(`import { hello } from './utils';`);
+					expect(code).to.contain('data() {');
+				})
 		);
 
 		it(
-			'should keep nested Component import',
-			testLoader('test/fixtures/parent.html', function(err, code, map) {
-				expect(err).not.to.exist;
+				'should keep nested Component import',
+				testLoader('test/fixtures/parent.html', function(err, code, map) {
+					expect(err).not.to.exist;
 
-				// es2015 statements remain
-				expect(code).to.contain(`import Nested from './nested';`);
+					// es2015 statements remain
+					expect(code).to.contain(`import Nested from './nested';`);
 
-				expect(code).to.exist;
-				expect(map).to.exist;
-			})
+					expect(code).to.exist;
+					expect(map).to.exist;
+				})
 		);
 	});
 
 	describe('configuration via query', () => {
 		describe('css', () => {
 			it(
-				'should configure css (default)',
-				testLoader('test/fixtures/css.html', function(err, code, map) {
-					expect(err).not.to.exist;
-					expect(code).to.contain('function add_css()');
-				})
+					'should configure css (default)',
+					testLoader('test/fixtures/css.html', function(err, code, map) {
+						expect(err).not.to.exist;
+						expect(code).to.contain('function add_css()');
+					})
 			);
 
 			it(
-				'should configure no css',
-				testLoader(
-					'test/fixtures/css.html',
-					function(err, code, map) {
-						expect(err).not.to.exist;
-						expect(code).not.to.contain('function add_css()');
-					},
-					{ css: false }
-				)
+					'should configure no css',
+					testLoader(
+							'test/fixtures/css.html',
+							function(err, code, map) {
+								expect(err).not.to.exist;
+								expect(code).not.to.contain('function add_css()');
+							},
+							{ css: false }
+					)
 			);
 		});
 
 		describe('shared', () => {
 			it(
-				'should configure shared=false (default)',
-				testLoader(
-					'test/fixtures/good.html',
-					function(err, code, map) {
-						expect(err).not.to.exist;
+					'should configure shared=false (default)',
+					testLoader(
+							'test/fixtures/good.html',
+							function(err, code, map) {
+								expect(err).not.to.exist;
 
-						expect(code).not.to.contain('import {');
-						expect(code).not.to.contain('svelte/shared.js');
-					},
-					{},
-					1
-				)
+								expect(code).not.to.contain('import {');
+								expect(code).not.to.contain('svelte/shared.js');
+							},
+							{},
+							1
+					)
 			);
 
 			it(
-				'should configure shared=true',
-				testLoader(
-					'test/fixtures/good.html',
-					function(err, code, map) {
-						expect(err).not.to.exist;
+					'should configure shared=true',
+					testLoader(
+							'test/fixtures/good.html',
+							function(err, code, map) {
+								expect(err).not.to.exist;
 
-						expect(code).to.contain('import {');
-						expect(code).to.contain('svelte/shared.js');
-					},
-					{ shared: true }
-				)
+								expect(code).to.contain('import {');
+								expect(code).to.contain('svelte/shared.js');
+							},
+							{ shared: true }
+					)
 			);
 		});
 
 		describe('generate', () => {
 			it(
-				'should configure generate=undefined (default)',
-				testLoader('test/fixtures/good.html', function(err, code, map) {
-					expect(err).not.to.exist;
+					'should configure generate=undefined (default)',
+					testLoader('test/fixtures/good.html', function(err, code, map) {
+						expect(err).not.to.exist;
 
-					expect(code).not.to.contain('.render = function(state, options = {}) {');
-				})
+						expect(code).
+								not.
+								to.
+								contain('.render = function(state, options = {}) {');
+					})
 			);
 
 			it(
-				'should configure generate=ssr',
-				testLoader(
-					'test/fixtures/good.html',
-					function(err, code, map) {
-						expect(err).not.to.exist;
+					'should configure generate=ssr',
+					testLoader(
+							'test/fixtures/good.html',
+							function(err, code, map) {
+								expect(err).not.to.exist;
 
-						expect(code).to.contain('.render = function(state, options = {}) {');
-					},
-					{ generate: 'ssr' }
-				)
+								expect(code).
+										to.
+										contain('.render = function(state, options = {}) {');
+							},
+							{ generate: 'ssr' }
+					)
 			);
 		});
 
 		describe('emitCss', function() {
 			it(
-				'should configure emitCss=false (default)',
-				testLoader(
-					'test/fixtures/css.html',
-					function(err, code, map) {
-						expect(err).not.to.exist;
+					'should configure emitCss=false (default)',
+					testLoader(
+							'test/fixtures/css.html',
+							function(err, code, map) {
+								expect(err).not.to.exist;
 
-						expect(code).not.to.match(/require\('.+\.css'\);/);
-					},
-					{}
-				)
+								expect(code).not.to.match(/require\('.+\.css'\);/);
+							},
+							{}
+					)
 			);
 
 			it(
-				'should configure emitCss=true',
-				testLoader(
-					'test/fixtures/css.html',
-					function(err, code, map) {
-						expect(err).not.to.exist;
+					'should configure emitCss=true',
+					testLoader(
+							'test/fixtures/css.html',
+							function(err, code, map) {
+								expect(err).not.to.exist;
 
-						expect(code).to.match(/require\('.+\.css'\);/);
-					},
-					{ emitCss: true }
-				)
+								expect(code).to.match(/require\('.+\.css'\);/);
+							},
+							{ emitCss: true }
+					)
 			);
+		});
+
+		describe('preprocess', () => {
+			it('should preprocess successfully', (done) => {
+				function callback(err, code, map) {
+					expect(err).not.to.exist;
+					expect(code).to.exist;
+					expect(code).to.contain('button{width:50px;height:50px}');
+					expect(map).to.exist;
+				}
+
+				function cb() {
+					try {
+						callback(...[].slice.call(arguments));
+					} catch (err) {
+						expect(callbackSpy).to.have.been.called;
+						return done(err);
+					}
+					expect(callbackSpy).to.have.been.called;
+					done();
+				}
+
+				const fileContents = readFileSync('test/fixtures/style-valid.html',
+						'utf-8');
+				const cacheableSpy = spy(() => {
+				});
+				const callbackSpy = spy(cb);
+				const options = {
+					style: ({ content }) => {
+						return {
+							code: content.replace(/\$size/gi, '50px'),
+						};
+					},
+				};
+
+				loader.call(
+					{
+						cacheable: cacheableSpy,
+						async: () => callbackSpy,
+						resourcePath: 'test/fixtures/style-valid.html',
+						options,
+					},
+						fileContents,
+						null
+				);
+
+				expect(cacheableSpy).to.have.been.called;
+			});
+
+			it('should not preprocess successfully', () => {
+				const fileContents = readFileSync('test/fixtures/style-valid.html',
+						'utf-8');
+				const cacheableSpy = spy(() => {
+				});
+				const options = {
+					style: () => {
+						throw new Error('Error while preprocessing');
+					},
+				};
+
+				loader.call(
+					{
+						cacheable: cacheableSpy,
+						async: () => (err) => {
+							expect(err).to.exist;
+						},
+						resourcePath: 'test/fixtures/style-valid.html',
+						options,
+					},
+						fileContents,
+						null
+				);
+
+			});
 		});
 	});
 });
