@@ -49,6 +49,6 @@ module.exports = function(source, map) {
 	} catch (err) {
 		// wrap error to provide correct
 		// context when logging to console
-		this.callback(new Error(err.toString() + '\n' + err.frame));
+		this.callback(new Error(err.toString()));
 	}
 };
