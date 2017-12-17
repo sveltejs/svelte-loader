@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.3.0
+
+* Add `preprocess` support ([#31](https://github.com/sveltejs/svelte-loader/pull/31))
+
 ## 2.2.2
 
 * Deterministic filenames for CSS output ([#30](https://github.com/sveltejs/svelte-loader/pull/30))
