@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.2.2
+
+* Deterministic filenames for CSS output ([#30](https://github.com/sveltejs/svelte-loader/pull/30))
+
 ## 2.2.1
 
 * Fix git fail
