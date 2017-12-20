@@ -43,7 +43,7 @@ module.exports = function(source, map) {
 
 			writeFileSync(tmpFile, css);
 			const { atime, mtime } = statSync(tmpFile);
-			utimesSync(tmpFile, atime.getTime() - 99999, mtime.getTime() - 99999);
+			utimesSync(tmpFile, new Date(atime.getTime() - 99999), new Date(mtime.getTime() - 99999));
 		}
 
 		callback(null, code, map);
