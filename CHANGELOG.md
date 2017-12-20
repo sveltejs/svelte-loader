@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.3.1
+
+* Coerce `utimes` arguments to dates ([#32](https://github.com/sveltejs/svelte-loader/pull/32))
+
 ## 2.3.0
 
 * Add `preprocess` support ([#31](https://github.com/sveltejs/svelte-loader/pull/31))
