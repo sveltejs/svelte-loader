@@ -26,7 +26,7 @@ module.exports = function(source, map) {
 	options.filename = this.resourcePath;
 	options.format = this.version === 1 ? options.format || 'cjs' : 'es';
 	options.shared =
-			options.format === 'es' && require.resolve('svelte/shared.js');
+			options.format === 'es' && 'svelte/shared.js';
 
 	if (options.emitCss) options.css = false;
 
