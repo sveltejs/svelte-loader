@@ -1,4 +1,4 @@
-const { basename, extname, join } = require('path');
+const { basename, extname, posix } = require('path');
 const { compile, preprocess } = require('svelte');
 const { getOptions } = require('loader-utils');
 const { statSync, utimesSync, writeFileSync } = require('fs');
@@ -36,7 +36,7 @@ module.exports = function(source, map) {
 		let { code, map, css, cssMap, ast } = compile(processed.toString(), options);
 
 		if (options.emitCss && css) {
-			const tmpFile = join(tmpdir(), 'svelte-' + ast.hash + '.css');
+			const tmpFile = posix.join(tmpdir(), 'svelte-' + ast.hash + '.css');
 
 			css += '\n/*# sourceMappingURL=' + cssMap.toUrl() + '*/';
 			code = code + `\nrequire('${tmpFile}');\n`;
