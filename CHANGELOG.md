@@ -1,5 +1,10 @@
 # svelte-loader changelog
 
+## 2.3.2
+
+* Use bare identifier for shared helpers ([#33](https://github.com/sveltejs/svelte-loader/pull/33))
+* Use forward-slashes for generated CSS imports ([#34](https://github.com/sveltejs/svelte-loader/pull/34))
+
 ## 2.3.1
 
 * Coerce `utimes` arguments to dates ([#32](https://github.com/sveltejs/svelte-loader/pull/32))
