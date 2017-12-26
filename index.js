@@ -4,6 +4,10 @@ const { getOptions } = require('loader-utils');
 const { statSync, utimesSync, writeFileSync } = require('fs');
 const { tmpdir } = require('os');
 
+function posixify(file) {
+	return file.replace(/[/\\]/g, '/');
+}
+
 function sanitize(input) {
 	return basename(input).
 			replace(extname(input), '').
@@ -36,7 +40,8 @@ module.exports = function(source, map) {
 		let { code, map, css, cssMap, ast } = compile(processed.toString(), options);
 
 		if (options.emitCss && css) {
-			const tmpFile = posix.join(tmpdir(), 'svelte-' + ast.hash + '.css');
+			const posixTmpdir = posixify(tmpdir());
+			const tmpFile = posix.join(posixTmpdir, 'svelte-' + ast.hash + '.css');
 
 			css += '\n/*# sourceMappingURL=' + cssMap.toUrl() + '*/';
 			code = code + `\nrequire('${tmpFile}');\n`;
