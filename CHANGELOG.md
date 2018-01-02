@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.3.3
+
+* Posixify paths to tmp CSS files ([#34](https://github.com/sveltejs/svelte-loader/pull/36))
+
 ## 2.3.2
 
 * Use bare identifier for shared helpers ([#33](https://github.com/sveltejs/svelte-loader/pull/33))
