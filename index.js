@@ -15,9 +15,9 @@ if (module.hot) {
 
 	module.hot.accept();
 
-	if(!module.hot.data){
+	if (!module.hot.data) {
 		proxyComponent = register(${id}, $2);
-	}else{
+	} else {
 		reload(${id}, proxyComponent);
 	}
 }
