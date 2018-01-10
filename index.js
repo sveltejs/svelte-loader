@@ -1,8 +1,32 @@
 const { basename, extname, posix } = require('path');
 const { compile, preprocess } = require('svelte');
-const { getOptions } = require('loader-utils');
+const { getOptions, stringifyRequest } = require('loader-utils');
 const { statSync, utimesSync, writeFileSync } = require('fs');
 const { tmpdir } = require('os');
+
+function makeHot(id, code) {
+	const replacement = `
+
+let proxyComponent = $2;
+
+if (module.hot) {
+
+	const { configure, register, reload } = require('svelte-loader/lib/hot-api');
+
+	module.hot.accept();
+
+	if(!module.hot.data){
+		proxyComponent = register(${id}, $2);
+	}else{
+		reload(${id}, proxyComponent);
+	}
+}
+
+export default proxyComponent;
+`;
+
+	return code.replace(/(export default ([^;]*));/, replacement);
+}
 
 function posixify(file) {
 	return file.replace(/[/\\]/g, '/');
@@ -49,6 +73,11 @@ module.exports = function(source, map) {
 			writeFileSync(tmpFile, css);
 			const { atime, mtime } = statSync(tmpFile);
 			utimesSync(tmpFile, new Date(atime.getTime() - 99999), new Date(mtime.getTime() - 99999));
+		}
+
+		if (options.hotReload) {
+			const id = stringifyRequest(this, `!!${this.request}`);
+			code = makeHot(id, code);
 		}
 
 		callback(null, code, map);
