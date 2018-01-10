@@ -48,6 +48,9 @@ function capitalize(str) {
 module.exports = function(source, map) {
 	this.cacheable();
 
+	const isServer = this.target === 'node';
+	const isProduction = this.minimize || process.env.NODE_ENV === 'production';
+
 	const options = Object.assign({}, this.options, getOptions(this));
 	const callback = this.async();
 
@@ -75,7 +78,7 @@ module.exports = function(source, map) {
 			utimesSync(tmpFile, new Date(atime.getTime() - 99999), new Date(mtime.getTime() - 99999));
 		}
 
-		if (options.hotReload) {
+		if (options.hotReload && !isProduction && !isServer) {
 			const id = stringifyRequest(this, `!!${this.request}`);
 			code = makeHot(id, code);
 		}
