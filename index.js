@@ -1,6 +1,6 @@
-const { basename, extname, posix } = require('path');
+const { basename, extname, posix, relative } = require('path');
 const { compile, preprocess } = require('svelte');
-const { getOptions, stringifyRequest } = require('loader-utils');
+const { getOptions } = require('loader-utils');
 const { statSync, utimesSync, writeFileSync } = require('fs');
 const { tmpdir } = require('os');
 
@@ -79,7 +79,7 @@ module.exports = function(source, map) {
 		}
 
 		if (options.hotReload && !isProduction && !isServer) {
-			const id = stringifyRequest(this, `!!${this.request}`);
+			const id = JSON.stringify(relative(process.cwd(), options.filename));
 			code = makeHot(id, code);
 		}
 
