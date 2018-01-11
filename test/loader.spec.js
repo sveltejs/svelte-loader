@@ -341,6 +341,70 @@ describe('loader', () => {
 
 			});
 		});
+
+		describe('hotReload', () => {
+			it(
+				'should configure hotReload=false (default)',
+				testLoader(
+					'test/fixtures/good.html',
+					function(err, code, map) {
+						expect(err).not.to.exist;
+
+						expect(code).not.to.contain('module.hot.accept();');
+					},
+					{}
+				)
+			);
+
+			it(
+				'should configure hotReload=true',
+				testLoader(
+					'test/fixtures/good.html',
+					function(err, code, map) {
+						expect(err).not.to.exist;
+
+						expect(code).to.contain('module.hot.accept();');
+						expect(code).not.to.contain('configure({"noPreserveState":true});');
+					},
+					{ hotReload: true }
+				)
+			);
+
+			it(
+				'should configure hotReload=true & hotOptions',
+				testLoader(
+					'test/fixtures/good.html',
+					function(err, code, map) {
+						expect(err).not.to.exist;
+
+						expect(code).to.contain('module.hot.accept();');
+						expect(code).to.contain('configure({"noPreserveState":true});');
+					},
+					{
+						hotReload: true,
+						hotOptions: {
+							noPreserveState: true
+						}
+					}
+				)
+			);
+
+			it(
+				'should ignore hotReload when generate=ssr',
+				testLoader(
+					'test/fixtures/good.html',
+					function(err, code, map) {
+						expect(err).not.to.exist;
+
+						expect(code).not.to.contain('module.hot.accept();');
+					},
+					{
+						hotReload: true,
+						generate:'ssr'
+					}
+				)
+			);
+		});
 	});
 });
 
