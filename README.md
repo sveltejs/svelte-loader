@@ -113,6 +113,84 @@ module.exports = {
 
 This should create an additional `styles.css.map` file.
 
+### Hot Reload
+
+Hot reloading is turned off by default, you can turn it on using the `hotReload` option as shown below:
+
+```javascript
+  ...
+  module: {
+    rules: [
+      ...
+      {
+        test: /\.(html|svelte)$/,
+        exclude: /node_modules/,
+        use: 'svelte-loader',
+        options: {
+          hotReload: true
+        }
+      }
+      ...
+    ]
+  }
+  ...
+```
+
+#### Hot reload rules and caveats:
+
+ - `_rerender` and `_register` are reserved method names, please don't use them in `methods:{...}`
+ - Turning `dev` mode on (`dev:true`) is **not** necessary.
+ - Modifying the HTML (template) part of your component will replace and re-render the changes in place. Current local state of the component will also be preserved (this can be turned off per component see [Stop preserving state](#stop-preserving-state)).
+ - When modifying the `<script>` part of your component, instances will be replaced and re-rendered in place too.
+  However if your component has lifecycle methods that produce global side-effects, you might need to reload the whole page.
+ - If you are using `svelte/store`, a full reload is required if you modify `store` properties
+
+
+Components will **not** be hot reloaded in the following situations:
+ 1. `process.env.NODE_ENV === 'production'`
+ 2. Webpack is minifying code
+ 3. Webpack's `target` is `node` (i.e SSR components)
+ 4. `generate` option has a value of `ssr`
+
+#### Stop preserving state
+
+Sometimes it might be necessary for some components to avoid state preservation on hot reload.
+
+This can be configured on a per-component basis by adding a property `noPreserveState = true` to the component's constructor using the `setup()` method. For example:
+```js
+export default {
+  setup(comp){
+    comp.noPreserveState = true;
+  },
+  data(){return {...}},
+  oncreate(){...}
+}
+```
+
+Or, on a global basis by adding `{noPreserveState: true}` to `hotOptions`. For example:
+```js
+{
+    test: /\.(html|svelte)$/,
+    exclude: /node_modules/,
+    use: [
+      {
+        loader: 'svelte-loader',
+        options: {
+          hotReload: true,
+          hotOptions: {
+            noPreserveState: true
+          }
+        }
+      }
+    ]
+  }
+```
+
+**Please Note:** If you are using `svelte/store`, `noPreserveState` has no effect on `store` properties. Neither locally, nor globally.
+
+
+
+
 ## License
 
 MIT
