@@ -52,11 +52,11 @@ function capitalize(str) {
 module.exports = function(source, map) {
 	this.cacheable();
 
-	const isServer = this.target === 'node';
-	const isProduction = this.minimize || process.env.NODE_ENV === 'production';
-
 	const options = Object.assign({}, this.options, getOptions(this));
 	const callback = this.async();
+
+	const isServer = this.target === 'node' || (options.generate && options.generate == 'ssr');
+	const isProduction = this.minimize || process.env.NODE_ENV === 'production';
 
 	options.filename = this.resourcePath;
 	options.format = this.version === 1 ? options.format || 'cjs' : 'es';
