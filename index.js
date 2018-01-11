@@ -4,7 +4,8 @@ const { getOptions } = require('loader-utils');
 const { statSync, utimesSync, writeFileSync } = require('fs');
 const { tmpdir } = require('os');
 
-function makeHot(id, code) {
+function makeHot(id, code, hotOptions) {
+	const options = JSON.stringify(hotOptions);
 	const replacement = `
 
 let proxyComponent = $2;
@@ -16,8 +17,11 @@ if (module.hot) {
 	module.hot.accept();
 
 	if (!module.hot.data) {
+		// initial load
+		configure(${options});
 		proxyComponent = register(${id}, $2);
 	} else {
+		// hot update
 		reload(${id}, proxyComponent);
 	}
 }
@@ -79,8 +83,9 @@ module.exports = function(source, map) {
 		}
 
 		if (options.hotReload && !isProduction && !isServer) {
+			const hotOptions = Object.assign({}, options.hotOptions);
 			const id = JSON.stringify(relative(process.cwd(), options.filename));
-			code = makeHot(id, code);
+			code = makeHot(id, code, hotOptions);
 		}
 
 		callback(null, code, map);
