@@ -16,8 +16,8 @@
   ],
   "dependencies": {
     "loader-utils": "^1.1.0",
-    "tmp": "0.0.31",
-    "svelte-dev-helper": "^1.1.2"
+    "svelte-dev-helper": "^1.1.2",
+    "tmp": "0.0.31"
   },
   "devDependencies": {
     "chai": "^3.5.0",
