@@ -59,9 +59,12 @@ module.exports = function(source, map) {
 	const isProduction = this.minimize || process.env.NODE_ENV === 'production';
 
 	options.filename = this.resourcePath;
-	options.format = this.version === 1 ? options.format || 'cjs' : 'es';
-	options.shared =
-			options.format === 'es' && 'svelte/shared.js';
+	if (!options.format) {
+		options.format = this.version === 1 ? options.format || 'cjs' : 'es';
+	}
+	if (!options.shared) {
+		options.shared = options.format === 'es' && 'svelte/shared.js';
+	}
 
 	if (options.emitCss) options.css = false;
 
