@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.4.0
+
+* Component-level hot reloading support ([#40](https://github.com/sveltejs/svelte-loader/pull/40))
+
 ## 2.3.3
 
 * Posixify paths to tmp CSS files ([#34](https://github.com/sveltejs/svelte-loader/pull/36))
