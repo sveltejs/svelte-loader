@@ -70,6 +70,8 @@ module.exports = function(source, map) {
 
 	if (!options.name) options.name = capitalize(sanitize(options.filename));
 
+	if (!options.onwarn) options.onwarn = warning => this.emitWarning(new Error(warning));
+
 	preprocess(source, options).then(processed => {
 		let { code, map, css, cssMap, ast } = compile(processed.toString(), options);
 
