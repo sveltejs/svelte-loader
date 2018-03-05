@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.5.0
+
+* Emit warnings to webpack ([#35](https://github.com/sveltejs/svelte-loader/issues/35))
+
 ## 2.4.0
 
 * Component-level hot reloading support ([#40](https://github.com/sveltejs/svelte-loader/pull/40))
