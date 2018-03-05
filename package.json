@@ -16,7 +16,7 @@
   ],
   "dependencies": {
     "loader-utils": "^1.1.0",
-    "svelte-dev-helper": "^1.1.2",
+    "svelte-dev-helper": "^1.1.4",
     "tmp": "0.0.31"
   },
   "devDependencies": {
