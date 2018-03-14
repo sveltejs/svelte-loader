@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.5.1
+
+* Wrap components with proxies when hot reloading ([#44](https://github.com/sveltejs/svelte-loader/pull/44))
+
 ## 2.5.0
 
 * Emit warnings to webpack ([#35](https://github.com/sveltejs/svelte-loader/issues/35))
