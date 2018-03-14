@@ -8,8 +8,6 @@ function makeHot(id, code, hotOptions) {
 	const options = JSON.stringify(hotOptions);
 	const replacement = `
 
-let proxyComponent = $2;
-
 if (module.hot) {
 
 	const { configure, register, reload } = require('svelte-loader/lib/hot-api');
@@ -19,14 +17,15 @@ if (module.hot) {
 	if (!module.hot.data) {
 		// initial load
 		configure(${options});
-		proxyComponent = register(${id}, $2);
+		$2 = register(${id}, $2);
 	} else {
 		// hot update
-		reload(${id}, proxyComponent);
+		$2 = reload(${id}, $2);
 	}
 }
 
-export default proxyComponent;
+
+export default $2;
 `;
 
 	return code.replace(/(export default ([^;]*));/, replacement);
