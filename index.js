@@ -48,6 +48,19 @@ function capitalize(str) {
 	return str[0].toUpperCase() + str.slice(1);
 }
 
+function normalize(compiled) {
+	// svelte.compile signature changed in 1.60 — this avoids
+	// future deprecation warnings while preserving backwards
+	// compatibility
+	const js = compiled.js || { code: compiled.code, map: compiled.map };
+
+	const css = compiled.css && typeof compiled.css === 'object'
+		? compiled.css
+		: { code: compiled.css, map: compiled.cssMap };
+
+	return { js, css, ast: compiled.ast };
+}
+
 module.exports = function(source, map) {
 	this.cacheable();
 
@@ -72,16 +85,16 @@ module.exports = function(source, map) {
 	if (!options.onwarn) options.onwarn = warning => this.emitWarning(new Error(warning));
 
 	preprocess(source, options).then(processed => {
-		let { code, map, css, cssMap, ast } = compile(processed.toString(), options);
+		let { js, css, ast } = normalize(compile(processed.toString(), options));
 
-		if (options.emitCss && css) {
+		if (options.emitCss && css.code) {
 			const posixTmpdir = posixify(tmpdir());
 			const tmpFile = posix.join(posixTmpdir, 'svelte-' + ast.hash + '.css');
 
-			css += '\n/*# sourceMappingURL=' + cssMap.toUrl() + '*/';
-			code = code + `\nrequire('${tmpFile}');\n`;
+			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';
+			js.code = js.code + `\nrequire('${tmpFile}');\n`;
 
-			writeFileSync(tmpFile, css);
+			writeFileSync(tmpFile, css.code);
 			const { atime, mtime } = statSync(tmpFile);
 			utimesSync(tmpFile, new Date(atime.getTime() - 99999), new Date(mtime.getTime() - 99999));
 		}
@@ -89,10 +102,10 @@ module.exports = function(source, map) {
 		if (options.hotReload && !isProduction && !isServer) {
 			const hotOptions = Object.assign({}, options.hotOptions);
 			const id = JSON.stringify(relative(process.cwd(), options.filename));
-			code = makeHot(id, code, hotOptions);
+			js.code = makeHot(id, js.code, hotOptions);
 		}
 
-		callback(null, code, map);
+		callback(null, js.code, js.map);
 	}, err => callback(err)).catch(err => {
 		// wrap error to provide correct
 		// context when logging to console
