@@ -56,7 +56,7 @@ function normalize(compiled) {
 
 	const css = compiled.css && typeof compiled.css === 'object'
 		? compiled.css
-		: { code: compiled.css, map: compiled.cssMap }
+		: { code: compiled.css, map: compiled.cssMap };
 
 	return { js, css, ast: compiled.ast };
 }
