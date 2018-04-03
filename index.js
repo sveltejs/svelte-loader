@@ -4,13 +4,15 @@ const { getOptions } = require('loader-utils');
 const { statSync, utimesSync, writeFileSync } = require('fs');
 const { tmpdir } = require('os');
 
+const hotApi = require.resolve('./lib/hot-api.js');
+
 function makeHot(id, code, hotOptions) {
 	const options = JSON.stringify(hotOptions);
 	const replacement = `
 
 if (module.hot) {
 
-	const { configure, register, reload } = require('svelte-loader/lib/hot-api');
+	const { configure, register, reload } = require('${hotApi}');
 
 	module.hot.accept();
 
