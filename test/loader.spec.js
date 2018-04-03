@@ -404,6 +404,19 @@ describe('loader', () => {
 					}
 				)
 			);
+
+			it(
+				'should require resolved hot-api.js',
+				testLoader(
+					'test/fixtures/good.html',
+					function(err, code, map) {
+						expect(err).not.to.exist;
+
+						expect(code).to.contain(require.resolve('../lib/hot-api.js'));
+					},
+					{ hotReload: true }
+				)
+			);
 		});
 	});
 });
