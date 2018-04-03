@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.7.0
+
+* Use resolved path for `hot-api.js`, to allowed linked components ([#49](https://github.com/sveltejs/svelte-loader/issues/49))
+
 ## 2.6.0
 
 * Prevent future post-1.60 deprecation warnings ([#48](https://github.com/sveltejs/svelte-loader/pull/48))
