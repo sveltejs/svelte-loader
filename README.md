@@ -11,6 +11,10 @@ Configure inside your `webpack.config.js`:
 
 ```javascript
   ...
+  resolve: {
+    // see below for an explanation
+    mainFields: ['svelte', 'browser', 'module', 'main']
+  },
   module: {
     rules: [
       ...
@@ -26,6 +30,10 @@ Configure inside your `webpack.config.js`:
 ```
 
 Check out the [example project](https://github.com/sveltejs/template-webpack).
+
+### resolve.mainFields
+
+Webpack's [`resolve.mainFields`](https://webpack.js.org/configuration/resolve/#resolve-mainfields) option determines which fields in package.json are used to resolve identifiers. If you're using Svelte components installed from npm, you should specify this option so that your app can use the original component source code, rather than consuming the already-compiled version (which is less efficient).
 
 ### Extracting CSS
 
