@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.8.1
+
+* Fix HMR on Windows ([#52](https://github.com/sveltejs/svelte-loader/issues/52))
+
 ## 2.8.0
 
 * Deprecate `options.markup`, `options.style` and `options.script` in favour of `options.preprocess.*` ([#41](https://github.com/sveltejs/svelte-loader/issues/41))
