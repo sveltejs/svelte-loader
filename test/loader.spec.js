@@ -294,10 +294,12 @@ describe('loader', () => {
 				});
 				const callbackSpy = spy(cb);
 				const options = {
-					style: ({ content }) => {
-						return {
-							code: content.replace(/\$size/gi, '50px'),
-						};
+					preprocess: {
+						style: ({ content }) => {
+							return {
+								code: content.replace(/\$size/gi, '50px'),
+							};
+						}
 					},
 				};
 
@@ -321,9 +323,11 @@ describe('loader', () => {
 				const cacheableSpy = spy(() => {
 				});
 				const options = {
-					style: () => {
-						throw new Error('Error while preprocessing');
-					},
+					preprocess: {
+						style: () => {
+							throw new Error('Error while preprocessing');
+						}
+					}
 				};
 
 				loader.call(
@@ -339,6 +343,32 @@ describe('loader', () => {
 						null
 				);
 
+			});
+		});
+
+
+		describe('deprecations', () => {
+			it('should warn on options.style', done => {
+				const { warn } = console;
+				const warnings = [];
+
+				console.warn = (msg) => {
+					warnings.push(msg);
+				};
+
+				testLoader('test/fixtures/style-valid.html', (err, code, map) => {
+					expect(code).to.contain('50px');
+					expect(warnings).to.deep.equal([
+						'[svelte-loader] DEPRECATION: options.style is now options.preprocess.style'
+					]);
+					console.warn = warn;
+				}, {
+					style: ({ content }) => {
+						return {
+							code: content.replace(/\$size/gi, '50px'),
+						};
+					}
+				})(done);
 			});
 		});
 
