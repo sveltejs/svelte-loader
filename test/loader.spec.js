@@ -445,7 +445,7 @@ describe('loader', () => {
 					function(err, code, map) {
 						expect(err).not.to.exist;
 
-						expect(code).to.contain(require.resolve('../lib/hot-api.js'));
+						expect(code).to.contain(require.resolve('../lib/hot-api.js').replace(/[/\\]/g, '/'));
 					},
 					{ hotReload: true }
 				)
