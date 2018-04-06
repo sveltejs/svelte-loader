@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.8.0
+
+* Deprecate `options.markup`, `options.style` and `options.script` in favour of `options.preprocess.*` ([#41](https://github.com/sveltejs/svelte-loader/issues/41))
+
 ## 2.7.0
 
 * Use resolved path for `hot-api.js`, to allowed linked components ([#49](https://github.com/sveltejs/svelte-loader/issues/49))
