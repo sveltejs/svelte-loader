@@ -12,7 +12,7 @@ function makeHot(id, code, hotOptions) {
 
 if (module.hot) {
 
-	const { configure, register, reload } = require('${hotApi}');
+	const { configure, register, reload } = require('${posixify(hotApi)}');
 
 	module.hot.accept();
 
