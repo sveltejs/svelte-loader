@@ -63,6 +63,23 @@ function normalize(compiled) {
 	return { js, css, ast: compiled.ast };
 }
 
+const warned = {};
+function deprecatePreprocessOptions(options) {
+	const preprocessOptions = {};
+
+	['markup', 'style', 'script'].forEach(kind => {
+		if (options[kind]) {
+			if (!warned[kind]) {
+				console.warn(`[svelte-loader] DEPRECATION: options.${kind} is now options.preprocess.${kind}`);
+				warned[kind] = true;
+			}
+			preprocessOptions[kind] = options[kind];
+		}
+	});
+
+	options.preprocess = options.preprocess || preprocessOptions;
+}
+
 module.exports = function(source, map) {
 	this.cacheable();
 
@@ -86,7 +103,10 @@ module.exports = function(source, map) {
 
 	if (!options.onwarn) options.onwarn = warning => this.emitWarning(new Error(warning));
 
-	preprocess(source, options).then(processed => {
+	deprecatePreprocessOptions(options);
+	options.preprocess.filename = options.filename;
+
+	preprocess(source, options.preprocess).then(processed => {
 		let { js, css, ast } = normalize(compile(processed.toString(), options));
 
 		if (options.emitCss && css.code) {
