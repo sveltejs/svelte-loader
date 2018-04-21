@@ -1,10 +1,10 @@
-const { basename, extname, posix, relative } = require('path');
+const { basename, extname, relative } = require('path');
 const { compile, preprocess } = require('svelte');
 const { getOptions } = require('loader-utils');
-const { statSync, utimesSync, writeFileSync } = require('fs');
-const { tmpdir } = require('os');
+const VirtualModulesPlugin = require('webpack-virtual-modules');
 
 const hotApi = require.resolve('./lib/hot-api.js');
+const virtualModules = new VirtualModulesPlugin();
 
 function makeHot(id, code, hotOptions) {
 	const options = JSON.stringify(hotOptions);
@@ -107,18 +107,18 @@ module.exports = function(source, map) {
 	options.preprocess.filename = options.filename;
 
 	preprocess(source, options.preprocess).then(processed => {
-		let { js, css, ast } = normalize(compile(processed.toString(), options));
+		let { js, css } = normalize(compile(processed.toString(), options));
 
 		if (options.emitCss && css.code) {
-			const posixTmpdir = posixify(tmpdir());
-			const tmpFile = posix.join(posixTmpdir, 'svelte-' + ast.hash + '.css');
-
-			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';
-			js.code = js.code + `\nrequire('${tmpFile}');\n`;
-
-			writeFileSync(tmpFile, css.code);
-			const { atime, mtime } = statSync(tmpFile);
-			utimesSync(tmpFile, new Date(atime.getTime() - 99999), new Date(mtime.getTime() - 99999));
+			const cssFilepath = options.filename.replace(
+				/\.[^/.]+$/,
+				`.${Math.random()
+				.toString()
+				.slice(2, 11)}.css`
+			);
+			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/'
+			js.code = js.code + `\nrequire('${cssFilepath}');\n`
+			virtualModules.writeModule(cssFilepath, css.code)
 		}
 
 		if (options.hotReload && !isProduction && !isServer) {
@@ -134,3 +134,6 @@ module.exports = function(source, map) {
 		callback(new Error(`${err.name}: ${err.toString()}`));
 	});
 };
+
+module.exports.plugin = virtualModules;
+module.exports.loader = __filename;

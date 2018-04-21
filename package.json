@@ -17,7 +17,7 @@
   "dependencies": {
     "loader-utils": "^1.1.0",
     "svelte-dev-helper": "^1.1.4",
-    "tmp": "0.0.31"
+    "webpack-virtual-modules": "^0.1.9"
   },
   "devDependencies": {
     "chai": "^3.5.0",
