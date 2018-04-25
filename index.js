@@ -112,9 +112,7 @@ module.exports = function(source, map) {
 		if (options.emitCss && css.code) {
 			const cssFilepath = options.filename.replace(
 				/\.[^/.]+$/,
-				`.${Math.random()
-				.toString()
-				.slice(2, 11)}.css`
+				`.svelte.css`,
 			);
 			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/'
 			js.code = js.code + `\nrequire('${cssFilepath}');\n`
