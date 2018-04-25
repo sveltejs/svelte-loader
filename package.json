@@ -16,8 +16,8 @@
   ],
   "dependencies": {
     "loader-utils": "^1.1.0",
-    "svelte-dev-helper": "^1.1.4",
-    "webpack-virtual-modules": "^0.1.9"
+    "svelte-dev-helper": "^1.1.7",
+    "webpack-virtual-modules": "^0.1.10"
   },
   "devDependencies": {
     "chai": "^3.5.0",
@@ -25,8 +25,7 @@
     "eslint-plugin-mocha": "^4.7.0",
     "mocha": "^3.2.0",
     "sinon": "^1.17.6",
-    "sinon-chai": "^2.8.0",
-    "svelte": "^1.60.0"
+    "sinon-chai": "^2.8.0"
   },
   "peerDependencies": {
     "svelte": "^1.44.0"
