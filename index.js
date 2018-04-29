@@ -112,11 +112,14 @@ module.exports = function(source, map) {
 		if (options.emitCss && css.code) {
 			const cssFilepath = options.filename.replace(
 				/\.[^/.]+$/,
-				`.svelte.css`,
+				`.svelte.css`
 			);
-			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/'
-			js.code = js.code + `\nrequire('${cssFilepath}');\n`
-			virtualModules.writeModule(cssFilepath, css.code)
+			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';
+			js.code = js.code + `\nrequire('${cssFilepath}');\n`;
+			/** If the webpack compiler is initialized, write the file to its vitual file system */
+			if (this.fs) {
+				virtualModules.writeModule(cssFilepath, css.code);
+			}
 		}
 
 		if (options.hotReload && !isProduction && !isServer) {
