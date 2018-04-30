@@ -1,7 +1,7 @@
 const { basename, extname, relative } = require('path');
 const { compile, preprocess } = require('svelte');
 const { getOptions } = require('loader-utils');
-const VirtualModulesPlugin = require('webpack-virtual-modules');
+const VirtualModulesPlugin = require('./lib/virtual');
 
 const hotApi = require.resolve('./lib/hot-api.js');
 const virtualModules = new VirtualModulesPlugin();
@@ -80,7 +80,14 @@ function deprecatePreprocessOptions(options) {
 	options.preprocess = options.preprocess || preprocessOptions;
 }
 
+const compilers = new Set();
+
 module.exports = function(source, map) {
+	if (!compilers.has(this._compiler)) {
+		virtualModules.apply(this._compiler);
+		compilers.add(this._compiler);
+	}
+
 	this.cacheable();
 
 	const options = Object.assign({}, this.options, getOptions(this));
@@ -130,6 +137,7 @@ module.exports = function(source, map) {
 
 		callback(null, js.code, js.map);
 	}, err => callback(err)).catch(err => {
+		console.log(err.stack);
 		// wrap error to provide correct
 		// context when logging to console
 		callback(new Error(`${err.name}: ${err.toString()}`));
