@@ -79,7 +79,7 @@ function deprecatePreprocessOptions(options) {
 const virtualModuleInstances = new Map();
 
 module.exports = function(source, map) {
-	if (!virtualModuleInstances.has(this._compiler)) {
+	if (this._compiler && !virtualModuleInstances.has(this._compiler)) {
 		virtualModuleInstances.set(this._compiler, new VirtualModules(this._compiler));
 	}
 
@@ -94,10 +94,10 @@ module.exports = function(source, map) {
 	const isProduction = this.minimize || process.env.NODE_ENV === 'production';
 
 	options.filename = this.resourcePath;
-	if (!options.format) options.format = 'es';
-	if (!options.shared) options.shared = options.format === 'es' && 'svelte/shared.js';
-	if (!options.name) options.name = capitalize(sanitize(options.filename));
-	if (!options.onwarn) options.onwarn = warning => this.emitWarning(new Error(warning));
+	if (!('format' in options)) options.format = 'es';
+	if (!('shared' in options)) options.shared = options.format === 'es' && 'svelte/shared.js';
+	if (!('name' in options)) options.name = capitalize(sanitize(options.filename));
+	if (!('onwarn' in options)) options.onwarn = warning => this.emitWarning(new Error(warning));
 	if (options.emitCss) options.css = false;
 
 	deprecatePreprocessOptions(options);
@@ -120,7 +120,9 @@ module.exports = function(source, map) {
 			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';
 			js.code = js.code + `\nimport '${cssFilepath}';\n`;
 
-			virtualModules.writeModule(cssFilepath, css.code);
+			if (virtualModules) {
+				virtualModules.writeModule(cssFilepath, css.code);
+			}
 		}
 
 		callback(null, js.code, js.map);
