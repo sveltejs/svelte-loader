@@ -28,7 +28,7 @@
     "svelte": "^1.60.0"
   },
   "peerDependencies": {
-    "svelte": "^1.44.0"
+    "svelte": ">1.44.0"
   },
   "repository": {
     "type": "git",
