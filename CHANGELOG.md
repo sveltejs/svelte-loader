@@ -1,5 +1,11 @@
 # svelte-loader changelog
 
+## 2.9.0
+
+* Fix peer dependency to squelch version mismatch warnings ([#57](https://github.com/sveltejs/svelte-loader/pull/57))
+* Fix CSS filenames ([#45](https://github.com/sveltejs/svelte-loader/issues/45), [#56](https://github.com/sveltejs/svelte-loader/issues/56))
+* Use virtual filesystem to preserve relative paths in CSS ([#45](https://github.com/sveltejs/svelte-loader/issues/45)
+
 ## 2.8.1
 
 * Fix HMR on Windows ([#52](https://github.com/sveltejs/svelte-loader/issues/52))
