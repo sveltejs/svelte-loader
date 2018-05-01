@@ -1,17 +1,14 @@
-const { basename, extname, posix, relative } = require('path');
+const { basename, extname, relative } = require('path');
 const { compile, preprocess } = require('svelte');
 const { getOptions } = require('loader-utils');
-const { statSync, utimesSync, writeFileSync } = require('fs');
-const { tmpdir } = require('os');
+const VirtualModules = require('./lib/virtual');
 
 const hotApi = require.resolve('./lib/hot-api.js');
 
 function makeHot(id, code, hotOptions) {
 	const options = JSON.stringify(hotOptions);
 	const replacement = `
-
 if (module.hot) {
-
 	const { configure, register, reload } = require('${posixify(hotApi)}');
 
 	module.hot.accept();
@@ -25,7 +22,6 @@ if (module.hot) {
 		$2 = reload(${id}, $2);
 	}
 }
-
 
 export default $2;
 `;
@@ -80,7 +76,15 @@ function deprecatePreprocessOptions(options) {
 	options.preprocess = options.preprocess || preprocessOptions;
 }
 
+const virtualModuleInstances = new Map();
+
 module.exports = function(source, map) {
+	if (this._compiler && !virtualModuleInstances.has(this._compiler)) {
+		virtualModuleInstances.set(this._compiler, new VirtualModules(this._compiler));
+	}
+
+	const virtualModules = virtualModuleInstances.get(this._compiler);
+
 	this.cacheable();
 
 	const options = Object.assign({}, this.options, getOptions(this));
@@ -90,41 +94,35 @@ module.exports = function(source, map) {
 	const isProduction = this.minimize || process.env.NODE_ENV === 'production';
 
 	options.filename = this.resourcePath;
-	if (!options.format) {
-		options.format = this.version === 1 ? options.format || 'cjs' : 'es';
-	}
-	if (!options.shared) {
-		options.shared = options.format === 'es' && 'svelte/shared.js';
-	}
-
+	if (!('format' in options)) options.format = 'es';
+	if (!('shared' in options)) options.shared = options.format === 'es' && 'svelte/shared.js';
+	if (!('name' in options)) options.name = capitalize(sanitize(options.filename));
+	if (!('onwarn' in options)) options.onwarn = warning => this.emitWarning(new Error(warning));
 	if (options.emitCss) options.css = false;
-
-	if (!options.name) options.name = capitalize(sanitize(options.filename));
-
-	if (!options.onwarn) options.onwarn = warning => this.emitWarning(new Error(warning));
 
 	deprecatePreprocessOptions(options);
 	options.preprocess.filename = options.filename;
 
 	preprocess(source, options.preprocess).then(processed => {
-		let { js, css, ast } = normalize(compile(processed.toString(), options));
-
-		if (options.emitCss && css.code) {
-			const posixTmpdir = posixify(tmpdir());
-			const tmpFile = posix.join(posixTmpdir, 'svelte-' + ast.hash + '.css');
-
-			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';
-			js.code = js.code + `\nrequire('${tmpFile}');\n`;
-
-			writeFileSync(tmpFile, css.code);
-			const { atime, mtime } = statSync(tmpFile);
-			utimesSync(tmpFile, new Date(atime.getTime() - 99999), new Date(mtime.getTime() - 99999));
-		}
+		let { js, css } = normalize(compile(processed.toString(), options));
 
 		if (options.hotReload && !isProduction && !isServer) {
 			const hotOptions = Object.assign({}, options.hotOptions);
 			const id = JSON.stringify(relative(process.cwd(), options.filename));
 			js.code = makeHot(id, js.code, hotOptions);
+		}
+
+		if (options.emitCss && css.code) {
+			const cssFilepath = options.filename.replace(
+				/\.[^/.]+$/,
+				`.svelte.css`
+			);
+			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';
+			js.code = js.code + `\nimport '${cssFilepath}';\n`;
+
+			if (virtualModules) {
+				virtualModules.writeModule(cssFilepath, css.code);
+			}
 		}
 
 		callback(null, js.code, js.map);

@@ -191,7 +191,7 @@ describe('loader', () => {
 						expect(code).not.to.contain('import {');
 						expect(code).not.to.contain('svelte/shared.js');
 					},
-					{},
+					{ shared: false },
 					1
 				)
 			);
@@ -260,7 +260,7 @@ describe('loader', () => {
 					function(err, code, map) {
 						expect(err).not.to.exist;
 
-						expect(code).to.match(/require\('.+\.css'\);/);
+						expect(code).to.match(/import '.+\.css';/);
 					},
 					{ emitCss: true }
 				)
