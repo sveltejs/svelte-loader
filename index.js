@@ -117,8 +117,9 @@ module.exports = function(source, map) {
 				/\.[^/.]+$/,
 				`.svelte.css`
 			);
+
 			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';
-			js.code = js.code + `\nimport '${cssFilepath}';\n`;
+			js.code = js.code + `\nimport '${posixify(cssFilepath)}';\n`;
 
 			if (virtualModules) {
 				virtualModules.writeModule(cssFilepath, css.code);
