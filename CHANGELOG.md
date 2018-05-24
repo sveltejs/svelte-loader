@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.9.1
+
+* Posixify CSS paths on Windows ([#64](https://github.com/sveltejs/svelte-loader/pull/64))
+
 ## 2.9.0
 
 * Fix peer dependency to squelch version mismatch warnings ([#57](https://github.com/sveltejs/svelte-loader/pull/57))
