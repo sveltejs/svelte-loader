@@ -69,9 +69,9 @@ describe('loader', () => {
 				expect(err).to.exist;
 
 				expect(err.message).to.eql(d`
-					ParseError: Expected }}} (1:18)
-					1: <p>Count: {{{count}}</p>
-					                     ^
+					ParseError: Unexpected block closing tag (1:23)
+					1: <p>Count: {count}</p>{/if}
+					                          ^
 					2: <button on:click='set({ count: count + 1 })'>+1</button>`);
 
 				expect(code).not.to.exist;
@@ -272,7 +272,7 @@ describe('loader', () => {
 				function callback(err, code, map) {
 					expect(err).not.to.exist;
 					expect(code).to.exist;
-					expect(code).to.contain('button{width:50px;height:50px}');
+					expect(code).to.contain('{width:50px;height:50px}');
 					expect(map).to.exist;
 				}
 
