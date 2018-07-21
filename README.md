@@ -200,7 +200,7 @@ Or, on a global basis by adding `{noPreserveState: true}` to `hotOptions`. For e
 
 If you rely on any external dependencies (files required in a preprocessor for example) you might want to watch these files for changes and re-run svelte compile.
 
-Webpack allows [loader dependencies](https://webpack.js.org/contribute/writing-a-loader/#loader-dependencies) to trigger a recompile. Svelte-loader exposes this API via `options.externalDependencies`. 
+Webpack allows [loader dependencies](https://webpack.js.org/contribute/writing-a-loader/#loader-dependencies) to trigger a recompile. svelte-loader exposes this API via `options.externalDependencies`. 
  For example: 
 
 ```js
