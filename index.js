@@ -99,6 +99,7 @@ module.exports = function(source, map) {
 	if (!('name' in options)) options.name = capitalize(sanitize(options.filename));
 	if (!('onwarn' in options)) options.onwarn = warning => this.emitWarning(new Error(warning));
 	if (options.emitCss) options.css = false;
+	if (options.externalDependencies) options.externalDependencies.forEach(dep => this.addDependency(dep));
 
 	deprecatePreprocessOptions(options);
 	options.preprocess.filename = options.filename;

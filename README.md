@@ -196,8 +196,29 @@ Or, on a global basis by adding `{noPreserveState: true}` to `hotOptions`. For e
 
 **Please Note:** If you are using `svelte/store`, `noPreserveState` has no effect on `store` properties. Neither locally, nor globally.
 
+#### External Dependencies
 
+If you rely on any external dependencies (files required in a preprocessor for example) you might want to watch these files for changes and re-run svelte compile.
 
+Webpack allows [loader dependencies](https://webpack.js.org/contribute/writing-a-loader/#loader-dependencies) to trigger a recompile. svelte-loader exposes this API via `options.externalDependencies`. 
+ For example: 
+
+```js
+...
+const variables = path.resolve('./variables.js');
+...
+{
+    test: /\.(html|svelte)$/,
+    use: [
+      {
+        loader: 'svelte-loader',
+        options: {
+          externalDependencies: [variables]
+        }
+      }
+    ]
+  }
+``` 
 
 ## License
 
