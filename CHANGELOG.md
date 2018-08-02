@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.10.1
+
+* Support for older webpack versions ([#63](https://github.com/sveltejs/svelte-loader/issues/63))
+
 ## 2.10.0
 
 * Add `options.externalDependencies` ([#66](https://github.com/sveltejs/svelte-loader/pull/66))
