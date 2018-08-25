@@ -2,6 +2,7 @@ const { basename, extname, relative } = require('path');
 const { compile, preprocess } = require('svelte');
 const { getOptions } = require('loader-utils');
 const VirtualModules = require('./lib/virtual');
+const requireRelative = require('require-relative');
 
 const hotApi = require.resolve('./lib/hot-api.js');
 
@@ -95,7 +96,7 @@ module.exports = function(source, map) {
 
 	options.filename = this.resourcePath;
 	if (!('format' in options)) options.format = 'es';
-	if (!('shared' in options)) options.shared = options.format === 'es' && 'svelte/shared.js';
+	if (!('shared' in options)) options.shared = options.format === 'es' && requireRelative.resolve('svelte/shared.js', process.cwd());
 	if (!('name' in options)) options.name = capitalize(sanitize(options.filename));
 	if (!('onwarn' in options)) options.onwarn = warning => this.emitWarning(new Error(warning));
 	if (options.emitCss) options.css = false;
