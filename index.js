@@ -35,12 +35,12 @@ function posixify(file) {
 }
 
 function sanitize(input) {
-	return basename(input).
-			replace(extname(input), '').
-			replace(/[^a-zA-Z_$0-9]+/g, '_').
-			replace(/^_/, '').
-			replace(/_$/, '').
-			replace(/^(\d)/, '_$1');
+	return basename(input)
+		.replace(extname(input), '')
+		.replace(/[^a-zA-Z_$0-9]+/g, '_')
+		.replace(/^_/, '')
+		.replace(/_$/, '')
+		.replace(/^(\d)/, '_$1');
 }
 
 function capitalize(str) {
