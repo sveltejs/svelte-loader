@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.11.0
+
+* Resolve `svelte/shared.js` before injecting import declaration ([#65](https://github.com/sveltejs/svelte-loader/issues/65))
+
 ## 2.10.1
 
 * Support for older webpack versions ([#63](https://github.com/sveltejs/svelte-loader/issues/63))
