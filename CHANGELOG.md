@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.12.0
+
+* Support Svelte 3
+
 ## 2.11.0
 
 * Resolve `svelte/shared.js` before injecting import declaration ([#65](https://github.com/sveltejs/svelte-loader/issues/65))
