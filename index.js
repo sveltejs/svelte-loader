@@ -1,10 +1,13 @@
 const { basename, extname, relative } = require('path');
-const { compile, preprocess } = require('svelte');
+const { compile, preprocess } = require('svelte/compiler');
 const { getOptions } = require('loader-utils');
 const VirtualModules = require('./lib/virtual');
 const requireRelative = require('require-relative');
 
 const hotApi = require.resolve('./lib/hot-api.js');
+
+const { version } = require('svelte/package.json');
+const major_version = +version[0];
 
 function makeHot(id, code, hotOptions) {
 	const options = JSON.stringify(hotOptions);
@@ -95,8 +98,14 @@ module.exports = function(source, map) {
 	const isProduction = this.minimize || process.env.NODE_ENV === 'production';
 
 	options.filename = this.resourcePath;
-	if (!('format' in options)) options.format = 'es';
-	if (!('shared' in options)) options.shared = options.format === 'es' && requireRelative.resolve('svelte/shared.js', process.cwd());
+	if (!('format' in options)) {
+		options.format = major_version >= 3 ? 'esm' : 'es';
+	}
+	if (!('shared' in options)) {
+		const shared = (major_version >= 3 ? 'svelte/internal.js' : 'svelte/shared.js');
+		options.shared = (options.format === 'es' || options.format === 'esm') &&
+			requireRelative.resolve(shared, process.cwd());
+	}
 	if (!('name' in options)) options.name = capitalize(sanitize(options.filename));
 	if (!('onwarn' in options)) options.onwarn = warning => this.emitWarning(new Error(warning));
 	if (options.emitCss) options.css = false;
