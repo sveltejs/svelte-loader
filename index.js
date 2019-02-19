@@ -117,6 +117,12 @@ module.exports = function(source, map) {
 	options.preprocess.filename = options.filename;
 
 	preprocess(source, options.preprocess).then(processed => {
+		if (processed.dependencies && this.addDependency) {
+			for (let dependency of processed.dependencies) {
+				this.addDependency(dependency);
+			}
+		}
+
 		let { js, css } = normalize(compile(processed.toString(), options));
 
 		if (options.hotReload && !isProduction && !isServer) {
