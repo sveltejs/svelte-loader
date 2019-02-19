@@ -76,7 +76,7 @@ function normalize(compiled) {
 		? compiled.css
 		: { code: compiled.css, map: compiled.cssMap };
 
-	return { js, css, ast: compiled.ast };
+	return { js, css, ast: compiled.ast, warnings: compiled.warnings || compiled.stats.warnings || [] };
 }
 
 const warned = {};
@@ -118,19 +118,19 @@ module.exports = function(source, map) {
 		format: options.format || (major_version >= 3 ? 'esm' : 'es')
 	};
 
+	const handleWarning = warning => this.emitWarning(new Error(warning));
+
 	if (major_version >= 3) {
 		// TODO anything?
 	} else {
 		compileOptions.shared = options.shared || 'svelte/shared.js';
 		compileOptions.name = capitalize(sanitize(options.filename));
+		compileOptions.onwarn = options.onwarn || handleWarning;
 	}
 
 	for (const option in options) {
 		if (!pluginOptions[option]) compileOptions[option] = options[option];
 	}
-
-	// if (!('onwarn' in options)) options.onwarn = warning => this.emitWarning(new Error(warning));
-
 
 	deprecatePreprocessOptions(options);
 	options.preprocess.filename = compileOptions.filename;
@@ -142,7 +142,15 @@ module.exports = function(source, map) {
 			}
 		}
 
-		let { js, css } = normalize(compile(processed.toString(), compileOptions));
+		let { js, css, warnings } = normalize(compile(processed.toString(), compileOptions));
+
+		if (major_version >= 3) {
+			warnings.forEach(
+				options.onwarn
+					? warning => options.onwarn(warning, handleWarning)
+					: handleWarning
+			);
+		}
 
 		if (options.hotReload && !isProduction && !isServer) {
 			const hotOptions = Object.assign({}, options.hotOptions);
