@@ -71,32 +71,7 @@ describe('loader', () => {
 				expect(err.message).to.eql(d`
 					ParseError: Unexpected block closing tag (1:23)
 					1: <p>Count: {count}</p>{/if}
-					                          ^
-					2: <button on:click='set({ count: count + 1 })'>+1</button>`);
-
-				expect(code).not.to.exist;
-				expect(map).not.to.exist;
-			})
-		);
-
-		it(
-			'should handle wrong export',
-			testLoader('test/fixtures/export-error.html', function(
-				err,
-				code,
-				map,
-				context
-			) {
-				expect(err).to.exist;
-
-				expect(err.message).to.eql(d`
-					ParseError: Unexpected token (5:7)
-					3: <script>
-					4:   export {
-					5:     foo: 'BAR'
-					          ^
-					6:   };
-					7: </script>`);
+					                          ^`);
 
 				expect(code).not.to.exist;
 				expect(map).not.to.exist;
@@ -113,14 +88,13 @@ describe('loader', () => {
 			) {
 				expect(err).to.exist;
 
-				expect(err.message).to.eql(d`
-					ValidationError: Computed properties can be function expressions or arrow function expressions (6:11)
-					4:   export default {
-					5:     computed: {
-					6:       foo: 'BAR'
-					              ^
-					7:     }
-					8:   };`);
+				expect(err.message.trim()).to.eql(d`
+					ValidationError: A component cannot have a default export (2:1)
+					1: <script>
+					2:   export default {};
+					     ^
+					3: </script>
+					4:`);
 
 				expect(code).not.to.exist;
 				expect(map).not.to.exist;
@@ -138,8 +112,7 @@ describe('loader', () => {
 				expect(map).to.exist;
 
 				// es2015 statements remain
-				expect(code).to.contain(`import { hello } from './utils';`);
-				expect(code).to.contain('data() {');
+				expect(code).to.contain(`import { hello } from "./utils";`);
 			})
 		);
 
@@ -149,7 +122,7 @@ describe('loader', () => {
 				expect(err).not.to.exist;
 
 				// es2015 statements remain
-				expect(code).to.contain(`import Nested from './nested';`);
+				expect(code).to.contain(`import Nested from "./nested";`);
 
 				expect(code).to.exist;
 				expect(map).to.exist;
@@ -180,33 +153,18 @@ describe('loader', () => {
 			);
 		});
 
-		describe('shared', () => {
+		describe('sveltePath', () => {
 			it(
-				'should configure shared=false (default)',
-				testLoader(
-					'test/fixtures/good.html',
-					function(err, code, map) {
-						expect(err).not.to.exist;
-
-						expect(code).not.to.contain('import {');
-						expect(code).not.to.contain('svelte/shared.js');
-					},
-					{ shared: false },
-					1
-				)
-			);
-
-			it(
-				'should configure shared=true',
+				'should configure sveltePath',
 				testLoader(
 					'test/fixtures/good.html',
 					function(err, code, map) {
 						expect(err).not.to.exist;
 
 						expect(code).to.contain('import {');
-						expect(code).to.contain('svelte/shared.js');
+						expect(code).to.contain('custom-svelte/internal');
 					},
-					{ shared: true }
+					{ sveltePath: 'custom-svelte' }
 				)
 			);
 		});
@@ -230,9 +188,7 @@ describe('loader', () => {
 					function(err, code, map) {
 						expect(err).not.to.exist;
 
-						expect(code).to.contain(
-							'.render = function(state, options = {}) {'
-						);
+						expect(code).to.contain('create_ssr_component');
 					},
 					{ generate: 'ssr' }
 				)
