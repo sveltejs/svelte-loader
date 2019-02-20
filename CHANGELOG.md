@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.13.1
+
+* v3 fixes ([#78](https://github.com/sveltejs/svelte-loader/pull/78))
+
 ## 2.13.0
 
 * Handle `dependencies` returned from `preprocess` ([#75](https://github.com/sveltejs/svelte-loader/pull/75))
