@@ -1,7 +1,6 @@
 const { basename, extname, relative } = require('path');
 const { getOptions } = require('loader-utils');
 const VirtualModules = require('./lib/virtual');
-const requireRelative = require('require-relative');
 
 const hotApi = require.resolve('./lib/hot-api.js');
 
