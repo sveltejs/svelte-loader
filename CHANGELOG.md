@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.13.2
+
+* Fix `compileOptions.filename` ([#79](https://github.com/sveltejs/svelte-loader/issues/79))
+
 ## 2.13.1
 
 * v3 fixes ([#78](https://github.com/sveltejs/svelte-loader/pull/78))

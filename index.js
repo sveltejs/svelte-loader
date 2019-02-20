@@ -123,7 +123,7 @@ module.exports = function(source, map) {
 		// TODO anything?
 	} else {
 		compileOptions.shared = options.shared || 'svelte/shared.js';
-		compileOptions.name = capitalize(sanitize(options.filename));
+		compileOptions.name = capitalize(sanitize(compileOptions.filename));
 		compileOptions.onwarn = options.onwarn || handleWarning;
 	}
 
