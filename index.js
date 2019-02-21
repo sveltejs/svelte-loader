@@ -131,6 +131,8 @@ module.exports = function(source, map) {
 		if (!pluginOptions[option]) compileOptions[option] = options[option];
 	}
 
+	if (options.emitCss) compileOptions.css = false;
+
 	deprecatePreprocessOptions(options);
 	options.preprocess.filename = compileOptions.filename;
 
