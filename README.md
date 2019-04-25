@@ -194,6 +194,22 @@ Or, on a global basis by adding `{noPreserveState: true}` to `hotOptions`. For e
   }
 ```
 
+#### Server Side Rendering ####
+
+If you want to use Server Side Rendering (SSR), you'll need to set the `generate` option to `'ssr'`.
+```js
+    {
+        test: /\.(html|svelte)$/,
+        exclude: /(node_modules)/,
+        use: {
+            loader: 'svelte-loader',
+            options: {
+                generate: 'ssr',
+            }
+        }
+    }
+```
+
 **Please Note:** If you are using `svelte/store`, `noPreserveState` has no effect on `store` properties. Neither locally, nor globally.
 
 #### External Dependencies
