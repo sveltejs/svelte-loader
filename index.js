@@ -128,7 +128,7 @@ module.exports = function(source, map) {
 	}
 
 	for (const option in options) {
-		if (!pluginOptions[option]) compileOptions[option] = options[option];
+		if (option in pluginOptions && !pluginOptions[option]) compileOptions[option] = options[option];
 	}
 
 	if (options.emitCss) compileOptions.css = false;
