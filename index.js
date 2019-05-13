@@ -105,8 +105,8 @@ module.exports = function(source, map) {
 	const virtualModules = virtualModuleInstances.get(this._compiler);
 
 	this.cacheable();
-
-	const options = Object.assign({}, this.options, getOptions(this));
+	
+	const options = Object.assign({}, getOptions(this));
 	const callback = this.async();
 
 	const isServer = this.target === 'node' || (options.generate && options.generate == 'ssr');
