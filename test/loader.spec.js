@@ -225,80 +225,48 @@ describe('loader', () => {
 
 		describe('preprocess', () => {
 			it('should preprocess successfully', done => {
-				function callback(err, code, map) {
-					expect(err).not.to.exist;
-					expect(code).to.exist;
-					expect(code).to.contain('{width:50px;height:50px}');
-					expect(map).to.exist;
-				}
-
-				function cb() {
-					try {
-						callback(...[].slice.call(arguments));
-					} catch (err) {
-						expect(callbackSpy).to.have.been.called;
-						return done(err);
-					}
-					expect(callbackSpy).to.have.been.called;
-					done();
-				}
-
-				const fileContents = readFileSync(
+				testLoader(
 					'test/fixtures/style-valid.html',
-					'utf-8'
-				);
-				const cacheableSpy = spy(() => {});
-				const callbackSpy = spy(cb);
-				const options = {
-					preprocess: {
-						style: ({ content }) => {
-							return {
-								code: content.replace(/\$size/gi, '50px')
-							};
+					(err, code, map) => {
+						expect(err).not.to.exist;
+						expect(code).to.exist;
+						expect(code).to.contain('{width:50px;height:50px}');
+						expect(map).to.exist;
+					},
+					{
+						preprocess:{
+							style: ({ content }) => {
+								return {
+									code: content.replace(/\$size/gi, '50px')
+								};
+							}
 						}
 					}
-				};
-
-				loader.call(
-					{
-						cacheable: cacheableSpy,
-						async: () => callbackSpy,
-						resourcePath: 'test/fixtures/style-valid.html',
-						options
-					},
-					fileContents,
-					null
-				);
-
-				expect(cacheableSpy).to.have.been.called;
+				)(done);
 			});
 
-			it('should not preprocess successfully', () => {
-				const fileContents = readFileSync(
-					'test/fixtures/style-valid.html',
-					'utf-8'
-				);
-				const cacheableSpy = spy(() => {});
-				const options = {
-					preprocess: {
-						style: () => {
-							throw new Error('Error while preprocessing');
-						}
-					}
+			it('should not preprocess successfully', done => {
+				const { warn } = console;
+				const warnings = [];
+
+				console.warn = msg => {
+					warnings.push(msg);
 				};
 
-				loader.call(
-					{
-						cacheable: cacheableSpy,
-						async: () => err => {
-							expect(err).to.exist;
-						},
-						resourcePath: 'test/fixtures/style-valid.html',
-						options
+				testLoader(
+					'test/fixtures/style-valid.html',
+					(err, code, map) => {
+						expect(err).to.exist;
+						console.warn = warn;
 					},
-					fileContents,
-					null
-				);
+					{
+						preprocess: {
+							style: () => {
+								throw new Error('Error while preprocessing');
+							}
+						}
+					}
+				)(done);
 			});
 		});
 
