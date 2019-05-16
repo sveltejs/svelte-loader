@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.13.4
+
+* Fix webpack 3 bug ([#89](https://github.com/sveltejs/svelte-loader/issues/89))
+
 ## 2.13.2
 
 * Fix `compileOptions.filename` ([#79](https://github.com/sveltejs/svelte-loader/issues/79))
