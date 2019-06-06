@@ -1,42 +1,41 @@
 {
-	"name": "svelte-loader",
-	"version": "2.13.4",
-	"author": "Nico Rehwaldt <git_nikku@nixis.de>",
-	"description": "A webpack loader for svelte",
-	"license": "MIT",
-	"scripts": {
-		"all": "npm run lint && npm run test",
-		"test": "mocha --harmony --full-trace --check-leaks",
-		"lint": "eslint index.js lib/*.js test/**/*.js"
-	},
-	"keywords": [
-		"svelte",
-		"sveltejs",
-		"webpack-loader"
-	],
-	"dependencies": {
-		"loader-utils": "^1.1.0",
-		"svelte-dev-helper": "^1.1.9"
-	},
-	"devDependencies": {
-		"chai": "^4.1.2",
-		"eslint": "^5.4.0",
-		"eslint-plugin-mocha": "^5.2.0",
-		"mocha": "^5.2.0",
-		"sinon": "^6.1.5",
-		"sinon-chai": "^3.2.0",
-		"svelte": "^3.0.0-beta.5"
-	},
-	"peerDependencies": {
-		"svelte": ">1.44.0"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git@github.com:sveltejs/svelte-loader.git"
-	},
-	"files": [
-		"lib",
-		"CHANGELOG.md",
-		"index.js"
-	]
+  "name": "svelte-loader",
+  "version": "2.13.4",
+  "author": "Nico Rehwaldt <git_nikku@nixis.de>",
+  "description": "A webpack loader for svelte",
+  "license": "MIT",
+  "scripts": {
+    "all": "npm run lint && npm run test",
+    "test": "mocha --harmony --full-trace --check-leaks",
+    "lint": "eslint index.js lib/*.js test/**/*.js"
+  },
+  "keywords": [
+    "svelte",
+    "sveltejs",
+    "webpack-loader"
+  ],
+  "dependencies": {
+    "loader-utils": "^1.1.0",
+    "svelte-dev-helper": "^1.1.9"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^5.4.0",
+    "eslint-plugin-mocha": "^5.2.0",
+    "mocha": "^5.2.0",
+    "sinon": "^6.1.5",
+    "sinon-chai": "^3.2.0",
+    "svelte": "^3.0.0-beta.5"
+  },
+  "peerDependencies": {
+    "svelte": ">1.44.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sveltejs/svelte-loader.git"
+  },
+  "files": [
+    "lib",
+    "index.js"
+  ]
 }
