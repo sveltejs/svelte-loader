@@ -37,9 +37,6 @@
 	"files": [
 		"lib",
 		"CHANGELOG.md",
-		"index.js",
-		"package-lock.json",
-		"package.json",
-		"README.md"
+		"index.js"
 	]
 }
