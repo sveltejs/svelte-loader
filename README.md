@@ -141,9 +141,11 @@ Hot reloading is turned off by default, you can turn it on using the `hotReload`
       {
         test: /\.(html|svelte)$/,
         exclude: /node_modules/,
-        use: 'svelte-loader',
-        options: {
-          hotReload: true
+        use: {
+          loader: 'svelte-loader',
+          options: {
+            hotReload: true
+          }
         }
       }
       ...
