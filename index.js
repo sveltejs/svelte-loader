@@ -18,6 +18,7 @@ const pluginOptions = {
 	emitCss: true,
 
 	// legacy
+	onwarn: true,
 	shared: true,
 	style: true,
 	script: true,
