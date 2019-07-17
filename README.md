@@ -12,6 +12,7 @@ Configure inside your `webpack.config.js`:
 ```javascript
   ...
   resolve: {
+    extensions: ['.mjs', '.js', '.svelte'],
     // see below for an explanation
     mainFields: ['svelte', 'browser', 'module', 'main']
   },
