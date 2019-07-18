@@ -12,8 +12,11 @@ Configure inside your `webpack.config.js`:
 ```javascript
   ...
   resolve: {
-    extensions: ['.mjs', '.js', '.svelte'],
     // see below for an explanation
+    alias: {
+      svelte: path.resolve('node_modules', 'svelte')
+    },
+    extensions: ['.mjs', '.js', '.svelte'],
     mainFields: ['svelte', 'browser', 'module', 'main']
   },
   module: {
@@ -31,6 +34,10 @@ Configure inside your `webpack.config.js`:
 ```
 
 Check out the [example project](https://github.com/sveltejs/template-webpack).
+
+### resolve.alias
+
+The [`resolve.alias`](https://webpack.js.org/configuration/resolve/#resolvealias) option is used to make sure that only one copy of the Svelte runtime is bundled in the app, even if you are `npm link`ing in dependencies with their own copy of the `svelte` package. Having multiple copies of the internal scheduler in an app, besides being inefficient, can also cause various problems.
 
 ### resolve.mainFields
 
@@ -201,8 +208,8 @@ Or, on a global basis by adding `{noPreserveState: true}` to `hotOptions`. For e
 
 If you rely on any external dependencies (files required in a preprocessor for example) you might want to watch these files for changes and re-run svelte compile.
 
-Webpack allows [loader dependencies](https://webpack.js.org/contribute/writing-a-loader/#loader-dependencies) to trigger a recompile. svelte-loader exposes this API via `options.externalDependencies`. 
- For example: 
+Webpack allows [loader dependencies](https://webpack.js.org/contribute/writing-a-loader/#loader-dependencies) to trigger a recompile. svelte-loader exposes this API via `options.externalDependencies`.
+ For example:
 
 ```js
 ...
@@ -219,7 +226,7 @@ const variables = path.resolve('./variables.js');
       }
     ]
   }
-``` 
+```
 
 ## License
 
