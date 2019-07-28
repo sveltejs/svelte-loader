@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 2.13.6
+
+* Check whether the filesystem implements `purge` before calling it ([#81](https://github.com/sveltejs/svelte-loader/pull/81))
+
 ## 2.13.5
 
 * Fix `onwarn` with Svelte 3 ([#104](https://github.com/sveltejs/svelte-loader/issues/104))
