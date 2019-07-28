@@ -106,7 +106,7 @@ module.exports = function(source, map) {
 	const virtualModules = virtualModuleInstances.get(this._compiler);
 
 	this.cacheable();
-	
+
 	const options = Object.assign({}, getOptions(this));
 	const callback = this.async();
 
