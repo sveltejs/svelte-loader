@@ -2,7 +2,7 @@
 
 ## 2.13.5
 
-* Fix `onwarn` with Svelte 4 ([#104](https://github.com/sveltejs/svelte-loader/issues/104))
+* Fix `onwarn` with Svelte 3 ([#104](https://github.com/sveltejs/svelte-loader/issues/104))
 
 ## 2.13.4
 
