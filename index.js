@@ -1,14 +1,15 @@
 const { basename, extname, relative } = require('path');
 const { getOptions } = require('loader-utils');
 const VirtualModules = require('./lib/virtual');
-
-const hotApi = require.resolve('./lib/hot-api.js');
+const posixify = require('./lib/posixify');
 
 const { version } = require('svelte/package.json');
 const major_version = +version[0];
 const { compile, preprocess } = major_version >= 3
 	? require('svelte/compiler')
 	: require('svelte');
+
+const makeHot = require('./lib/make-hot');
 
 const pluginOptions = {
 	externalDependencies: true,
@@ -24,34 +25,6 @@ const pluginOptions = {
 	script: true,
 	markup: true
 };
-
-function makeHot(id, code, hotOptions) {
-	const options = JSON.stringify(hotOptions);
-	const replacement = `
-if (module.hot) {
-	const { configure, register, reload } = require('${posixify(hotApi)}');
-
-	module.hot.accept();
-
-	if (!module.hot.data) {
-		// initial load
-		configure(${options});
-		$2 = register(${id}, $2);
-	} else {
-		// hot update
-		$2 = reload(${id}, $2);
-	}
-}
-
-export default $2;
-`;
-
-	return code.replace(/(export default ([^;]*));/, replacement);
-}
-
-function posixify(file) {
-	return file.replace(/[/\\]/g, '/');
-}
 
 function sanitize(input) {
 	return basename(input)
