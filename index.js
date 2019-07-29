@@ -9,7 +9,9 @@ const { compile, preprocess } = major_version >= 3
 	? require('svelte/compiler')
 	: require('svelte');
 
-const makeHot = require('./lib/make-hot');
+const makeHot = major_version >= 3
+	? require('./lib/svelte3/make-hot')
+	: require('./lib/make-hot');
 
 const pluginOptions = {
 	externalDependencies: true,
