@@ -4,11 +4,11 @@ const VirtualModules = require('./lib/virtual');
 
 const hotApi = require.resolve('./lib/hot-api.js');
 
-const { version } = require('svelte/package.json');
-const major_version = +version[0];
-const { compile, preprocess } = major_version >= 3
-	? require('svelte/compiler')
-	: require('svelte');
+const {
+	major_version,
+	compile,
+	preprocess,
+} = require('./lib/resolve-svelte');
 
 const pluginOptions = {
 	externalDependencies: true,
