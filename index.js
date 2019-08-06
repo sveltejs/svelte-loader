@@ -116,7 +116,8 @@ module.exports = function(source, map) {
 			}
 		}
 
-		let { js, css, warnings } = normalize(compile(processed.toString(), compileOptions));
+		const compiled = compile(processed.toString(), compileOptions);
+		let { js, css, warnings } = normalize(compiled);
 
 		if (major_version >= 3) {
 			warnings.forEach(
@@ -129,7 +130,7 @@ module.exports = function(source, map) {
 		if (options.hotReload && !isProduction && !isServer) {
 			const hotOptions = Object.assign({}, options.hotOptions);
 			const id = JSON.stringify(relative(process.cwd(), compileOptions.filename));
-			js.code = makeHot(id, js.code, hotOptions);
+			js.code = makeHot(id, js.code, hotOptions, compiled);
 		}
 
 		if (options.emitCss && css.code) {
