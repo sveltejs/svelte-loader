@@ -3,11 +3,11 @@ const { getOptions } = require('loader-utils');
 const VirtualModules = require('./lib/virtual');
 const posixify = require('./lib/posixify');
 
-const { version } = require('svelte/package.json');
-const major_version = +version[0];
-const { compile, preprocess } = major_version >= 3
-	? require('svelte/compiler')
-	: require('svelte');
+const {
+	major_version,
+	compile,
+	preprocess,
+} = require('./lib/resolve-svelte');
 
 const makeHot = major_version >= 3
 	? require('./lib/svelte3/make-hot')
