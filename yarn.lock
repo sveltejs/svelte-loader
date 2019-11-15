@@ -823,6 +823,10 @@ svelte-hmr@~0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.1.0.tgz#8cfed36e596f939cb1e78bf105543f09186bc8c7"
 
+svelte@3.12:
+  version "3.12.1"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.12.1.tgz#ddfacd43272ac3255907c682b74ee7d3d8b06b0c"
+
 table@^5.2.3:
   version "5.4.6"
   resolved "https://registry.yarnpkg.com/table/-/table-5.4.6.tgz#1292d19500ce3f86053b05f0e8e7e4a3bb21079e"
