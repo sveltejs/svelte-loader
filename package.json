@@ -1,41 +1,52 @@
 {
-  "name": "svelte-loader",
-  "version": "2.13.6",
-  "author": "Nico Rehwaldt <git_nikku@nixis.de>",
-  "description": "A webpack loader for svelte",
-  "license": "MIT",
-  "scripts": {
-    "all": "npm run lint && npm run test",
-    "test": "mocha --harmony --full-trace --check-leaks",
-    "lint": "eslint index.js lib/*.js test/**/*.js"
-  },
-  "keywords": [
-    "svelte",
-    "sveltejs",
-    "webpack-loader"
-  ],
-  "dependencies": {
-    "loader-utils": "^1.1.0",
-    "svelte-dev-helper": "^1.1.9",
-    "svelte-hmr": "0.0.9"
-  },
-  "devDependencies": {
-    "chai": "^4.1.2",
-    "eslint": "^5.4.0",
-    "eslint-plugin-mocha": "^5.2.0",
-    "mocha": "^5.2.0",
-    "sinon": "^6.1.5",
-    "sinon-chai": "^3.2.0"
-  },
-  "peerDependencies": {
-    "svelte": ">1.44.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:sveltejs/svelte-loader.git"
-  },
-  "files": [
-    "lib",
-    "index.js"
-  ]
+	"name": "svelte-loader-hot",
+	"version": "0.0.0",
+	"author": "Nico Rehwaldt <git_nikku@nixis.de>",
+	"maintainers": [
+		{
+			"name": "rixo",
+			"email": "rixo@rixo.fr"
+		}
+	],
+	"description": "Webpack loader for Svelte with HMR support",
+	"license": "MIT",
+	"keywords": [
+		"svelte",
+		"sveltejs",
+		"webpack-loader",
+		"hmr"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:rixo/svelte-loader-hot.git"
+	},
+	"homepage": "https://github.com/rixo/svelte-loader-hot",
+	"bugs": {
+		"url": "https://github.com/rixo/svelte-loader-hot/issues"
+	},
+	"dependencies": {
+		"loader-utils": "^1.1.0",
+		"svelte-dev-helper": "^1.1.9",
+		"svelte-hmr": "~0.1.0"
+	},
+	"devDependencies": {
+		"chai": "^4.1.2",
+		"eslint": "^5.4.0",
+		"eslint-plugin-mocha": "^5.2.0",
+		"mocha": "^5.2.0",
+		"sinon": "^6.1.5",
+		"sinon-chai": "^3.2.0"
+	},
+	"peerDependencies": {
+		"svelte": ">1.44.0"
+	},
+	"files": [
+		"lib",
+		"index.js"
+	],
+	"scripts": {
+		"all": "npm run lint && npm run test",
+		"test": "mocha --harmony --full-trace --check-leaks",
+		"lint": "eslint index.js lib/*.js test/**/*.js"
+	}
 }
