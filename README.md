@@ -4,15 +4,15 @@ This is a copy of official [svelte-loader](https://github.com/sveltejs/svelte-lo
 
 HMR is not officially supported by Svelte 3 yet. Progress can be tracked in [this issue](https://github.com/sveltejs/svelte/issues/3632).
 
-Meanwhile, please report your issues regarding HMR (with Webpack) in this project's [issue tracker](https://github.com/rixo/rollup-plugin-svelte-hot/issues). By the way, now is a very good time to share your ideas & suggestions about Svelte HMR, since this is all very much a work in progress. Mere feedback is welcome, too.
+Meanwhile, please report your issues regarding HMR (with Webpack) in this project's [issue tracker](https://github.com/rixo/svelte-loader-hot/issues).
 
 ## Templates
 
 To quickly bootstrap a new project, or for example purpose, you can use the following templates. They are copies of the official templates, with the bare minimum added to support HMR with this plugin.
 
-- [svelte-template-hot](https://github.com/rixo/svelte-template-webpack-hot): hot version of the official Svelte template for Webpack.
+- [svelte-template-webpack-hot](https://github.com/rixo/svelte-template-webpack-hot): hot version of the official Svelte template for Webpack.
 
-- [sapper-template-hot](https://github.com/rixo/sapper-template-hot/tree/webpack): Sapper + Webpack template with HMR.
+- [sapper-template-hot#webpack](https://github.com/rixo/sapper-template-hot/tree/webpack): Sapper + Webpack template with HMR.
 
 ## Installation
 
