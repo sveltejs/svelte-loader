@@ -6,7 +6,7 @@ HMR is not officially supported by Svelte 3 yet. Progress can be tracked in [thi
 
 Meanwhile, please report your issues regarding HMR (with Webpack) in this project's [issue tracker](https://github.com/rixo/svelte-loader-hot/issues).
 
-## :warning: Experimental :warning:
+**:warning: Experimental :warning:**
 
 This HMR implementation relies on Svelte's private & non documented API. This means that it could stop working with any new version of Svelte.
 
