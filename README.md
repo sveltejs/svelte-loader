@@ -8,7 +8,7 @@ Meanwhile, please report your issues regarding HMR (with Webpack) in this projec
 
 **:warning: Experimental :warning:**
 
-This HMR implementation relies on Svelte's private & non documented API. This means that it could stop working with any new version of Svelte.
+This HMR implementation relies on Svelte's private & non documented API. This means that it can stop working with any new version of Svelte.
 
 ## Templates
 
