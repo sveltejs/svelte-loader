@@ -10,6 +10,8 @@ Meanwhile, please report your issues regarding HMR (with Webpack) in this projec
 
 This HMR implementation relies on Svelte's private & non documented API. This means that it can stop working with any new version of Svelte.
 
+**Update 2020-02-24** We're [making progress](https://github.com/sveltejs/svelte/pull/3822) :)
+
 ## Templates
 
 To quickly bootstrap a new project, or for example purpose, you can use the following templates. They are copies of the official templates, with the bare minimum added to support HMR with this plugin.
@@ -48,12 +50,36 @@ module.exports = {
             hotReload: true, // Default: false
             // Extra HMR options
             hotOptions: {
-              // Do not preserve local state (i.e. non exported `let` variables)
-              // between HMR updates
-              noPreserveState: false, // Default: false
-              // Try to recover from runtime errors happening during reloaded
-              // component init
-              optimistic: true, // Default: false
+              // Prevent preserving local component state
+              noPreserveState: false,
+
+              // If this string appears anywhere in your component's code, then local
+              // state won't be preserved, even when noPreserveState is false
+              noPreserveStateKey: '@!hmr',
+
+              // Prevent doing a full reload on next HMR update after fatal error
+              noReload: false,
+
+              // Try to recover after runtime errors in component init
+              optimistic: false
+
+              // --- Advanced ---
+
+              // By default, components compiled with accessors or that have named
+              // exports (i.e. exports from <script context="module">) don't have HMR
+              // accept handlers registered. This means that, when those components
+              // change, the update will bubble to all their consumers (i.e. modules
+              // that import them). Without this, changes to named exports / publicly
+              // accessible props wouldn't be reflected in parent modules. These two
+              // options allow to force accept handlers for those modules.
+              //
+              // Note, in particular, that if you set the `accessors` compile option
+              // globally, you'll have to set `acceptAccessors` to true, otherwise no
+              // component will ever be updated through HMR -- instead the updates
+              // would all bubble all the way up to the root non Svelte JS file...
+              //
+              acceptAccessors: false,
+              acceptNamedExports: false,
             }
           }
         }
