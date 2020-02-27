@@ -27,7 +27,7 @@
 	"dependencies": {
 		"loader-utils": "^1.1.0",
 		"svelte-dev-helper": "^1.1.9",
-		"svelte-hmr": "^0.1.4"
+		"svelte-hmr": "^0.3.1"
 	},
 	"devDependencies": {
 		"chai": "^4.1.2",

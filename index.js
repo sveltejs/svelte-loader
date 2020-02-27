@@ -130,7 +130,7 @@ module.exports = function(source, map) {
 		if (options.hotReload && !isProduction && !isServer) {
 			const hotOptions = Object.assign({}, options.hotOptions);
 			const id = JSON.stringify(relative(process.cwd(), compileOptions.filename));
-			js.code = makeHot(id, js.code, hotOptions, compiled);
+			js.code = makeHot(id, js.code, hotOptions, compiled, source, compileOptions);
 		}
 
 		if (options.emitCss && css.code) {
