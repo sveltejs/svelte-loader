@@ -819,13 +819,13 @@ svelte-dev-helper@^1.1.9:
   version "1.1.9"
   resolved "https://registry.yarnpkg.com/svelte-dev-helper/-/svelte-dev-helper-1.1.9.tgz#7d187db5c6cdbbd64d75a32f91b8998bde3273c3"
 
-svelte-hmr@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.3.1.tgz#a4092afe0e0b993869dbaaabac5722ef9e2967db"
+svelte-hmr@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.5.0.tgz#7fbea074691a117474dfd96bb352c4fdbc418007"
 
-svelte@3.12:
-  version "3.12.1"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.12.1.tgz#ddfacd43272ac3255907c682b74ee7d3d8b06b0c"
+svelte@^3.19.1:
+  version "3.19.1"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.19.1.tgz#2455e443f8ca67b98f3b7eb58285eaeb8af0c4b9"
 
 table@^5.2.3:
   version "5.4.6"
