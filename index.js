@@ -6,6 +6,7 @@ const hotApi = require.resolve('./lib/hot-api.js');
 
 const { version } = require('svelte/package.json');
 const major_version = +version[0];
+const minor_version = +version[1];
 const { compile, preprocess } = major_version >= 3
 	? require('svelte/compiler')
 	: require('svelte');
@@ -15,8 +16,7 @@ const pluginOptions = {
 	hotReload: true,
 	hotOptions: true,
 	preprocess: true,
-	emitCss: true,
-
+	emitCss: true,	
 	// legacy
 	onwarn: true,
 	shared: true,
@@ -122,6 +122,9 @@ module.exports = function(source, map) {
 
 	if (major_version >= 3) {
 		// TODO anything?
+		if(isServer) { //do minor version check here to see ensure if svelte has 'hash' option enabled
+			compileOptions.hash = hash(this.request)
+		}
 	} else {
 		compileOptions.shared = options.shared || 'svelte/shared.js';
 		compileOptions.name = capitalize(sanitize(compileOptions.filename));
