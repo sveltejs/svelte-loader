@@ -5,8 +5,7 @@ const VirtualModules = require('./lib/virtual');
 const hotApi = require.resolve('./lib/hot-api.js');
 
 const { version } = require('svelte/package.json');
-const major_version = +version[0];
-const minor_version = +version[1];
+const [major_version, minor_version] = version.split('.')
 const { compile, preprocess } = major_version >= 3
 	? require('svelte/compiler')
 	: require('svelte');
