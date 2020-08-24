@@ -819,9 +819,10 @@ svelte-dev-helper@^1.1.9:
   version "1.1.9"
   resolved "https://registry.yarnpkg.com/svelte-dev-helper/-/svelte-dev-helper-1.1.9.tgz#7d187db5c6cdbbd64d75a32f91b8998bde3273c3"
 
-svelte-hmr@^0.6.0-0:
-  version "0.6.0-0"
-  resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.6.0-0.tgz#9fab12b17093427642a3bc593bd6f473af8fedac"
+svelte-hmr@^0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.10.3.tgz#6939a6ae483bb0180e0f3f120554d947e00d2223"
+  integrity sha512-s90yAPnfGE6rTbq9Vvq73z1XqLJ2qGw0VjorpwKfDZRIsB0/Ozu+uF5cyC1fS3dCyQcS2sZDMt4zQ/qDjDwa/Q==
 
 svelte@^3.19.1:
   version "3.19.1"
