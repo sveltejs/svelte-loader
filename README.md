@@ -61,7 +61,7 @@ module.exports = {
               noReload: false,
 
               // Try to recover after runtime errors in component init
-              optimistic: false
+              optimistic: false,
 
               // --- Advanced ---
 
