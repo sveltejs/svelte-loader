@@ -5,6 +5,13 @@
 A [webpack](https://webpack.js.org) loader for [svelte](https://svelte.technology).
 
 
+## Install
+
+```
+npm install --save svelte svelte-loader
+```
+
+
 ## Usage
 
 Configure inside your `webpack.config.js`:
