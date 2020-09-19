@@ -178,6 +178,6 @@ module.exports = function(source, map) {
 	}, err => callback(err)).catch(err => {
 		// wrap error to provide correct
 		// context when logging to console
-		callback(new Error(`${err.name}: ${err.toString()}`));
+		callback(new Error(`${err.name || "Error"}: ${err.toString()}`));
 	});
 };
