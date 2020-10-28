@@ -33,7 +33,14 @@ Configure inside your `webpack.config.js`:
         test: /\.(html|svelte)$/,
         exclude: /node_modules/,
         use: 'svelte-loader'
-      }
+      },
+      // Only include this when using Webpack 5+
+      {
+        test: /node_modules\/svelte\/.*\.mjs$/,
+        resolve: {
+          fullySpecified: false // load Svelte correctly
+        }
+      },
       ...
     ]
   }
