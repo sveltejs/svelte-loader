@@ -61,9 +61,11 @@ Webpack's [`resolve.mainFields`](https://webpack.js.org/configuration/resolve/#r
 
 If your Svelte components contain `<style>` tags, by default the compiler will add JavaScript that injects those styles into the page when the component is rendered. That's not ideal, because it adds weight to your JavaScript, prevents styles from being fetched in parallel with your code, and can even cause CSP violations.
 
-A better option is to extract the CSS into a separate file. Using the `emitCss` option as shown below would cause a virtual CSS file to be emitted for each Svelte component. The resulting file is then imported by the component, thus following the standard Webpack compilation flow. Add [ExtractTextPlugin](https://github.com/webpack-contrib/extract-text-webpack-plugin) to the mix to output the css to a separate file.
+A better option is to extract the CSS into a separate file. Using the `emitCss` option as shown below would cause a virtual CSS file to be emitted for each Svelte component. The resulting file is then imported by the component, thus following the standard Webpack compilation flow. Add [MiniCssExtractPlugin](https://github.com/webpack-contrib/mini-css-extract-plugin) to the mix to output the css to a separate file.
 
 ```javascript
+  const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+  const dev = mode == 'development';
   ...
   module: {
     rules: [
@@ -80,21 +82,32 @@ A better option is to extract the CSS into a separate file. Using the `emitCss` 
       },
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader',
-        }),
+        use: [
+          dev ? 'style-loader' : MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              url: false, //necessary if you use url('/path/to/some/asset.png|jpg|gif')
+            }
+          }
+        ]
       },
       ...
     ]
   },
   ...
   plugins: [
-    new ExtractTextPlugin('styles.css'),
+    new MiniCssExtractPlugin('styles.css'),
     ...
   ]
   ...
 ```
+
+Note that the configuration shown above switches off `MiniCssExtractPlugin` in development mode in favour of using CSS javascript injection. This is recommended by `MiniCssExtractPlugin` because it does not support hot reloading. `dev` is some boolean flag indicating that the build is development. 
+
+Additionally, if you're using multiple entrypoints, you may wish to change `new MiniCssExtractPlugin('styles.css')` for `new MiniCssExtractPlugin('[name].css')` to generate one CSS file per entrypoint. 
+
+Warning, in production, if you have set `sideEffects: false` in your `package.json`, `MiniCssExtractPlugin` has a tendency to drop CSS, regardless of if it's included in your svelte components.
 
 Alternatively, if you're handling styles in some other way and just want to prevent the CSS being added to your JavaScript bundle, use `css: false`.
 
