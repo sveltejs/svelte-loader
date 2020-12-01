@@ -133,7 +133,11 @@ module.exports = function(source, map) {
 	}
 
 	if (options.emitCss) compileOptions.css = false;
-
+	
+	if (typeof options.preprocess === 'function') {
+		options.preprocess = options.preprocess(this, virtualModules.writeModule.bind(virtualModules));
+	}
+	
 	deprecatePreprocessOptions(options);
 	options.preprocess.filename = compileOptions.filename;
 
