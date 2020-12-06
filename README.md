@@ -237,6 +237,24 @@ const variables = path.resolve('./variables.js');
   }
 ```
 
+### SSR
+
+To build a Svelte component for SSR, pass a `generate` property with a value of "ssr"
+
+```js
+{
+    test: /\.(html|svelte)$/,
+    use: [
+      {
+        loader: 'svelte-loader',
+        options: {
+          generate: "ssr"
+        }
+      }
+    ]
+  }
+```
+
 ## License
 
 MIT
