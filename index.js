@@ -118,6 +118,10 @@ module.exports = function(source, map) {
 		format: options.format || (major_version >= 3 ? 'esm' : 'es')
 	};
 
+	if (options.generate) {
+		compileOptions.generate = options.generate;
+	}
+
 	const handleWarning = warning => this.emitWarning(new Error(warning));
 
 	if (major_version >= 3) {
