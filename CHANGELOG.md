@@ -1,5 +1,24 @@
 # svelte-loader changelog
 
+## 3.0.0
+
+* **Breaking change**: if `emitCss` is enabled, you have to add a `SveltePlugin` to your `webpack.config.js` like so: ([#146](https://github.com/sveltejs/svelte-loader/pull/146))
+  ```js
+  const SveltePlugin = require('svelte-loader').plugin; // at top of config
+  ...
+  module.exports = {
+    ...
+    plugins: [
+      ...
+      new SveltePlugin(),
+      ...
+    ]
+    ...
+  };
+  ```
+* Webpack 5 is now supported
+* Fix intermittent crashes when using `cache-loader` in front of `svelte-loader` ([#125](https://github.com/sveltejs/svelte-loader/pull/125))
+
 ## 2.13.6
 
 * Check whether the filesystem implements `purge` before calling it ([#81](https://github.com/sveltejs/svelte-loader/pull/81))
