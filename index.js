@@ -1,6 +1,6 @@
 const { basename, extname, relative } = require('path');
 const { getOptions } = require('loader-utils');
-const VirtualModules = require('./lib/virtual');
+const VirtualModules = require('webpack-virtual-modules');
 
 const hotApi = require.resolve('./lib/hot-api.js');
 
@@ -96,13 +96,9 @@ function deprecatePreprocessOptions(options) {
 	options.preprocess = options.preprocess || preprocessOptions;
 }
 
-const virtualModuleInstances = new Map();
+let virtualModuleInstances = new WeakMap();
 
-module.exports = function(source, map) {
-	if (this._compiler && !virtualModuleInstances.has(this._compiler)) {
-		virtualModuleInstances.set(this._compiler, new VirtualModules(this._compiler));
-	}
-
+function loader(source, map) {
 	const virtualModules = virtualModuleInstances.get(this._compiler);
 
 	this.cacheable();
@@ -169,9 +165,26 @@ module.exports = function(source, map) {
 			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';
 			js.code = js.code + `\nimport '${posixify(cssFilepath)}';\n`;
 
-			if (virtualModules) {
-				virtualModules.writeModule(cssFilepath, css.code);
+			if (!virtualModules) {
+				throw new Error(
+					`
+
+					To be able to use emitCss: true, add
+
+						const SveltePlugin = require('svelte-loader').plugin;
+
+					to the top of your webpack.config.js and
+					SveltePlugin to the plugins array like this
+
+						plugins: [
+							...
+							new SveltePlugin()
+						]
+					`.split('\n').map(s => s.slice(5)).join('\n')
+				);
 			}
+
+			virtualModules.writeModule(cssFilepath, css.code);
 		}
 
 		callback(null, js.code, js.map);
@@ -180,4 +193,15 @@ module.exports = function(source, map) {
 		// context when logging to console
 		callback(new Error(`${err.name}: ${err.toString()}`));
 	});
-};
+}
+
+class SveltePlugin extends VirtualModules {
+	apply(compiler) {
+		virtualModuleInstances.set(compiler, this);
+		super.apply(compiler);
+	}
+}
+
+loader.plugin = SveltePlugin;
+
+module.exports = loader;

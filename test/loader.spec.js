@@ -208,19 +208,6 @@ describe('loader', () => {
 					{}
 				)
 			);
-
-			it(
-				'should configure emitCss=true',
-				testLoader(
-					'test/fixtures/css.html',
-					function(err, code, map) {
-						expect(err).not.to.exist;
-
-						expect(code).to.match(/import '.+\.css';/);
-					},
-					{ emitCss: true }
-				)
-			);
 		});
 
 		describe('preprocess', () => {

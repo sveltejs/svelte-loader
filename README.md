@@ -33,6 +33,13 @@ Configure inside your `webpack.config.js`:
         test: /\.(html|svelte)$/,
         exclude: /node_modules/,
         use: 'svelte-loader'
+      },
+      {
+        // required to prevent errors from Svelte on Webpack 5+
+        test: /node_modules\/svelte\/.*\.mjs$/,
+        resolve: {
+          fullySpecified: false
+        }
       }
       ...
     ]
@@ -54,9 +61,13 @@ Webpack's [`resolve.mainFields`](https://webpack.js.org/configuration/resolve/#r
 
 If your Svelte components contain `<style>` tags, by default the compiler will add JavaScript that injects those styles into the page when the component is rendered. That's not ideal, because it adds weight to your JavaScript, prevents styles from being fetched in parallel with your code, and can even cause CSP violations.
 
-A better option is to extract the CSS into a separate file. Using the `emitCss` option as shown below would cause a virtual CSS file to be emitted for each Svelte component. The resulting file is then imported by the component, thus following the standard Webpack compilation flow. Add [ExtractTextPlugin](https://github.com/webpack-contrib/extract-text-webpack-plugin) to the mix to output the css to a separate file.
+A better option is to extract the CSS into a separate file. Using the `emitCss` option as shown below would cause a virtual CSS file to be emitted for each Svelte component. The resulting file is then imported by the component, thus following the standard Webpack compilation flow. Add [MiniCssExtractPlugin](https://webpack.js.org/plugins/mini-css-extract-plugin/) to the mix to output the css to a separate file.
+
+Make sure to add SveltePlugin like shown below, which allows emitting virtual CSS files. It is a wrapper around webpack-virtual-modules, connected to the svelte-loader.
 
 ```javascript
+  const SveltePlugin = require('svelte-loader').plugin;
+  const MiniCssExtractPlugin = require('mini-css-extract-plugin');
   ...
   module: {
     rules: [
@@ -73,17 +84,20 @@ A better option is to extract the CSS into a separate file. Using the `emitCss` 
       },
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader',
-        }),
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader'
+        ]
       },
       ...
     ]
   },
   ...
   plugins: [
-    new ExtractTextPlugin('styles.css'),
+    new MiniCssExtractPlugin({
+      filename: '[name].css'
+    }),
+    new SveltePlugin(),
     ...
   ]
   ...
@@ -115,19 +129,26 @@ module.exports = {
             },
           },
         },
+
         {
           test: /\.css$/,
-          use: ExtractTextPlugin.extract({
-            fallback: 'style-loader',
-            use: [{ loader: 'css-loader', options: { sourceMap: true } }],
-          }),
+          use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader',
+              options: { sourceMap: true }
+            }
+          ]
         },
         ...
       ]
     },
     ...
     plugins: [
-      new ExtractTextPlugin('styles.css'),
+      new MiniCssExtractPlugin({
+        filename: '[name].css'
+      }),
+      new SveltePlugin(),
       ...
     ]
     ...
