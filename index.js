@@ -180,6 +180,8 @@ function loader(source, map) {
 							...
 							new SveltePlugin()
 						]
+
+					If you are running Webpack in watch mode, restart the server to apply these changes.
 					`.split('\n').map(s => s.slice(5)).join('\n')
 				);
 			}
