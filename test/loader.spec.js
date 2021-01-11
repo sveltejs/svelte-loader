@@ -88,7 +88,7 @@ describe('loader', () => {
 			) {
 				expect(err).to.exist;
 
-				expect(err.message.trim()).to.eql(d`
+				expect(err.message.trim().replace(/\r/g, "")).to.eql(d`
 					ValidationError: A component cannot have a default export (2:1)
 					1: <script>
 					2:   export default {};
