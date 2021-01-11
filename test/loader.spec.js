@@ -9,7 +9,7 @@ chai.use(sinonChai);
 const { expect } = chai;
 
 function d([str]) {
-	return str.replace(/^\t+/gm, '').replace(/\r/g, "").trim();
+	return str.replace(/^\t+/gm, '').replace(/\r/g, '').trim();
 }
 
 describe('loader', () => {
