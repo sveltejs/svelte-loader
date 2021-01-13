@@ -7,7 +7,7 @@
   "scripts": {
     "all": "npm run lint && npm run test",
     "test": "mocha --harmony --full-trace --check-leaks",
-    "lint": "eslint index.js lib/*.js test/**/*.js"
+    "lint": "eslint index.js test/**/*.js"
   },
   "keywords": [
     "svelte",
@@ -15,8 +15,7 @@
     "webpack-loader"
   ],
   "dependencies": {
-    "loader-utils": "^1.1.0",
-    "svelte-dev-helper": "^1.1.9"
+    "loader-utils": "^1.1.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
@@ -35,7 +34,6 @@
     "url": "git@github.com:sveltejs/svelte-loader.git"
   },
   "files": [
-    "lib",
     "index.js"
   ]
 }
