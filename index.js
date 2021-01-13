@@ -1,6 +1,5 @@
 const { basename, extname, relative } = require('path');
 const { getOptions } = require('loader-utils');
-const VirtualModules = require('./lib/virtual');
 
 const hotApi = require.resolve('./lib/hot-api.js');
 
@@ -96,19 +95,21 @@ function deprecatePreprocessOptions(options) {
 	options.preprocess = options.preprocess || preprocessOptions;
 }
 
-const virtualModuleInstances = new Map();
+const virtualModules = new Map();
+let index = 0;
 
 module.exports = function(source, map) {
-	if (this._compiler && !virtualModuleInstances.has(this._compiler)) {
-		virtualModuleInstances.set(this._compiler, new VirtualModules(this._compiler));
-	}
-
-	const virtualModules = virtualModuleInstances.get(this._compiler);
-
 	this.cacheable();
-	
+
 	const options = Object.assign({}, getOptions(this));
 	const callback = this.async();
+
+	if (options.cssPath) {
+		const css = virtualModules.get(options.cssPath);
+		virtualModules.delete(options.cssPath);
+		callback(null, css);
+		return;
+	}
 
 	const isServer = this.target === 'node' || (options.generate && options.generate == 'ssr');
 	const isProduction = this.minimize || process.env.NODE_ENV === 'production';
@@ -161,17 +162,11 @@ module.exports = function(source, map) {
 		}
 
 		if (options.emitCss && css.code) {
-			const cssFilepath = compileOptions.filename.replace(
-				/\.[^/.]+$/,
-				`.svelte.css`
-			);
-
+			const resource = posixify(compileOptions.filename);
+			const cssPath = `${resource}.${index++}.css`;
 			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';
-			js.code = js.code + `\nimport '${posixify(cssFilepath)}';\n`;
-
-			if (virtualModules) {
-				virtualModules.writeModule(cssFilepath, css.code);
-			}
+			js.code += `\nimport '${cssPath}!=!svelte-loader?cssPath=${cssPath}!${resource}'\n;`;
+			virtualModules.set(cssPath, css.code);
 		}
 
 		callback(null, js.code, js.map);
