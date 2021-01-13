@@ -1,13 +1,9 @@
-const { basename, extname, relative } = require('path');
+const { relative } = require('path');
 const { getOptions } = require('loader-utils');
 
 const hotApi = require.resolve('./lib/hot-api.js');
 
-const { version } = require('svelte/package.json');
-const major_version = +version[0];
-const { compile, preprocess } = major_version >= 3
-	? require('svelte/compiler')
-	: require('svelte');
+const { compile, preprocess } = require('svelte/compiler');
 
 const pluginOptions = {
 	externalDependencies: true,
@@ -50,19 +46,6 @@ export default $2;
 
 function posixify(file) {
 	return file.replace(/[/\\]/g, '/');
-}
-
-function sanitize(input) {
-	return basename(input)
-		.replace(extname(input), '')
-		.replace(/[^a-zA-Z_$0-9]+/g, '_')
-		.replace(/^_/, '')
-		.replace(/_$/, '')
-		.replace(/^(\d)/, '_$1');
-}
-
-function capitalize(str) {
-	return str[0].toUpperCase() + str.slice(1);
 }
 
 function normalize(compiled) {
@@ -116,18 +99,10 @@ module.exports = function(source, map) {
 
 	const compileOptions = {
 		filename: this.resourcePath,
-		format: options.format || (major_version >= 3 ? 'esm' : 'es')
+		format: options.format || 'esm'
 	};
 
 	const handleWarning = warning => this.emitWarning(new Error(warning));
-
-	if (major_version >= 3) {
-		// TODO anything?
-	} else {
-		compileOptions.shared = options.shared || 'svelte/shared.js';
-		compileOptions.name = capitalize(sanitize(compileOptions.filename));
-		compileOptions.onwarn = options.onwarn || handleWarning;
-	}
 
 	for (const option in options) {
 		if (!pluginOptions[option]) compileOptions[option] = options[option];
@@ -147,13 +122,11 @@ module.exports = function(source, map) {
 
 		let { js, css, warnings } = normalize(compile(processed.toString(), compileOptions));
 
-		if (major_version >= 3) {
-			warnings.forEach(
-				options.onwarn
-					? warning => options.onwarn(warning, handleWarning)
-					: handleWarning
-			);
-		}
+		warnings.forEach(
+			options.onwarn
+				? warning => options.onwarn(warning, handleWarning)
+				: handleWarning
+		);
 
 		if (options.hotReload && !isProduction && !isServer) {
 			const hotOptions = Object.assign({}, options.hotOptions);
