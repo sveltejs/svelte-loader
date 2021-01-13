@@ -1,5 +1,11 @@
 # svelte-loader changelog
 
+## 3.0.0 (unreleased)
+
+* Breaking: dropped Svelte 2 support
+* Webpack 5 support
+* Node 14 support
+
 ## 2.13.6
 
 * Check whether the filesystem implements `purge` before calling it ([#81](https://github.com/sveltejs/svelte-loader/pull/81))
