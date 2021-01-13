@@ -2,9 +2,10 @@
 
 ## 3.0.0 (unreleased)
 
-* Breaking: dropped Svelte 2 support
-* Webpack 5 support
-* Node 14 support
+* Breaking: dropped Svelte 2 support ([#150](https://github.com/sveltejs/svelte-loader/pull/150))
+* Webpack 5 support ([#151](https://github.com/sveltejs/svelte-loader/pull/151))
+* Node 14 support and fix intermittent crashes when using `cache-loader` in front of `svelte-loader` ([#125](https://github.com/sveltejs/svelte-loader/pull/125))
+* Fix handling of paths containing `$$` ([#149](https://github.com/sveltejs/svelte-loader/pull/149))
 
 ## 2.13.6
 
