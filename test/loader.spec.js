@@ -216,7 +216,7 @@ describe('loader', () => {
 					function(err, code, map) {
 						expect(err).not.to.exist;
 
-						expect(code).to.match(/import '.+\.css';/);
+						expect(code).to.match(/!=!svelte-loader\?cssPath=/);
 					},
 					{ emitCss: true }
 				)
