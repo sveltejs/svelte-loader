@@ -41,7 +41,9 @@ if (module.hot) {
 export default $2;
 `;
 
-	return code.replace(/(export default ([^;]*));/, () => replacement);
+	return code.replace(/(export default ([^;]*));/, (match, $1, $2) => {
+		return replacement.replace(/\$2/g, () => $2);
+	});
 }
 
 function posixify(file) {
