@@ -369,7 +369,7 @@ describe('loader', () => {
 					function(err, code, map) {
 						expect(err).not.to.exist;
 
-						expect(code).to.contain(`lib/hot-api.js`);
+						expect(code).to.contain('lib/hot-api.js');
 					},
 					{ hotReload: true }
 				)
