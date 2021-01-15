@@ -1,11 +1,9 @@
 const { relative } = require('path');
 const { getOptions } = require('loader-utils');
-const posixify = require('./lib/posixify');
-const {
-	compile,
-	preprocess,
-	makeHot,
-} = require('./lib/resolve-svelte');
+
+const makeHot = require('./lib/make-hot.js');
+
+const { compile, preprocess } = require('svelte/compiler');
 
 const pluginOptions = {
 	externalDependencies: true,
@@ -21,6 +19,10 @@ const pluginOptions = {
 	script: true,
 	markup: true
 };
+
+function posixify(file) {
+	return file.replace(/[/\\]/g, '/');
+}
 
 function normalize(compiled) {
 	// svelte.compile signature changed in 1.60 — this avoids
