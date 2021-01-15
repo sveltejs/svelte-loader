@@ -362,15 +362,14 @@ describe('loader', () => {
 				)
 			);
 
-			it.skip(
+			it(
 				'should require resolved hot-api.js',
 				testLoader(
 					'test/fixtures/good.html',
 					function(err, code, map) {
 						expect(err).not.to.exist;
 
-						console.log(code) ; process.exit();
-						expect(code).to.contain(require.resolve('../lib/hot-api.js').replace(/[/\\]/g, '/'));
+						expect(code).to.contain(`lib/hot-api.js`);
 					},
 					{ hotReload: true }
 				)
