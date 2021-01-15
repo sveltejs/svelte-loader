@@ -1,9 +1,11 @@
 const { relative } = require('path');
 const { getOptions } = require('loader-utils');
-
-const hotApi = require.resolve('./lib/hot-api.js');
-
-const { compile, preprocess } = require('svelte/compiler');
+const posixify = require('./lib/posixify');
+const {
+	compile,
+	preprocess,
+	makeHot,
+} = require('./lib/resolve-svelte');
 
 const pluginOptions = {
 	externalDependencies: true,
@@ -19,34 +21,6 @@ const pluginOptions = {
 	script: true,
 	markup: true
 };
-
-function makeHot(id, code, hotOptions) {
-	const options = JSON.stringify(hotOptions);
-	const replacement = `
-if (module.hot) {
-	const { configure, register, reload } = require('${posixify(hotApi)}');
-
-	module.hot.accept();
-
-	if (!module.hot.data) {
-		// initial load
-		configure(${options});
-		$2 = register(${id}, $2);
-	} else {
-		// hot update
-		$2 = reload(${id}, $2);
-	}
-}
-
-export default $2;
-`;
-
-	return code.replace(/(export default ([^;]*));/, () => replacement);
-}
-
-function posixify(file) {
-	return file.replace(/[/\\]/g, '/');
-}
 
 function normalize(compiled) {
 	// svelte.compile signature changed in 1.60 — this avoids
@@ -120,7 +94,8 @@ module.exports = function(source, map) {
 			}
 		}
 
-		let { js, css, warnings } = normalize(compile(processed.toString(), compileOptions));
+		const compiled = compile(processed.toString(), compileOptions);
+		let { js, css, warnings } = normalize(compiled);
 
 		warnings.forEach(
 			options.onwarn
@@ -131,7 +106,7 @@ module.exports = function(source, map) {
 		if (options.hotReload && !isProduction && !isServer) {
 			const hotOptions = Object.assign({}, options.hotOptions);
 			const id = JSON.stringify(relative(process.cwd(), compileOptions.filename));
-			js.code = makeHot(id, js.code, hotOptions);
+			js.code = makeHot(id, js.code, hotOptions, compiled, source, compileOptions);
 		}
 
 		if (options.emitCss && css.code) {
