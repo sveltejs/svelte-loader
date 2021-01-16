@@ -5,14 +5,13 @@ const { compile, preprocess } = require('svelte/compiler');
 
 const pluginOptions = {
 	externalDependencies: true,
-	hotReload: true,
+	hotReload: false,
 	hotOptions: true,
 	preprocess: true,
 	emitCss: true,
 
 	// legacy
 	onwarn: true,
-	shared: true,
 	style: true,
 	script: true,
 	markup: true
