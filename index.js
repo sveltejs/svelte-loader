@@ -5,7 +5,7 @@ const { compile, preprocess } = require('svelte/compiler');
 
 const pluginOptions = {
 	externalDependencies: true,
-	hotReload: false,
+	hotReload: true,
 	hotOptions: true,
 	preprocess: true,
 	emitCss: true,
