@@ -167,8 +167,9 @@ module.exports = {
             dev: true,
 
             // NOTE emitCss: true is currently not supported with HMR
+            // Enable it for production to output separate css file
             emitCss: false,
-            // Enable HMR
+            // Enable HMR only for dev mode
             hotReload: true, // Default: false
             // Extra HMR options
             hotOptions: {
