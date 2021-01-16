@@ -7,19 +7,6 @@ function posixify(file) {
 	return file.replace(/[/\\]/g, '/');
 }
 
-function normalize(compiled) {
-	// svelte.compile signature changed in 1.60 — this avoids
-	// future deprecation warnings while preserving backwards
-	// compatibility
-	const js = compiled.js || { code: compiled.code, map: compiled.map };
-
-	const css = compiled.css && typeof compiled.css === 'object'
-		? compiled.css
-		: { code: compiled.css, map: compiled.cssMap };
-
-	return { js, css, ast: compiled.ast, warnings: compiled.warnings || compiled.stats.warnings || [] };
-}
-
 const virtualModules = new Map();
 let index = 0;
 
@@ -58,7 +45,7 @@ module.exports = function(source, map) {
 		}
 
 		const compiled = compile(processed.toString(), compileOptions);
-		let { js, css, warnings } = normalize(compiled);
+		let { js, css, warnings } = compiled;
 
 		warnings.forEach(
 			options.onwarn
