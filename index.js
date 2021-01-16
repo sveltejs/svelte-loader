@@ -7,43 +7,13 @@ function posixify(file) {
 	return file.replace(/[/\\]/g, '/');
 }
 
-function normalize(compiled) {
-	// svelte.compile signature changed in 1.60 — this avoids
-	// future deprecation warnings while preserving backwards
-	// compatibility
-	const js = compiled.js || { code: compiled.code, map: compiled.map };
-
-	const css = compiled.css && typeof compiled.css === 'object'
-		? compiled.css
-		: { code: compiled.css, map: compiled.cssMap };
-
-	return { js, css, ast: compiled.ast, warnings: compiled.warnings || compiled.stats.warnings || [] };
-}
-
-const warned = {};
-function deprecatePreprocessOptions(options) {
-	const preprocessOptions = {};
-
-	['markup', 'style', 'script'].forEach(kind => {
-		if (options[kind]) {
-			if (!warned[kind]) {
-				console.warn(`[svelte-loader] DEPRECATION: options.${kind} is now options.preprocess.${kind}`);
-				warned[kind] = true;
-			}
-			preprocessOptions[kind] = options[kind];
-		}
-	});
-
-	options.preprocess = options.preprocess || preprocessOptions;
-}
-
 const virtualModules = new Map();
 let index = 0;
 
 module.exports = function(source, map) {
 	this.cacheable();
 
-	const options = Object.assign({}, getOptions(this));
+	const options = { ...getOptions(this) };
 	const callback = this.async();
 
 	if (options.cssPath) {
@@ -65,7 +35,7 @@ module.exports = function(source, map) {
 
 	const handleWarning = warning => this.emitWarning(new Error(warning));
 
-	deprecatePreprocessOptions(options);
+	options.preprocess = options.preprocess || {};
 	options.preprocess.filename = compileOptions.filename;
 
 	preprocess(source, options.preprocess).then(processed => {
@@ -76,7 +46,7 @@ module.exports = function(source, map) {
 		}
 
 		const compiled = compile(processed.toString(), compileOptions);
-		let { js, css, warnings } = normalize(compiled);
+		let { js, css, warnings } = compiled;
 
 		warnings.forEach(
 			options.onwarn
@@ -85,7 +55,7 @@ module.exports = function(source, map) {
 		);
 
 		if (options.hotReload && !isProduction && !isServer) {
-			const hotOptions = Object.assign({}, options.hotOptions);
+			const hotOptions = { ...options.hotOptions };
 			const id = JSON.stringify(relative(process.cwd(), compileOptions.filename));
 			js.code = makeHot(id, js.code, hotOptions, compiled, source, compileOptions);
 		}

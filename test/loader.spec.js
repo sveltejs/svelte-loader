@@ -270,35 +270,6 @@ describe('loader', () => {
 			});
 		});
 
-		describe('deprecations', () => {
-			it('should warn on options.style', done => {
-				const { warn } = console;
-				const warnings = [];
-
-				console.warn = msg => {
-					warnings.push(msg);
-				};
-
-				testLoader(
-					'test/fixtures/style-valid.html',
-					(err, code, map) => {
-						expect(code).to.contain('50px');
-						expect(warnings).to.deep.equal([
-							'[svelte-loader] DEPRECATION: options.style is now options.preprocess.style'
-						]);
-						console.warn = warn;
-					},
-					{
-						style: ({ content }) => {
-							return {
-								code: content.replace(/\$size/gi, '50px')
-							};
-						}
-					}
-				)(done);
-			});
-		});
-
 		describe('hotReload', () => {
 			it(
 				'should configure hotReload=false (default)',
