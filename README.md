@@ -103,9 +103,9 @@ A better option is to extract the CSS into a separate file. Using the `emitCss` 
   ...
 ```
 
-Note that the configuration shown above switches off `MiniCssExtractPlugin` in development mode in favour of using CSS javascript injection. This is recommended by `MiniCssExtractPlugin` because it does not support hot reloading. `dev` is some boolean flag indicating that the build is development. 
+Note that the configuration shown above switches off `MiniCssExtractPlugin` in development mode in favour of using CSS javascript injection. This is recommended by `MiniCssExtractPlugin` because it does not support hot reloading. `dev` is some boolean flag indicating that the build is development.
 
-Additionally, if you're using multiple entrypoints, you may wish to change `new MiniCssExtractPlugin('styles.css')` for `new MiniCssExtractPlugin('[name].css')` to generate one CSS file per entrypoint. 
+Additionally, if you're using multiple entrypoints, you may wish to change `new MiniCssExtractPlugin('styles.css')` for `new MiniCssExtractPlugin('[name].css')` to generate one CSS file per entrypoint.
 
 Warning, in production, if you have set `sideEffects: false` in your `package.json`, `MiniCssExtractPlugin` has a tendency to drop CSS, regardless of if it's included in your svelte components.
 
