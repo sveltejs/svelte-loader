@@ -20,23 +20,6 @@ function normalize(compiled) {
 	return { js, css, ast: compiled.ast, warnings: compiled.warnings || compiled.stats.warnings || [] };
 }
 
-const warned = {};
-function deprecatePreprocessOptions(options) {
-	const preprocessOptions = {};
-
-	['markup', 'style', 'script'].forEach(kind => {
-		if (options[kind]) {
-			if (!warned[kind]) {
-				console.warn(`[svelte-loader] DEPRECATION: options.${kind} is now options.preprocess.${kind}`);
-				warned[kind] = true;
-			}
-			preprocessOptions[kind] = options[kind];
-		}
-	});
-
-	options.preprocess = options.preprocess || preprocessOptions;
-}
-
 const virtualModules = new Map();
 let index = 0;
 
@@ -65,8 +48,7 @@ module.exports = function(source, map) {
 
 	const handleWarning = warning => this.emitWarning(new Error(warning));
 
-	deprecatePreprocessOptions(options);
-	options.preprocess.filename = compileOptions.filename;
+	options.preprocess = { filename: compileOptions.filename };
 
 	preprocess(source, options.preprocess).then(processed => {
 		if (processed.dependencies && this.addDependency) {
