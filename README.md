@@ -112,7 +112,20 @@ Additionally, if you're using multiple entrypoints, you may wish to change `new 
 
 Warning, in production, if you have set `sideEffects: false` in your `package.json`, `MiniCssExtractPlugin` has a tendency to drop CSS, regardless of if it's included in your svelte components.
 
-Alternatively, if you're handling styles in some other way and just want to prevent the CSS being added to your JavaScript bundle, use `css: false`.
+Alternatively, if you're handling styles in some other way and just want to prevent the CSS being added to your JavaScript bundle, use
+
+```javascript
+...
+use: {
+  loader: 'svelte-loader',
+  options: {
+    compilerOptions: {
+      css: false
+    }
+  },
+},
+...
+```
 
 ### Source maps
 
@@ -129,28 +142,23 @@ module.exports = {
       rules: [
         ...
         {
-          test: /\.(html|svelte)$/,
-          exclude: /node_modules/,
-          use: {
-            loader: 'svelte-loader',
-            options: {
-              emitCss: true,
-            },
-          },
-        },
-        {
           test: /\.css$/,
-          use: ExtractTextPlugin.extract({
-            fallback: 'style-loader',
-            use: [{ loader: 'css-loader', options: { sourceMap: true } }],
-          }),
+          use: [
+            prod ? MiniCssExtractPlugin.loader :'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true
+              }
+            }
+          ]
         },
         ...
       ]
     },
     ...
     plugins: [
-      new ExtractTextPlugin('styles.css'),
+      new MiniCssExtractPlugin('styles.css'),
       ...
     ]
     ...
@@ -245,30 +253,6 @@ module.exports = {
     ...
   ]
 }
-```
-
-#### External Dependencies
-
-If you rely on any external dependencies (files required in a preprocessor for example) you might want to watch these files for changes and re-run svelte compile.
-
-Webpack allows [loader dependencies](https://webpack.js.org/contribute/writing-a-loader/#loader-dependencies) to trigger a recompile. svelte-loader exposes this API via `options.externalDependencies`.
- For example:
-
-```js
-...
-const variables = path.resolve('./variables.js');
-...
-{
-    test: /\.(html|svelte)$/,
-    use: [
-      {
-        loader: 'svelte-loader',
-        options: {
-          externalDependencies: [variables]
-        }
-      }
-    ]
-  }
 ```
 
 ## License
