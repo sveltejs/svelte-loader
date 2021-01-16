@@ -2,12 +2,13 @@
 
 ## 3.0.0 (unreleased)
 
+* Breaking: compiler options must now be specified under `compilerOptions` ([#159](https://github.com/sveltejs/svelte-loader/pull/159))
+* Breaking: removed support for deprecated `style`, `script`, and `markup` options, which are now located under the `preprocess` configuration ([#158](https://github.com/sveltejs/svelte-loader/pull/158))
 * Breaking: dropped Svelte 2 support ([#150](https://github.com/sveltejs/svelte-loader/pull/150))
 * Breaking: dropped Node 8 support ([#157](https://github.com/sveltejs/svelte-loader/pull/157))
-* Breaking: compiler options must now be specified under `compilerOptions` ([#159](https://github.com/sveltejs/svelte-loader/pull/159))
 * Add Webpack 5 support ([#151](https://github.com/sveltejs/svelte-loader/pull/151))
 * Replace broken Svelte 2 HMR with the implementation from `rixo/svelte-loader-hot` ([#156](https://github.com/sveltejs/svelte-loader/pull/156))
-* Add Node 14 support and fix intermittent crashes when using `cache-loader` in front of `svelte-loader` ([#125](https://github.com/sveltejs/svelte-loader/pull/125))
+* Add Node 14 support and remove virtual modules implementation (fixes [#125](https://github.com/sveltejs/svelte-loader/pull/125), [#131](https://github.com/sveltejs/svelte-loader/pull/131))
 
 ## 2.13.6
 
