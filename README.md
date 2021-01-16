@@ -110,7 +110,7 @@ Note that the configuration shown above switches off `MiniCssExtractPlugin` in d
 
 Additionally, if you're using multiple entrypoints, you may wish to change `new MiniCssExtractPlugin('styles.css')` for `new MiniCssExtractPlugin('[name].css')` to generate one CSS file per entrypoint.
 
-Warning, in production, if you have set `sideEffects: false` in your `package.json`, `MiniCssExtractPlugin` has a tendency to drop CSS, regardless of if it's included in your svelte components.
+Warning: in production, if you have set `sideEffects: false` in your `package.json`, `MiniCssExtractPlugin` has a tendency to drop CSS, regardless of whether it's included in your svelte components.
 
 Alternatively, if you're handling styles in some other way and just want to prevent the CSS being added to your JavaScript bundle, use
 
