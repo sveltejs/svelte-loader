@@ -161,10 +161,12 @@ module.exports = {
         use: {
           loader: 'svelte-loader',
           options: {
-            // NOTE Svelte's dev mode MUST be enabled for HMR to work
-            // -- in a real config, you'd probably set it to false for prod build,
-            //    based on a env variable or so
-            dev: true,
+            compilerOptions: {
+              // NOTE Svelte's dev mode MUST be enabled for HMR to work
+              // -- in a real config, you'd probably set it to false for prod build,
+              //    based on a env variable or so
+              dev: true,
+            },
 
             // NOTE emitCss: true is currently not supported with HMR
             // Enable it for production to output separate css file
