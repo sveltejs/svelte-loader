@@ -3,19 +3,6 @@ const { getOptions } = require('loader-utils');
 const { makeHot } = require('./lib/make-hot.js');
 const { compile, preprocess } = require('svelte/compiler');
 
-const pluginOptions = {
-	hotReload: true,
-	hotOptions: true,
-	preprocess: true,
-	emitCss: true,
-
-	// legacy
-	onwarn: true,
-	style: true,
-	script: true,
-	markup: true
-};
-
 function posixify(file) {
 	return file.replace(/[/\\]/g, '/');
 }
@@ -66,21 +53,17 @@ module.exports = function(source, map) {
 		return;
 	}
 
-	const isServer = this.target === 'node' || (options.generate && options.generate == 'ssr');
+	const isServer = this.target === 'node' || (options.compilerOptions && options.compilerOptions.generate == 'ssr');
 	const isProduction = this.minimize || process.env.NODE_ENV === 'production';
 
 	const compileOptions = {
 		filename: this.resourcePath,
-		format: options.format || 'esm'
+		css: !options.emitCss,
+		...options.compilerOptions,
+		format: (options.compilerOptions && options.compilerOptions.format) || 'esm'
 	};
 
 	const handleWarning = warning => this.emitWarning(new Error(warning));
-
-	for (const option in options) {
-		if (!pluginOptions[option]) compileOptions[option] = options[option];
-	}
-
-	if (options.emitCss) compileOptions.css = false;
 
 	deprecatePreprocessOptions(options);
 	options.preprocess.filename = compileOptions.filename;

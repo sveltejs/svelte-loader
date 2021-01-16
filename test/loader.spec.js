@@ -148,7 +148,7 @@ describe('loader', () => {
 						expect(err).not.to.exist;
 						expect(code).not.to.contain('function add_css()');
 					},
-					{ css: false }
+					{ compilerOptions: { css: false } }
 				)
 			);
 		});
@@ -164,7 +164,7 @@ describe('loader', () => {
 						expect(code).to.contain('import {');
 						expect(code).to.contain('custom-svelte/internal');
 					},
-					{ sveltePath: 'custom-svelte' }
+					{ compilerOptions: { sveltePath: 'custom-svelte' } }
 				)
 			);
 		});
@@ -190,7 +190,7 @@ describe('loader', () => {
 
 						expect(code).to.contain('create_ssr_component');
 					},
-					{ generate: 'ssr' }
+					{ compilerOptions: { generate: 'ssr' } }
 				)
 			);
 		});
@@ -357,7 +357,7 @@ describe('loader', () => {
 					},
 					{
 						hotReload: true,
-						generate: 'ssr'
+						compilerOptions: { generate: 'ssr' }
 					}
 				)
 			);
