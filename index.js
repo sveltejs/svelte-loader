@@ -4,7 +4,6 @@ const { makeHot } = require('./lib/make-hot.js');
 const { compile, preprocess } = require('svelte/compiler');
 
 const pluginOptions = {
-	externalDependencies: true,
 	hotReload: true,
 	hotOptions: true,
 	preprocess: true,
