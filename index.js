@@ -13,7 +13,7 @@ let index = 0;
 module.exports = function(source, map) {
 	this.cacheable();
 
-	const options = Object.assign({}, getOptions(this));
+	const options = { ...getOptions(this) };
 	const callback = this.async();
 
 	if (options.cssPath) {
@@ -55,7 +55,7 @@ module.exports = function(source, map) {
 		);
 
 		if (options.hotReload && !isProduction && !isServer) {
-			const hotOptions = Object.assign({}, options.hotOptions);
+			const hotOptions = { ...options.hotOptions };
 			const id = JSON.stringify(relative(process.cwd(), compileOptions.filename));
 			js.code = makeHot(id, js.code, hotOptions, compiled, source, compileOptions);
 		}
