@@ -1,8 +1,6 @@
 const { relative } = require('path');
 const { getOptions } = require('loader-utils');
-
-const makeHot = require('./lib/make-hot.js');
-
+const { makeHot } = require('./lib/make-hot.js');
 const { compile, preprocess } = require('svelte/compiler');
 
 const pluginOptions = {
