@@ -17,34 +17,34 @@ npm install --save svelte svelte-loader
 Configure inside your `webpack.config.js`:
 
 ```javascript
-...
-resolve: {
-  // see below for an explanation
-  alias: {
-    svelte: path.resolve('node_modules', 'svelte')
-  },
-  extensions: ['.mjs', '.js', '.svelte'],
-  mainFields: ['svelte', 'browser', 'module', 'main']
-},
-module: {
-  rules: [
-    ...
-    {
-      test: /\.(html|svelte)$/,
-      exclude: /node_modules/,
-      use: 'svelte-loader'
+  ...
+  resolve: {
+    // see below for an explanation
+    alias: {
+      svelte: path.resolve('node_modules', 'svelte')
     },
-    {
-      // required to prevent errors from Svelte on Webpack 5+, omit on Webpack 4
-      test: /node_modules\/svelte\/.*\.mjs$/,
-      resolve: {
-        fullySpecified: false
+    extensions: ['.mjs', '.js', '.svelte'],
+    mainFields: ['svelte', 'browser', 'module', 'main']
+  },
+  module: {
+    rules: [
+      ...
+      {
+        test: /\.(html|svelte)$/,
+        exclude: /node_modules/,
+        use: 'svelte-loader'
+      },
+      {
+        // required to prevent errors from Svelte on Webpack 5+, omit on Webpack 4
+        test: /node_modules\/svelte\/.*\.mjs$/,
+        resolve: {
+          fullySpecified: false
+        }
       }
-    }
-    ...
-  ]
-}
-...
+      ...
+    ]
+  }
+  ...
 ```
 
 Check out the [example project](https://github.com/sveltejs/template-webpack).
@@ -64,44 +64,44 @@ If your Svelte components contain `<style>` tags, by default the compiler will a
 A better option is to extract the CSS into a separate file. Using the `emitCss` option as shown below would cause a virtual CSS file to be emitted for each Svelte component. The resulting file is then imported by the component, thus following the standard Webpack compilation flow. Add [MiniCssExtractPlugin](https://github.com/webpack-contrib/mini-css-extract-plugin) to the mix to output the css to a separate file.
 
 ```javascript
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const mode = process.env.NODE_ENV || 'development';
-const prod = mode === 'production';
-...
-module: {
-  rules: [
-    ...
-    {
-      test: /\.(html|svelte)$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'svelte-loader',
-        options: {
-          emitCss: true,
+  const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+  const mode = process.env.NODE_ENV || 'development';
+  const prod = mode === 'production';
+  ...
+  module: {
+    rules: [
+      ...
+      {
+        test: /\.(html|svelte)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'svelte-loader',
+          options: {
+            emitCss: true,
+          },
         },
       },
-    },
-    {
-      test: /\.css$/,
-      use: [
-        prod ? MiniCssExtractPlugin.loader :'style-loader',
-        {
-          loader: 'css-loader',
-          options: {
-            url: false, //necessary if you use url('/path/to/some/asset.png|jpg|gif')
+      {
+        test: /\.css$/,
+        use: [
+          prod ? MiniCssExtractPlugin.loader :'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              url: false, //necessary if you use url('/path/to/some/asset.png|jpg|gif')
+            }
           }
-        }
-      ]
-    },
+        ]
+      },
+      ...
+    ]
+  },
+  ...
+  plugins: [
+    new MiniCssExtractPlugin('styles.css'),
     ...
   ]
-},
-...
-plugins: [
-  new MiniCssExtractPlugin('styles.css'),
   ...
-]
-...
 ```
 
 Note that the configuration shown above switches off `MiniCssExtractPlugin` in development mode in favour of using CSS javascript injection. This is recommended by `MiniCssExtractPlugin` because it does not support hot reloading.
@@ -135,33 +135,33 @@ To enable CSS source maps, you'll need to use `emitCss` and pass the `sourceMap`
 
 ```javascript
 module.exports = {
-  ...
-  devtool: "source-map", // any "source-map"-like devtool is possible
-  ...
-  module: {
-    rules: [
-      ...
-      {
-        test: /\.css$/,
-        use: [
-          prod ? MiniCssExtractPlugin.loader :'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true
+    ...
+    devtool: "source-map", // any "source-map"-like devtool is possible
+    ...
+    module: {
+      rules: [
+        ...
+        {
+          test: /\.css$/,
+          use: [
+            prod ? MiniCssExtractPlugin.loader :'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true
+              }
             }
-          }
-        ]
-      },
+          ]
+        },
+        ...
+      ]
+    },
+    ...
+    plugins: [
+      new MiniCssExtractPlugin('styles.css'),
       ...
     ]
-  },
-  ...
-  plugins: [
-    new MiniCssExtractPlugin('styles.css'),
     ...
-  ]
-  ...
 };
 ```
 
