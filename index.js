@@ -35,7 +35,8 @@ module.exports = function(source, map) {
 
 	const handleWarning = warning => this.emitWarning(new Error(warning));
 
-	options.preprocess = { filename: compileOptions.filename };
+	options.preprocess = options.preprocess || {};
+	options.preprocess.filename = compileOptions.filename;
 
 	preprocess(source, options.preprocess).then(processed => {
 		if (processed.dependencies && this.addDependency) {
