@@ -307,7 +307,7 @@ describe('loader', () => {
 					function(err, code, map) {
 						expect(err).not.to.exist;
 
-						expect(code).not.to.contain('module.hot.accept();');
+						expect(code).not.to.contain('module && module.hot');
 					},
 					{}
 				)
@@ -320,8 +320,8 @@ describe('loader', () => {
 					function(err, code, map) {
 						expect(err).not.to.exist;
 
-						expect(code).to.contain('module.hot.accept();');
-						expect(code).not.to.contain('configure({"noPreserveState":true});');
+						expect(code).to.contain('module && module.hot');
+						expect(code).not.to.contain('"noPreserveState":true');
 					},
 					{ hotReload: true }
 				)
@@ -334,8 +334,8 @@ describe('loader', () => {
 					function(err, code, map) {
 						expect(err).not.to.exist;
 
-						expect(code).to.contain('module.hot.accept();');
-						expect(code).to.contain('configure({"noPreserveState":true});');
+						expect(code).to.contain('module && module.hot');
+						expect(code).to.contain('"noPreserveState":true');
 					},
 					{
 						hotReload: true,
@@ -353,7 +353,7 @@ describe('loader', () => {
 					function(err, code, map) {
 						expect(err).not.to.exist;
 
-						expect(code).not.to.contain('module.hot.accept();');
+						expect(code).not.to.contain('module && module.hot');
 					},
 					{
 						hotReload: true,
@@ -369,7 +369,7 @@ describe('loader', () => {
 					function(err, code, map) {
 						expect(err).not.to.exist;
 
-						expect(code).to.contain(require.resolve('../lib/hot-api.js').replace(/[/\\]/g, '/'));
+						expect(code).to.contain('lib/hot-api.js');
 					},
 					{ hotReload: true }
 				)
