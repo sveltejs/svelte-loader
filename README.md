@@ -64,9 +64,9 @@ If your Svelte components contain `<style>` tags, by default the compiler will a
 A better option is to extract the CSS into a separate file. Using the `emitCss` option as shown below would cause a virtual CSS file to be emitted for each Svelte component. The resulting file is then imported by the component, thus following the standard Webpack compilation flow. Add [MiniCssExtractPlugin](https://github.com/webpack-contrib/mini-css-extract-plugin) to the mix to output the css to a separate file.
 
 ```javascript
-  const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-  const mode = process.env.NODE_ENV || 'development';
-  const prod = mode === 'production';
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const mode = process.env.NODE_ENV || 'development';
+const prod = mode === 'production';
   ...
   module: {
     rules: [
@@ -191,6 +191,11 @@ This loader supports component-level HMR via the community supported [svelte-hmr
 Configure inside your `webpack.config.js`:
 
 ```javascript
+// It is recommended to adjust svelte options dynamically, by using
+// environment variables
+const mode = process.env.NODE_ENV || 'development';
+const prod = mode === 'production';
+
 module.exports = {
   ...
   module: {
@@ -204,20 +209,19 @@ module.exports = {
           options: {
             compilerOptions: {
               // NOTE Svelte's dev mode MUST be enabled for HMR to work
-              // -- in a real config, you'd probably set it to false for prod build,
-              //    based on a env variable or so
-              dev: true,
+              dev: !prod, // Default: false
             },
 
             // NOTE emitCss: true is currently not supported with HMR
             // Enable it for production to output separate css file
-            emitCss: false,
+            emitCss: prod, // Default: false
             // Enable HMR only for dev mode
-            hotReload: true, // Default: false
-            // Extra HMR options
+            hotReload: !prod, // Default: false
+            // Extra HMR options, the defaults are completely fine
+            // You can safely omit hotOptions altogether
             hotOptions: {
               // Prevent preserving local component state
-              noPreserveState: false,
+              preserveLocalState: false,
 
               // If this string appears anywhere in your component's code, then local
               // state won't be preserved, even when noPreserveState is false
