@@ -177,7 +177,7 @@ use: {
   options: {
     compilerOptions: {
       // additional compiler options here
-      generate: "ssr", // for example, SSR can be enabled here
+      generate: 'ssr', // for example, SSR can be enabled here
     }
   },
 },
