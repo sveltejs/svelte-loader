@@ -16,9 +16,12 @@ module.exports = function(source, map) {
 	const options = { ...getOptions(this) };
 	const callback = this.async();
 
-	if (options.cssPath) {
-		const css = virtualModules.get(options.cssPath);
-		virtualModules.delete(options.cssPath);
+	if (options.cssPath || options.cssData) {
+		const css = options.cssData
+			? Buffer.from(options.cssData, 'base64').toString('utf-8')
+			: virtualModules.get(options.cssPath);
+		if (options.cssPath)
+			virtualModules.delete(options.cssPath);
 		callback(null, css);
 		return;
 	}
@@ -66,10 +69,16 @@ module.exports = function(source, map) {
 
 		if (options.emitCss && css.code) {
 			const resource = posixify(compileOptions.filename);
-			const cssPath = `${resource}.${index++}.css`;
+			const cssPath = options.inlineCss
+				? `${resource}.css`
+				: `${resource}.${index++}.css`;
+			const cssQuery = options.inlineCss
+				? `cssData=${Buffer.from(css.code).toString('base64')}`
+				: `cssPath=${cssPath}`;
 			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';
-			js.code += `\nimport '${cssPath}!=!svelte-loader?cssPath=${cssPath}!${resource}'\n;`;
-			virtualModules.set(cssPath, css.code);
+			js.code += `\nimport '${cssPath}!=!svelte-loader?${cssQuery}!${resource}'\n;`;
+			if (!options.inlineCss)
+				virtualModules.set(cssPath, css.code);
 		}
 
 		callback(null, js.code, js.map);

@@ -349,6 +349,29 @@ If you are using autoprefixer for `.css`, then it is better to exclude emitted c
 
 This ensures that global css is being processed with `postcss` through webpack rules, and svelte component's css is being processed with `postcss` through `svelte-preprocess`.
 
+## Using svelte-loader in combination with thread-loader
+
+There is a way to make `svelte-loader` support `thread-loader`.
+
+Enable `inlineCss: true` in options as shown below. It will make `svelte-loader` output component css in base64 as a query string to webpack, instead of saving it to a Map, and passing key to that map.
+
+This will make console output unpleasant to look at, but `thread-loader` will have access to the css data it needs to function properly.
+
+```javascript
+      ...
+      {
+        test: /\.(html|svelte)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'svelte-loader',
+          options: {
+            inlineCss: true,
+          },
+        },
+      },
+      ...
+```
+
 ## License
 
 MIT
