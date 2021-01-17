@@ -351,26 +351,13 @@ This ensures that global css is being processed with `postcss` through webpack r
 
 ## Using svelte-loader in combination with thread-loader
 
-There is a way to make `svelte-loader` support `thread-loader`.
+By default `svelte-loader` uses a Map to store css, and passes keys to that Map through custom loader string in query parameter.
 
-Enable `inlineCss: true` in options as shown below. It will make `svelte-loader` output component css in base64 as a query string to webpack, instead of saving it to a Map, and passing key to that map.
+This won't work for multiple `thread-loader` processess. `css-loader` won't find component's css in a Map that is located in other process.
 
-This will make console output unpleasant to look at, but `thread-loader` will have access to the css data it needs to function properly.
+If you set up `thread-loader` on top of `svelte-loader` however, it will pass whole base64'd css in a query, without using Map.
 
-```javascript
-      ...
-      {
-        test: /\.(html|svelte)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'svelte-loader',
-          options: {
-            inlineCss: true,
-          },
-        },
-      },
-      ...
-```
+It will clutter the console output, but you will gain compilation speed, especially when using `tailwindcss` with `@apply` through `svelte-preprocess`.
 
 ## License
 
