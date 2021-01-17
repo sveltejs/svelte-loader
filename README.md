@@ -217,7 +217,7 @@ module.exports = {
             // Extra HMR options
             hotOptions: {
               // Prevent preserving local component state
-              noPreserveState: false,
+              preserveLocalState: false,
 
               // If this string appears anywhere in your component's code, then local
               // state won't be preserved, even when noPreserveState is false
