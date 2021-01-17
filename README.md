@@ -167,6 +167,23 @@ module.exports = {
 
 This should create an additional `styles.css.map` file.
 
+### Svelte Compiler options
+
+You can specify additional arbitrary compilation options with the `compilerOptions` config key, which are passed directly to the underlying Svelte compiler:
+```js
+...
+use: {
+  loader: 'svelte-loader',
+  options: {
+    compilerOptions: {
+      // additional compiler options here
+      generate: 'ssr', // for example, SSR can be enabled here
+    }
+  },
+},
+...
+```
+
 ### Hot Reload
 
 This loader supports component-level HMR via the community supported [svelte-hmr](https://github.com/rixo/svelte-hmr) package. This package serves as a testbed and early access for Svelte HMR, while we figure out how to best include HMR support in the compiler itself (which is tricky to do without unfairly favoring any particular dev tooling). Feedback, suggestion, or help to move HMR forward is welcomed at [svelte-hmr](https://github.com/rixo/svelte-hmr/issues) (for now).
