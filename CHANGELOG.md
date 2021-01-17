@@ -11,6 +11,8 @@
 * Replace broken Svelte 2 HMR with the implementation from `rixo/svelte-loader-hot` ([#156](https://github.com/sveltejs/svelte-loader/pull/156))
 * Add Node 14 support and remove virtual modules implementation (fixes [#125](https://github.com/sveltejs/svelte-loader/pull/125), [#131](https://github.com/sveltejs/svelte-loader/pull/131))
 
+Thanks to @non25, @Smittyvb, @rixo, and the numerous others who contributed to this major release!
+
 ## 2.13.6
 
 * Check whether the filesystem implements `purge` before calling it ([#81](https://github.com/sveltejs/svelte-loader/pull/81))
