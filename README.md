@@ -214,7 +214,8 @@ module.exports = {
             emitCss: false,
             // Enable HMR only for dev mode
             hotReload: true, // Default: false
-            // Extra HMR options
+            // Extra HMR options, the defaults are completely fine
+            // You can safely omit hotOptions altogether
             hotOptions: {
               // Prevent preserving local component state
               preserveLocalState: false,
