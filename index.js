@@ -69,15 +69,16 @@ module.exports = function(source, map) {
 
 		if (options.emitCss && css.code) {
 			const resource = posixify(compileOptions.filename);
-			const cssPath = options.inlineCss
+			const threadLoaderUsed = this.emitFile === undefined;
+			const cssPath = threadLoaderUsed
 				? `${resource}.css`
 				: `${resource}.${index++}.css`;
-			const cssQuery = options.inlineCss
+			const cssQuery = threadLoaderUsed
 				? `cssData=${Buffer.from(css.code).toString('base64')}`
 				: `cssPath=${cssPath}`;
 			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';
 			js.code += `\nimport '${cssPath}!=!svelte-loader?${cssQuery}!${resource}'\n;`;
-			if (!options.inlineCss)
+			if (!threadLoaderUsed)
 				virtualModules.set(cssPath, css.code);
 		}
 
