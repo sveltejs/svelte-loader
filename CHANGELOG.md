@@ -7,24 +7,7 @@
 * Breaking: dropped Svelte 2 support ([#150](https://github.com/sveltejs/svelte-loader/pull/150))
 * Breaking: dropped Node 8 support ([#157](https://github.com/sveltejs/svelte-loader/pull/157))
 * Add Webpack 5 support ([#151](https://github.com/sveltejs/svelte-loader/pull/151))
-    * Webpack 5 requires an additional rule in `webpack.config.js` to load the Svelte runtime correctly:
-        ```javascript
-        ...
-        module: {
-          rules: [
-            ...
-            {
-              // required to prevent errors from Svelte on Webpack 5+
-              test: /node_modules\/svelte\/.*\.mjs$/,
-              resolve: {
-                fullySpecified: false
-              }
-            }
-            ...
-          ]
-        }
-        ...
-        ```
+    * Webpack 5 requires [an additional rule](https://github.com/sveltejs/svelte-loader#usage) in `webpack.config.js` to load the Svelte runtime correctly
 * Replace broken Svelte 2 HMR with the implementation from `rixo/svelte-loader-hot` ([#156](https://github.com/sveltejs/svelte-loader/pull/156))
 * Add Node 14 support and remove virtual modules implementation (fixes [#125](https://github.com/sveltejs/svelte-loader/pull/125), [#131](https://github.com/sveltejs/svelte-loader/pull/131))
 
