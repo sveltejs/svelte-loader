@@ -167,7 +167,7 @@ module.exports = {
 
 This should create an additional `styles.css.map` file.
 
-## compilerOptions
+### compilerOptions
 
 You can specify additional arbitrary compilation options with the `compilerOptions` config key, which are passed directly to the underlying Svelte compiler:
 ```js
