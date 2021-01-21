@@ -1,6 +1,6 @@
 # svelte-loader changelog
 
-## 3.0.0 (unreleased)
+## 3.0.0
 
 * Breaking: compiler options must now be specified under `compilerOptions` ([#159](https://github.com/sveltejs/svelte-loader/pull/159))
 * Breaking: removed support for deprecated `style`, `script`, and `markup` options, which are now located under the `preprocess` configuration ([#158](https://github.com/sveltejs/svelte-loader/pull/158))
