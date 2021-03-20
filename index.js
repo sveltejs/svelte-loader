@@ -45,6 +45,8 @@ module.exports = function(source, map) {
 			}
 		}
 
+		if (processed.map) compileOptions.sourcemap = processed.map;
+
 		const compiled = compile(processed.toString(), compileOptions);
 		let { js, css, warnings } = compiled;
 
