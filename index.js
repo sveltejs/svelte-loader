@@ -71,7 +71,10 @@ module.exports = function(source, map) {
 		}
 
 		callback(null, js.code, js.map);
-	}, err => callback(err)).catch(err => {
+	}, err => {
+		this.addDependency(err.file);
+		callback(err);
+	}).catch(err => {
 		// wrap error to provide correct
 		// context when logging to console
 		callback(new Error(`${err.name}: ${err.toString()}`));
