@@ -64,8 +64,6 @@ A better option is to extract the CSS into a separate file. Using the `emitCss` 
 
 ```javascript
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const mode = process.env.NODE_ENV || 'development';
-const prod = mode === 'production';
   ...
   module: {
     rules: [
@@ -82,11 +80,11 @@ const prod = mode === 'production';
       {
         test: /\.css$/,
         use: [
-          prod ? MiniCssExtractPlugin.loader :'style-loader',
+          MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {
-              url: false, //necessary if you use url('/path/to/some/asset.png|jpg|gif')
+              url: false, // necessary if you use url('/path/to/some/asset.png|jpg|gif')
             }
           }
         ]
@@ -101,10 +99,6 @@ const prod = mode === 'production';
   ]
   ...
 ```
-
-Note that the configuration shown above switches off `MiniCssExtractPlugin` in development mode in favour of using CSS javascript injection. This is recommended by `MiniCssExtractPlugin` because it does not support hot reloading.
-
-`prod` indicates, that `NODE_ENV=production` has been set from `package.json` or manually (`NODE_ENV=production npx webpack`) for production builds. We can rely on that to make dynamic adjustments to the config.
 
 Additionally, if you're using multiple entrypoints, you may wish to change `new MiniCssExtractPlugin('styles.css')` for `new MiniCssExtractPlugin('[name].css')` to generate one CSS file per entrypoint.
 
@@ -142,7 +136,7 @@ module.exports = {
         {
           test: /\.css$/,
           use: [
-            prod ? MiniCssExtractPlugin.loader :'style-loader',
+            MiniCssExtractPlugin.loader,
             {
               loader: 'css-loader',
               options: {
