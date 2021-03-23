@@ -1,5 +1,10 @@
 # svelte-loader changelog
 
+## 3.1.0 (Unreleased)
+
+* Pass preprocessor source maps to compiler ([#172](https://github.com/sveltejs/svelte-loader/pull/172))
+* Recompile style imports after an error ([#173](https://github.com/sveltejs/svelte-loader/pull/173))
+
 ## 3.0.0
 
 * Breaking: compiler options must now be specified under `compilerOptions` ([#159](https://github.com/sveltejs/svelte-loader/pull/159))
