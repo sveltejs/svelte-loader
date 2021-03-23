@@ -31,7 +31,6 @@ Configure inside your `webpack.config.js`:
       ...
       {
         test: /\.(html|svelte)$/,
-        exclude: /node_modules/,
         use: 'svelte-loader'
       },
       {
@@ -73,7 +72,6 @@ const prod = mode === 'production';
       ...
       {
         test: /\.(html|svelte)$/,
-        exclude: /node_modules/,
         use: {
           loader: 'svelte-loader',
           options: {
@@ -203,7 +201,6 @@ module.exports = {
       ...
       {
         test: /\.(html|svelte)$/,
-        exclude: /node_modules/,
         use: {
           loader: 'svelte-loader',
           options: {
