@@ -267,6 +267,88 @@ module.exports = {
 }
 ```
 
+### CSS @import in components
+
+It is advised to inline any css `@import` in component's style tag before it hits `css-loader`.
+
+This ensures equal css behavior when using HMR with `emitCss: false` and production.
+
+Install `svelte-preprocess`, `postcss`, `postcss-import`, `postcss-load-config`.
+
+Configure `svelte-preprocess`:
+
+```javascript
+const sveltePreprocess = require('svelte-preprocess');
+...
+module.exports = {
+  ...
+  module: {
+    rules: [
+      ...
+      {
+        test: /\.(html|svelte)$/,
+        use: {
+          loader: 'svelte-loader',
+          options: {
+            preprocess: sveltePreprocess({
+              postcss: true
+            })
+          }
+        }
+      }
+      ...
+    ]
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    ...
+  ]
+}
+...
+```
+
+Create `postcss.config.js`:
+
+```javascript
+module.exports = {
+  plugins: [
+    require('postcss-import')
+  ]
+}
+```
+
+If you are using autoprefixer for `.css`, then it is better to exclude emitted css, because it was already processed with `postcss` through `svelte-preprocess` before emitting.
+
+```javascript
+  ...
+  module: {
+    rules: [
+      ...
+      {
+        test: /\.css$/,
+        exclude: /svelte\.\d+\.css/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader'
+        ]
+      },
+      {
+        test: /\.css$/,
+        include: /svelte\.\d+\.css/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader'
+        ]
+      },
+      ...
+    ]
+  },
+  ...
+```
+
+This ensures that global css is being processed with `postcss` through webpack rules, and svelte component's css is being processed with `postcss` through `svelte-preprocess`.
+
 ## License
 
 MIT
