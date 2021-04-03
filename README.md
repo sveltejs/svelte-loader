@@ -31,7 +31,6 @@ Configure inside your `webpack.config.js`:
       ...
       {
         test: /\.(html|svelte)$/,
-        exclude: /node_modules/,
         use: 'svelte-loader'
       },
       {
@@ -65,15 +64,12 @@ A better option is to extract the CSS into a separate file. Using the `emitCss` 
 
 ```javascript
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const mode = process.env.NODE_ENV || 'development';
-const prod = mode === 'production';
   ...
   module: {
     rules: [
       ...
       {
         test: /\.(html|svelte)$/,
-        exclude: /node_modules/,
         use: {
           loader: 'svelte-loader',
           options: {
@@ -84,11 +80,11 @@ const prod = mode === 'production';
       {
         test: /\.css$/,
         use: [
-          prod ? MiniCssExtractPlugin.loader :'style-loader',
+          MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {
-              url: false, //necessary if you use url('/path/to/some/asset.png|jpg|gif')
+              url: false, // necessary if you use url('/path/to/some/asset.png|jpg|gif')
             }
           }
         ]
@@ -103,10 +99,6 @@ const prod = mode === 'production';
   ]
   ...
 ```
-
-Note that the configuration shown above switches off `MiniCssExtractPlugin` in development mode in favour of using CSS javascript injection. This is recommended by `MiniCssExtractPlugin` because it does not support hot reloading.
-
-`prod` indicates, that `NODE_ENV=production` has been set from `package.json` or manually (`NODE_ENV=production npx webpack`) for production builds. We can rely on that to make dynamic adjustments to the config.
 
 Additionally, if you're using multiple entrypoints, you may wish to change `new MiniCssExtractPlugin('styles.css')` for `new MiniCssExtractPlugin('[name].css')` to generate one CSS file per entrypoint.
 
@@ -144,7 +136,7 @@ module.exports = {
         {
           test: /\.css$/,
           use: [
-            prod ? MiniCssExtractPlugin.loader :'style-loader',
+            MiniCssExtractPlugin.loader,
             {
               loader: 'css-loader',
               options: {
@@ -203,7 +195,6 @@ module.exports = {
       ...
       {
         test: /\.(html|svelte)$/,
-        exclude: /node_modules/,
         use: {
           loader: 'svelte-loader',
           options: {
@@ -275,6 +266,88 @@ module.exports = {
   ]
 }
 ```
+
+### CSS @import in components
+
+It is advised to inline any css `@import` in component's style tag before it hits `css-loader`.
+
+This ensures equal css behavior when using HMR with `emitCss: false` and production.
+
+Install `svelte-preprocess`, `postcss`, `postcss-import`, `postcss-load-config`.
+
+Configure `svelte-preprocess`:
+
+```javascript
+const sveltePreprocess = require('svelte-preprocess');
+...
+module.exports = {
+  ...
+  module: {
+    rules: [
+      ...
+      {
+        test: /\.(html|svelte)$/,
+        use: {
+          loader: 'svelte-loader',
+          options: {
+            preprocess: sveltePreprocess({
+              postcss: true
+            })
+          }
+        }
+      }
+      ...
+    ]
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    ...
+  ]
+}
+...
+```
+
+Create `postcss.config.js`:
+
+```javascript
+module.exports = {
+  plugins: [
+    require('postcss-import')
+  ]
+}
+```
+
+If you are using autoprefixer for `.css`, then it is better to exclude emitted css, because it was already processed with `postcss` through `svelte-preprocess` before emitting.
+
+```javascript
+  ...
+  module: {
+    rules: [
+      ...
+      {
+        test: /\.css$/,
+        exclude: /svelte\.\d+\.css/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader'
+        ]
+      },
+      {
+        test: /\.css$/,
+        include: /svelte\.\d+\.css/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader'
+        ]
+      },
+      ...
+    ]
+  },
+  ...
+```
+
+This ensures that global css is being processed with `postcss` through webpack rules, and svelte component's css is being processed with `postcss` through `svelte-preprocess`.
 
 ## License
 
