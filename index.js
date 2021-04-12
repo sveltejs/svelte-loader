@@ -50,6 +50,8 @@ module.exports = function(source, map) {
 		const compiled = compile(processed.toString(), compileOptions);
 		let { js, css, warnings } = compiled;
 
+		if (!js.map.sourcesContent) js.map.sourcesContent = [ source ];
+
 		warnings.forEach(
 			options.onwarn
 				? warning => options.onwarn(warning, handleWarning)
