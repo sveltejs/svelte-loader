@@ -1,6 +1,6 @@
 # svelte-loader changelog
 
-## 3.1.1 (Unreleased)
+## 3.1.1
 
 * Fix empty sourcesContent ([#177](https://github.com/sveltejs/svelte-loader/pull/177))
 
