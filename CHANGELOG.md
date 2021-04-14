@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 3.1.1 (Unreleased)
+
+* Fix empty sourcesContent ([#177](https://github.com/sveltejs/svelte-loader/pull/177))
+
 ## 3.1.0
 
 * Pass preprocessor source maps to compiler ([#172](https://github.com/sveltejs/svelte-loader/pull/172))
