@@ -1,6 +1,6 @@
 const { relative } = require('path');
 const { getOptions } = require('loader-utils');
-const { makeHot } = require('./lib/make-hot.js');
+const { buildMakeHot } = require('./lib/make-hot.js');
 const { compile, preprocess } = require('svelte/compiler');
 
 function posixify(file) {
@@ -60,6 +60,7 @@ module.exports = function(source, map) {
 
 		if (options.hotReload && !isProduction && !isServer) {
 			const hotOptions = { ...options.hotOptions };
+			const makeHot = buildMakeHot(hotOptions);
 			const id = JSON.stringify(relative(process.cwd(), compileOptions.filename));
 			js.code = makeHot(id, js.code, hotOptions, compiled, source, compileOptions);
 		}

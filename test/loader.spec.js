@@ -292,7 +292,7 @@ describe('loader', () => {
 						expect(err).not.to.exist;
 
 						expect(code).to.contain('module && module.hot');
-						expect(code).not.to.contain('"noPreserveState":true');
+						expect(code).not.to.contain('"preserveLocalState":true');
 					},
 					{ hotReload: true }
 				)
@@ -306,12 +306,12 @@ describe('loader', () => {
 						expect(err).not.to.exist;
 
 						expect(code).to.contain('module && module.hot');
-						expect(code).to.contain('"noPreserveState":true');
+						expect(code).to.contain('"preserveLocalState":true');
 					},
 					{
 						hotReload: true,
 						hotOptions: {
-							noPreserveState: true
+							preserveLocalState: true
 						}
 					}
 				)
