@@ -1,6 +1,6 @@
 # svelte-loader changelog
 
-## 3.1.2 (Unreleased)
+## 3.1.2
 
 * Update to latest `svelte-hmr` package fixing Webpack 4 support
 * Fix sourcemap breakpoints ([#183](https://github.com/sveltejs/svelte-loader/pull/183))
