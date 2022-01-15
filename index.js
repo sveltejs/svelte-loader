@@ -78,7 +78,10 @@ module.exports = function(source, map) {
 
 		callback(null, js.code, js.map);
 	}, err => {
-		this.addDependency(err.file);
+		const file = err.file || err.filename;
+		if (typeof file === 'string' && file !== this.resourcePath) {
+			this.addDependency(file);
+		}
 		callback(err);
 	}).catch(err => {
 		// wrap error to provide correct

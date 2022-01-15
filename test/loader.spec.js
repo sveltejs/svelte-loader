@@ -15,9 +15,15 @@ function d([str]) {
 describe('loader', () => {
 	function testLoader(fileName, callback, query, version = 2) {
 		return done => {
-			function cb() {
+			const addedDependencies = new Set();
+
+			function cb(...args) {
+				while (args.length < 4) {
+					args.push(undefined);
+				}
+				args.push(addedDependencies);
 				try {
-					callback(...[].slice.call(arguments));
+					callback(...args);
 				} catch (err) {
 					expect(callbackSpy).to.have.been.called;
 					return done(err);
@@ -32,10 +38,13 @@ describe('loader', () => {
 
 			const callbackSpy = spy(cb);
 
+			const dependencySpy = spy(function(p) { addedDependencies.add(p); });
+
 			loader.call(
 				{
 					cacheable: cacheableSpy,
 					async: () => callbackSpy,
+					addDependency: dependencySpy,
 					resourcePath: fileName,
 					version,
 					query
@@ -45,6 +54,10 @@ describe('loader', () => {
 			);
 
 			expect(cacheableSpy).to.have.been.called;
+
+			for (const call of dependencySpy.getCalls()) {
+				expect(call.firstArg).to.be.a('string');
+			}
 		};
 	}
 
@@ -246,23 +259,18 @@ describe('loader', () => {
 			});
 
 			it('should not preprocess successfully', done => {
-				const { warn } = console;
-				const warnings = [];
-
-				console.warn = msg => {
-					warnings.push(msg);
-				};
-
 				testLoader(
 					'test/fixtures/style-valid.html',
-					(err, code, map) => {
+					(err, code, map, context, addedDependencies) => {
 						expect(err).to.exist;
-						console.warn = warn;
+						expect(addedDependencies).to.include('/some/subresource.css');
 					},
 					{
 						preprocess: {
 							style: () => {
-								throw new Error('Error while preprocessing');
+								const e = new Error('Error while preprocessing');
+								e.filename = '/some/subresource.css';
+								throw e;
 							}
 						}
 					}
