@@ -1,4 +1,4 @@
-# This package is no longer maintained. We suggest using [SvelteKit](https://kit.svelte.dev), or Vite with [vite-plugin-svelte](https://github.com/sveltejs/vite-plugin-svelte/).
+> Undecided yet what bundler to use? We suggest using [SvelteKit](https://kit.svelte.dev), or Vite with [vite-plugin-svelte](https://github.com/sveltejs/vite-plugin-svelte/).
 
 # svelte-loader
 
