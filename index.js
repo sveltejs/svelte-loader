@@ -39,7 +39,7 @@ module.exports = function(source, map) {
 	options.preprocess.filename = compileOptions.filename;
 
 	preprocess(source, options.preprocess).then(processed => {
-		if (processed.dependencies && this.addDependency) {
+		if (processed.dependencies && processed.dependencies.length && this.addDependency) {
 			for (let dependency of processed.dependencies) {
 				this.addDependency(dependency);
 			}
