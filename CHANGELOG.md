@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 3.1.4
+
+* Bump `loader-utils` dependency
+
 ## 3.1.3
 
 * Prevent webpack process crashing on undefined dependencies ([#197](https://github.com/sveltejs/svelte-loader/issues/197))
