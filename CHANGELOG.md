@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 3.1.5
+
+* Bump `loader-utils` dependency
+
 ## 3.1.4
 
 * Bump `loader-utils` dependency

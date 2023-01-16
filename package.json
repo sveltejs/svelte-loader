@@ -1,6 +1,6 @@
 {
   "name": "svelte-loader",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "author": "Nico Rehwaldt <git_nikku@nixis.de>",
   "description": "A webpack loader for svelte",
   "license": "MIT",
@@ -15,7 +15,7 @@
     "webpack-loader"
   ],
   "dependencies": {
-    "loader-utils": "^2.0.3",
+    "loader-utils": "^2.0.4",
     "svelte-dev-helper": "^1.1.9",
     "svelte-hmr": "^0.14.2"
   },
