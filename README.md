@@ -26,7 +26,8 @@ Configure inside your `webpack.config.js`:
       svelte: path.resolve('node_modules', 'svelte')
     },
     extensions: ['.mjs', '.js', '.svelte'],
-    mainFields: ['svelte', 'browser', 'module', 'main']
+    mainFields: ['svelte', 'browser', 'module', 'main'],
+    conditionNames: ['svelte']
   },
   module: {
     rules: [
@@ -56,7 +57,11 @@ The [`resolve.alias`](https://webpack.js.org/configuration/resolve/#resolvealias
 
 ### resolve.mainFields
 
-Webpack's [`resolve.mainFields`](https://webpack.js.org/configuration/resolve/#resolve-mainfields) option determines which fields in package.json are used to resolve identifiers. If you're using Svelte components installed from npm, you should specify this option so that your app can use the original component source code, rather than consuming the already-compiled version (which is less efficient).
+Webpack's [`resolve.mainFields`](https://webpack.js.org/configuration/resolve/#resolve-mainfields) option determines which fields in `package.json` are used to resolve identifiers. If you're using Svelte components installed from npm, you should specify this option so that your app can use the original component source code, rather than consuming the already-compiled version (which is less efficient).
+
+### resolve.conditionNames
+
+Webpack's [`resolve.conditionNames`](https://webpack.js.org/configuration/resolve/#resolveconditionnames) option determines which fields in the `exports in `package.json` are used to resolve identifiers. If you're using Svelte components installed from npm, you should specify this option so that your app can use the original component source code, rather than consuming the already-compiled version (which is less efficient).
 
 ### Extracting CSS
 
