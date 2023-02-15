@@ -25,7 +25,7 @@ for (let i = 0; i < process.argv.length; i++) {
 
 try {
 	const config = require(path.resolve(process.cwd(), config_file));
-	if (!config.resolve?.conditionNames?.includes('svelte')) {
+	if (!config.resolve || !config.resolve.conditionNames || !config.resolve.conditionNames.includes('svelte')) {
 		console.warn('\n\u001B[1m\u001B[31mWARNING: You should add "svelte" to the "resolve.conditionNames" array in your webpack config.\u001B[39m\u001B[22m\n');
 	}
 } catch {
