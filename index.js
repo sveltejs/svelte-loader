@@ -10,21 +10,21 @@ function posixify(file) {
 const virtualModules = new Map();
 let index = 0;
 
-let config_file = 'webpack.config.js';
+let configFile = 'webpack.config.js';
 for (let i = 0; i < process.argv.length; i++) {
 	if (process.argv[i] === '--config') {
-		config_file = process.argv[i + 1];
+		configFile = process.argv[i + 1];
 		break;
 	}
 
 	if (process.argv[i].startsWith('--config=')) {
-		config_file = process.argv[i].split('=')[1];
+		configFile = process.argv[i].split('=')[1];
 		break;
 	}
 }
 
 try {
-	const config = require(path.resolve(process.cwd(), config_file));
+	const config = require(path.resolve(process.cwd(), configFile));
 	if (!config.resolve || !config.resolve.conditionNames || !config.resolve.conditionNames.includes('svelte')) {
 		console.warn('\n\u001B[1m\u001B[31mWARNING: You should add "svelte" to the "resolve.conditionNames" array in your webpack config.\u001B[39m\u001B[22m\n');
 	}
