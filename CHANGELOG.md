@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 3.1.6
+
+* Detect missing `conditionNames: ['svelte']` ([#225](https://github.com/sveltejs/svelte-loader/pull/225))
+
 ## 3.1.5
 
 * Bump `loader-utils` dependency
