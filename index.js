@@ -1,4 +1,4 @@
-const { relative } = require('path');
+const path = require('path');
 const { getOptions } = require('loader-utils');
 const { buildMakeHot } = require('./lib/make-hot.js');
 const { compile, preprocess } = require('svelte/compiler');
@@ -9,6 +9,28 @@ function posixify(file) {
 
 const virtualModules = new Map();
 let index = 0;
+
+let configFile = 'webpack.config.js';
+for (let i = 0; i < process.argv.length; i++) {
+	if (process.argv[i] === '--config') {
+		configFile = process.argv[i + 1];
+		break;
+	}
+
+	if (process.argv[i].startsWith('--config=')) {
+		configFile = process.argv[i].split('=')[1];
+		break;
+	}
+}
+
+try {
+	const config = require(path.resolve(process.cwd(), configFile));
+	if (!config.resolve || !config.resolve.conditionNames || !config.resolve.conditionNames.includes('svelte')) {
+		console.warn('\n\u001B[1m\u001B[31mWARNING: You should add "svelte" to the "resolve.conditionNames" array in your webpack config. See https://github.com/sveltejs/svelte-loader#resolveconditionnames for more information\u001B[39m\u001B[22m\n');
+	}
+} catch (e) {
+	// do nothing and hope for the best
+}
 
 module.exports = function(source, map) {
 	this.cacheable();
@@ -64,7 +86,7 @@ module.exports = function(source, map) {
 		if (options.hotReload && !isProduction && !isServer) {
 			const hotOptions = { ...options.hotOptions };
 			const makeHot = buildMakeHot(hotOptions);
-			const id = JSON.stringify(relative(process.cwd(), compileOptions.filename));
+			const id = JSON.stringify(path.relative(process.cwd(), compileOptions.filename));
 			js.code = makeHot(id, js.code, hotOptions, compiled, source, compileOptions);
 		}
 
