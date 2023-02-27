@@ -8,7 +8,8 @@
     "space-before-function-paren": [ 2, "never" ],
     "semi": [ 2, "always" ],
     "no-console": 0,
-    "mocha/no-exclusive-tests": 2
+    "mocha/no-exclusive-tests": 2,
+    "no-inner-declarations": 0
   },
   "extends": "eslint:recommended",
   "parserOptions": {

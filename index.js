@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const { getOptions } = require('loader-utils');
 const { buildMakeHot } = require('./lib/make-hot.js');
 const { compile, preprocess } = require('svelte/compiler');
@@ -24,9 +25,29 @@ for (let i = 0; i < process.argv.length; i++) {
 }
 
 try {
-	const config = require(path.resolve(process.cwd(), configFile));
-	if (!config.resolve || !config.resolve.conditionNames || !config.resolve.conditionNames.includes('svelte')) {
+	const configPath = path.resolve(process.cwd(), configFile);
+	const config = require(configPath);
+	let found = false;
+	if (Array.isArray(config)) {
+		found = config.some(check);
+	} else {
+		found = check(config);
+	}
+
+	if (!found) {
 		console.warn('\n\u001B[1m\u001B[31mWARNING: You should add "svelte" to the "resolve.conditionNames" array in your webpack config. See https://github.com/sveltejs/svelte-loader#resolveconditionnames for more information\u001B[39m\u001B[22m\n');
+	}
+
+	function check(config) {
+		if (typeof config === 'function') {
+			// We could try to invoke it but that could maybe have side unintended side effects
+			// and/or fail due to missing parameters, so we read the file instead
+			const configString = fs.readFileSync(configPath, 'utf-8');
+			const result = /conditionNames\s*:[\s|\n]*\[([^\]]+?)\]/.exec(configString);
+			return !!result && !!result[1].includes('svelte');
+		} else {
+			return !!config.resolve && !!config.resolve.conditionNames && config.resolve.conditionNames.includes('svelte');
+		}
 	}
 } catch (e) {
 	// do nothing and hope for the best

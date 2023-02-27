@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 3.1.7
+
+* More robust `conditionNames: ['svelte']` detection ([#226](https://github.com/sveltejs/svelte-loader/pull/226))
+
 ## 3.1.6
 
 * Detect missing `conditionNames: ['svelte']` ([#225](https://github.com/sveltejs/svelte-loader/pull/225))
