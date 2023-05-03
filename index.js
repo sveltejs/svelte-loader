@@ -9,7 +9,7 @@ function posixify(file) {
 }
 
 function interopEsmDefault(mod) {
-	return mod && mod.__esModule ? mod.default : mod;
+	return mod && mod.__esModule && mod.default ? mod.default : mod;
 }
 
 const virtualModules = new Map();
