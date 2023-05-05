@@ -27,7 +27,7 @@ Configure inside your `webpack.config.js`:
     },
     extensions: ['.mjs', '.js', '.svelte'],
     mainFields: ['svelte', 'browser', 'module', 'main'],
-    conditionNames: ['svelte']
+    conditionNames: ['svelte', 'browser']
   },
   module: {
     rules: [
