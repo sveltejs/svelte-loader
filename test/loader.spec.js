@@ -125,7 +125,7 @@ describe('loader', () => {
 				expect(map).to.exist;
 
 				// es2015 statements remain
-				expect(code).to.contain(`import { hello } from "./utils";`);
+				expect(code).to.contain(`import { hello } from './utils';`);
 			})
 		);
 
@@ -135,7 +135,7 @@ describe('loader', () => {
 				expect(err).not.to.exist;
 
 				// es2015 statements remain
-				expect(code).to.contain(`import Nested from "./nested";`);
+				expect(code).to.contain(`import Nested from './nested';`);
 
 				expect(code).to.exist;
 				expect(map).to.exist;
@@ -149,7 +149,7 @@ describe('loader', () => {
 				'should configure css (default)',
 				testLoader('test/fixtures/css.html', function(err, code, map) {
 					expect(err).not.to.exist;
-					expect(code).to.contain('function add_css()');
+					expect(code).to.contain('function add_css(target)');
 				})
 			);
 
@@ -159,7 +159,7 @@ describe('loader', () => {
 					'test/fixtures/css.html',
 					function(err, code, map) {
 						expect(err).not.to.exist;
-						expect(code).not.to.contain('function add_css()');
+						expect(code).not.to.contain('function add_css(target)');
 					},
 					{ compilerOptions: { css: false } }
 				)
