@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const { getOptions } = require('loader-utils');
 const { buildMakeHot } = require('./lib/make-hot.js');
-const { compile, preprocess } = require('svelte/compiler');
+const { compile, preprocess, VERSION } = require('svelte/compiler');
 
 function posixify(file) {
 	return file.replace(/[/\\]/g, '/');
@@ -53,6 +53,8 @@ try {
 	// do nothing and hope for the best
 }
 
+let warned = false;
+
 module.exports = function(source, map) {
 	this.cacheable();
 
@@ -72,9 +74,17 @@ module.exports = function(source, map) {
 	const compileOptions = {
 		filename: this.resourcePath,
 		css: !options.emitCss,
-		...options.compilerOptions,
-		format: (options.compilerOptions && options.compilerOptions.format) || 'esm'
+		...options.compilerOptions
 	};
+	if (VERSION[0] === '3') {
+		compileOptions.format = (options.compilerOptions && options.compilerOptions.format) || 'esm'
+	} else {
+		if (options.compilerOptions && options.compilerOptions.format && !warned) {
+			warned = true;
+			console.warn(`[svelte-loader] Svelte's "format" compiler option was removed in version 4, the output is always ESM now.` +
+				` Remove the format option from your webpack config to remove this warning.`);
+		}
+	}
 
 	const handleWarning = warning => this.emitWarning(new Error(warning));
 
