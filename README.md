@@ -183,6 +183,24 @@ use: {
 ...
 ```
 
+### Using preprocessors like TypeScript
+
+Install [svelte-preprocess](https://github.com/sveltejs/svelte-preprocess) and add it to the loader options:
+
+```js
+const sveltePreprocess = require('svelte-preprocess');
+...
+use: {
+  loader: 'svelte-loader',
+  options: {
+    preprocess: sveltePreprocess()
+  },
+},
+...
+```
+
+Now you can use other languages inside the script and style tags. Make sure to install the respective transpilers and add a `lang` tag indicating the language that should be preprocessed. In the case of TypeScript, install `typescript` and add `lang="ts"` to your script tags.
+
 ### Hot Reload
 
 This loader supports component-level HMR via the community supported [svelte-hmr](https://github.com/rixo/svelte-hmr) package. This package serves as a testbed and early access for Svelte HMR, while we figure out how to best include HMR support in the compiler itself (which is tricky to do without unfairly favoring any particular dev tooling). Feedback, suggestion, or help to move HMR forward is welcomed at [svelte-hmr](https://github.com/rixo/svelte-hmr/issues) (for now).
