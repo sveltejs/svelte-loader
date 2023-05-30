@@ -77,7 +77,7 @@ module.exports = function(source, map) {
 		...options.compilerOptions
 	};
 	if (VERSION[0] === '3') {
-		compileOptions.format = (options.compilerOptions && options.compilerOptions.format) || 'esm'
+		compileOptions.format = (options.compilerOptions && options.compilerOptions.format) || 'esm';
 	} else {
 		if (options.compilerOptions && options.compilerOptions.format && !warned) {
 			warned = true;
