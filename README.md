@@ -22,12 +22,12 @@ Configure inside your `webpack.config.js`:
   ...
   resolve: {
     // see below for an explanation
-    alias: {
-      svelte: path.resolve('node_modules', 'svelte')
-    },
+    // alias: {
+    //   svelte: path.resolve('node_modules', 'svelte/src/runtime') // Svelte 3: path.resolve('node_modules', 'svelte')
+    // },
     extensions: ['.mjs', '.js', '.svelte'],
     mainFields: ['svelte', 'browser', 'module', 'main'],
-    conditionNames: ['svelte', 'browser']
+    conditionNames: ['svelte', 'browser', 'import']
   },
   module: {
     rules: [
@@ -53,7 +53,7 @@ Check out the [example project](https://github.com/sveltejs/template-webpack).
 
 ### resolve.alias
 
-The [`resolve.alias`](https://webpack.js.org/configuration/resolve/#resolvealias) option is used to make sure that only one copy of the Svelte runtime is bundled in the app, even if you are `npm link`ing in dependencies with their own copy of the `svelte` package. Having multiple copies of the internal scheduler in an app, besides being inefficient, can also cause various problems.
+The [`resolve.alias`](https://webpack.js.org/configuration/resolve/#resolvealias) option is used to make sure that only one copy of the Svelte runtime is bundled in the app, even if you are `npm link`ing in dependencies with their own copy of the `svelte` package. Having multiple copies of the internal scheduler in an app, besides being inefficient, can also cause various problems. It's commented out because you rarely should need this and it's brittle since it relies on the internal structure of the Svelte package, which can change.
 
 ### resolve.mainFields
 
