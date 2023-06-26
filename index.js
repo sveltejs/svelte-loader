@@ -73,7 +73,7 @@ module.exports = function(source, map) {
 
 	const compileOptions = {
 		filename: this.resourcePath,
-		css: !options.emitCss,
+		css: VERSION[0] === '3' ? !options.emitCss : (options.emitCss ? 'external' : 'injected'),
 		...options.compilerOptions
 	};
 	if (VERSION[0] === '3') {

@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 3.1.9
+
+* Handle `emitCSS` to `css` option transformation correctly for Svelte 4
+
 ## 3.1.8
 
 * Get ready for Svelte 4
