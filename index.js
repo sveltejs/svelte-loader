@@ -103,7 +103,7 @@ module.exports = function(source, map) {
 		const compiled = compile(processed.toString(), compileOptions);
 		let { js, css, warnings } = compiled;
 
-		if (!js.map.sourcesContent) {
+		if (js.map && !js.map.sourcesContent) {
 			js.map.sourcesContent = [source];
 			js.map.sources = [compileOptions.filename];
 		}
@@ -124,7 +124,9 @@ module.exports = function(source, map) {
 		if (options.emitCss && css.code) {
 			const resource = posixify(compileOptions.filename);
 			const cssPath = `${resource}.${index++}.css`;
-			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';
+			if (css.map) {
+				css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';
+			}
 			js.code += `\nimport '${cssPath}!=!svelte-loader?cssPath=${cssPath}!${resource}'\n;`;
 			virtualModules.set(cssPath, css.code);
 		}
