@@ -121,7 +121,7 @@ module.exports = function(source, map) {
 			js.code = makeHot(id, js.code, hotOptions, compiled, source, compileOptions);
 		}
 
-		if (options.emitCss && css.code) {
+		if (options.emitCss && css?.code) {
 			const resource = posixify(compileOptions.filename);
 			const cssPath = `${resource}.${index++}.css`;
 			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';
