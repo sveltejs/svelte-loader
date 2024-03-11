@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 3.2.0
+
+* Compile `.svelte.js/ts` files when using Svelte 5
+
 ## 3.1.9
 
 * Handle `emitCSS` to `css` option transformation correctly for Svelte 4

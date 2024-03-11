@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const { getOptions } = require('loader-utils');
 const { buildMakeHot } = require('./lib/make-hot.js');
-const { compile, preprocess, VERSION } = require('svelte/compiler');
+const svelte = require('svelte/compiler');
 
 function posixify(file) {
 	return file.replace(/[/\\]/g, '/');
@@ -55,6 +55,10 @@ try {
 
 let warned = false;
 
+function getMajor() {
+	return Number(svelte.VERSION.split('.')[0])
+}
+
 module.exports = function(source, map) {
 	this.cacheable();
 
@@ -70,13 +74,37 @@ module.exports = function(source, map) {
 
 	const isServer = this.target === 'node' || (options.compilerOptions && options.compilerOptions.generate == 'ssr');
 	const isProduction = this.minimize || process.env.NODE_ENV === 'production';
-
 	const compileOptions = {
 		filename: this.resourcePath,
-		css: VERSION[0] === '3' ? !options.emitCss : (options.emitCss ? 'external' : 'injected'),
+		css: getMajor() === 3 ? !options.emitCss : (options.emitCss ? 'external' : 'injected'),
 		...options.compilerOptions
 	};
-	if (VERSION[0] === '3') {
+	const handleWarning = warning => this.emitWarning(new Error(warning));
+
+	if (getMajor() >= 5 && (this.resourcePath.endsWith('.svelte.js') || this.resourcePath.endsWith('.svelte.ts'))) {
+		try {
+			const { js, warnings } = svelte.compileModule(
+				source,
+				{ filename: this.resourcePath, dev: compileOptions.dev, generate: compileOptions.generate }
+			);
+
+			warnings.forEach(
+				options.onwarn
+					? warning => options.onwarn(warning, handleWarning)
+					: handleWarning
+			);
+
+			callback(null, js.code, js.map);
+		} catch (err) {
+			// wrap error to provide correct
+			// context when logging to console
+			callback(new Error(`${err.name}: ${err.toString()}`));
+		}
+
+		return;
+	}
+
+	if (getMajor() === 3) {
 		compileOptions.format = (options.compilerOptions && options.compilerOptions.format) || 'esm';
 	} else {
 		if (options.compilerOptions && options.compilerOptions.format && !warned) {
@@ -86,12 +114,10 @@ module.exports = function(source, map) {
 		}
 	}
 
-	const handleWarning = warning => this.emitWarning(new Error(warning));
-
 	options.preprocess = options.preprocess || {};
 	options.preprocess.filename = compileOptions.filename;
 
-	preprocess(source, options.preprocess).then(processed => {
+	svelte.preprocess(source, options.preprocess).then(processed => {
 		if (processed.dependencies && this.addDependency) {
 			for (let dependency of processed.dependencies) {
 				this.addDependency(dependency);
@@ -100,7 +126,7 @@ module.exports = function(source, map) {
 
 		if (processed.map) compileOptions.sourcemap = processed.map;
 
-		const compiled = compile(processed.toString(), compileOptions);
+		const compiled = svelte.compile(processed.toString(), compileOptions);
 		let { js, css, warnings } = compiled;
 
 		if (!js.map.sourcesContent) {
@@ -121,7 +147,7 @@ module.exports = function(source, map) {
 			js.code = makeHot(id, js.code, hotOptions, compiled, source, compileOptions);
 		}
 
-		if (options.emitCss && css.code) {
+		if (options.emitCss && css && css.code) {
 			const resource = posixify(compileOptions.filename);
 			const cssPath = `${resource}.${index++}.css`;
 			css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';

@@ -355,6 +355,22 @@ describe('loader', () => {
 			);
 		});
 	});
+
+	// needs Svelte 5
+	describe.skip('Svelte 5', () => {
+		it(
+			'should compile .svelte.js/ts',
+			testLoader(
+				'test/fixtures/file.svelte.js',
+				function(err, code, map) {
+					expect(err).not.to.exist;
+
+					expect(code).not.to.contain('$state');
+				},
+				{}
+			)
+		);
+	});
 });
 
 function readFile(path) {
