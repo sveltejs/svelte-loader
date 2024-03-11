@@ -56,7 +56,7 @@ try {
 let warned = false;
 
 function getMajor() {
-	return Number(svelte.VERSION.split('.')[0])
+	return Number(svelte.VERSION.split('.')[0]);
 }
 
 module.exports = function(source, map) {
