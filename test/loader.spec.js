@@ -164,6 +164,34 @@ describe('loader', () => {
 					{ compilerOptions: { css: false } }
 				)
 			);
+
+			it(
+				'should configure css with dev sourcemaps',
+				testLoader(
+					'test/fixtures/css.html',
+					function(err, code, map) {
+						expect(err).not.to.exist;
+						expect(code).to.contain('function add_css(target)');
+						expect(code).to.contain('/*# sourceMappingURL=');
+						expect(map).to.exist;
+					},
+					{ compilerOptions: { dev: true, enableSourcemap: true } }
+				)
+			);
+
+			it(
+				'should configure css without dev sourcemaps',
+				testLoader(
+					'test/fixtures/css.html',
+					function(err, code, map) {
+						expect(err).not.to.exist;
+						expect(code).to.contain('function add_css(target)');
+						expect(code).not.to.contain('/*# sourceMappingURL=');
+						expect(map).to.exist;
+					},
+					{ compilerOptions: { dev: true, enableSourcemap: { css: false, js: true } } }
+				)
+			);
 		});
 
 		describe('sveltePath', () => {
@@ -232,6 +260,19 @@ describe('loader', () => {
 						expect(code).to.match(/!=!svelte-loader\?cssPath=/);
 					},
 					{ emitCss: true }
+				)
+			);
+
+			it(
+				'should configure emitCss=true without css sourcemaps',
+				testLoader(
+					'test/fixtures/css.html',
+					function(err, code, map) {
+						expect(err).not.to.exist;
+
+						expect(code).to.match(/!=!svelte-loader\?cssPath=/);
+					},
+					{ emitCss: true, compilerOptions: { enableSourcemap: { css: false, js: true } } }
 				)
 			);
 		});
@@ -352,6 +393,21 @@ describe('loader', () => {
 					},
 					{ hotReload: true }
 				)
+			);
+		});
+
+		describe('compilerOptions', () => {
+			it(
+				'should configure enableSourcemap=false',
+				testLoader(
+					'test/fixtures/good.html',
+					function(err, code, map) {
+						expect(err).not.to.exist;
+						expect(code).to.exist;
+						expect(map).not.to.exist;
+					},
+					{ compilerOptions: { enableSourcemap: false } }
+				),
 			);
 		});
 	});
