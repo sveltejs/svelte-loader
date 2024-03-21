@@ -374,6 +374,16 @@ If you are using autoprefixer for `.css`, then it is better to exclude emitted c
 
 This ensures that global css is being processed with `postcss` through webpack rules, and svelte component's css is being processed with `postcss` through `svelte-preprocess`.
 
+## Using svelte-loader in combination with thread-loader
+
+By default `svelte-loader` uses a Map to store css, and passes keys to that Map through custom loader string in query parameter.
+
+This won't work for multiple `thread-loader` processess. `css-loader` won't find component's css in a Map that is located in other process.
+
+If you set up `thread-loader` on top of `svelte-loader` however, it will pass whole base64'd css in a query, without using Map.
+
+It will clutter the console output, but you will gain compilation speed, especially when using `tailwindcss` with `@apply` through `svelte-preprocess`.
+
 ## License
 
 MIT
