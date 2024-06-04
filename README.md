@@ -213,6 +213,8 @@ Now you can use other languages inside the script and style tags. Make sure to i
 
 ### Hot Reload
 
+> Hot Module Reloading is currently not supported for Svelte 5+
+
 This loader supports component-level HMR via the community supported [svelte-hmr](https://github.com/rixo/svelte-hmr) package. This package serves as a testbed and early access for Svelte HMR, while we figure out how to best include HMR support in the compiler itself (which is tricky to do without unfairly favoring any particular dev tooling). Feedback, suggestion, or help to move HMR forward is welcomed at [svelte-hmr](https://github.com/rixo/svelte-hmr/issues) (for now).
 
 Configure inside your `webpack.config.js`:

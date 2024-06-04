@@ -144,7 +144,8 @@ module.exports = function(source, map) {
 				: handleWarning
 		);
 
-		if (options.hotReload && !isProduction && !isServer) {
+		// svelte-hmr has no Svelte 5 support
+		if (options.hotReload && !isProduction && !isServer && getMajor() < 5) {
 			const hotOptions = { ...options.hotOptions };
 			const makeHot = buildMakeHot(hotOptions);
 			const id = JSON.stringify(path.relative(process.cwd(), compileOptions.filename));
