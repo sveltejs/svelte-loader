@@ -26,8 +26,8 @@ Configure inside your `webpack.config.js`:
       svelte: path.resolve('node_modules', 'svelte/src/runtime') // Svelte 3: path.resolve('node_modules', 'svelte')
     },
     extensions: ['.mjs', '.js', '.svelte'],
-    mainFields: ['svelte', 'browser', 'module', 'main'],
-    conditionNames: ['svelte', 'browser', 'import']
+    mainFields: ['svelte', 'browser', '...'],
+    conditionNames: ['svelte', 'browser', '...'],
   },
   module: {
     rules: [
