@@ -32,8 +32,18 @@ Configure inside your `webpack.config.js`:
   module: {
     rules: [
       ...
+      // This is only needed if you use Svelte 5+ with TypeScript
       {
-        test: /\.(html|svelte)$/,
+        test: /\.svelte\.ts$/,
+        use: ['ts-loader', 'svelte-loader']
+      },
+      {
+        // Svelte 5+:
+        test: /\.(svelte|svelte\.js)$/,
+        // Svelte 3 or 4:
+        // test: /\.svelte$/,
+        // In case you write Svelte in HTML (not recommended since Svelte 3):
+        // test: /\.(html|svelte)$/,
         use: 'svelte-loader'
       },
       {
@@ -76,7 +86,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
     rules: [
       ...
       {
-        test: /\.(html|svelte)$/,
+        test: /\.(svelte|svelte\.js)$/,
         use: {
           loader: 'svelte-loader',
           options: {
@@ -219,7 +229,7 @@ module.exports = {
     rules: [
       ...
       {
-        test: /\.(html|svelte)$/,
+        test: /\.(svelte|svelte\.js)$/,
         use: {
           loader: 'svelte-loader',
           options: {
@@ -311,7 +321,7 @@ module.exports = {
     rules: [
       ...
       {
-        test: /\.(html|svelte)$/,
+        test: /\.(svelte|svelte\.js)$/,
         use: {
           loader: 'svelte-loader',
           options: {
