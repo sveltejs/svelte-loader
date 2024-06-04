@@ -172,6 +172,10 @@ module.exports = function(source, map) {
 	}).catch(err => {
 		// wrap error to provide correct
 		// context when logging to console
-		callback(new Error(`${err.name}: ${err.toString()}`));
+		let err_str = err.toString();
+		if (getMajor() < 5 || !err_str.startsWith('CompileError:')) {
+			err_str = `${err.name}: ${err_str}`
+		}
+		callback(new Error(err_str));
 	});
 };

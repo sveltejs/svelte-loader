@@ -4,6 +4,9 @@ const sinonChai = require('sinon-chai');
 const { spy } = require('sinon');
 const { readFileSync } = require('fs');
 const loader = require('../');
+const { VERSION } = require('svelte/compiler');
+
+const isSvelte5Plus = Number(VERSION.split('.')[0]) >= 5;
 
 chai.use(sinonChai);
 const { expect } = chai;
@@ -77,14 +80,21 @@ describe('loader', () => {
 				err,
 				code,
 				map,
-				context
 			) {
 				expect(err).to.exist;
 
-				expect(err.message).to.eql(d`
-					ParseError: Unexpected block closing tag (1:23)
-					1: <p>Count: {count}</p>{/if}
-					                          ^`);
+				if (isSvelte5Plus) {
+					expect(err.message).to.eql(d`
+						CompileError: Unexpected block closing tag
+						(block_unexpected_close)
+						test/fixtures/parse-error.html1:22
+					`);
+				} else {
+					expect(err.message).to.eql(d`
+						ParseError: Unexpected block closing tag (1:23)
+						1: <p>Count: {count}</p>{/if}
+						                          ^`);
+				}
 
 				expect(code).not.to.exist;
 				expect(map).not.to.exist;
@@ -97,17 +107,24 @@ describe('loader', () => {
 				err,
 				code,
 				map,
-				context
 			) {
 				expect(err).to.exist;
 
-				expect(err.message.trim().replace(/\r/g, '')).to.eql(d`
-					ValidationError: A component cannot have a default export (2:1)
-					1: <script>
-					2:   export default {};
-					     ^
-					3: </script>
-					4:`);
+				if (isSvelte5Plus) {
+					expect(err.message.trim().replace(/\r/g, '')).to.eql(d`
+						CompileError: A component cannot have a default export
+						(module_illegal_default_export)
+						test/fixtures/validation-error.html2:1
+					 `);
+				} else {
+					expect(err.message.trim().replace(/\r/g, '')).to.eql(d`
+						ValidationError: A component cannot have a default export (2:1)
+						1: <script>
+						2:   export default {};
+						     ^
+						3: </script>
+						4:`);
+				}
 
 				expect(code).not.to.exist;
 				expect(map).not.to.exist;
@@ -149,7 +166,11 @@ describe('loader', () => {
 				'should configure css (default)',
 				testLoader('test/fixtures/css.html', function(err, code, map) {
 					expect(err).not.to.exist;
-					expect(code).to.contain('function add_css(target)');
+					if (isSvelte5Plus) {
+						expect(code).to.contain('$.append_styles');
+					} else {
+						expect(code).to.contain('function add_css(target)');
+					}
 				})
 			);
 
@@ -159,9 +180,13 @@ describe('loader', () => {
 					'test/fixtures/css.html',
 					function(err, code, map) {
 						expect(err).not.to.exist;
-						expect(code).not.to.contain('function add_css(target)');
+						if (isSvelte5Plus) {
+							expect(code).not.to.contain('$.append_styles');
+						} else {
+							expect(code).not.to.contain('function add_css(target)');
+						}
 					},
-					{ compilerOptions: { css: false } }
+					{ compilerOptions: { css: 'external' } }
 				)
 			);
 
@@ -171,7 +196,11 @@ describe('loader', () => {
 					'test/fixtures/css.html',
 					function(err, code, map) {
 						expect(err).not.to.exist;
-						expect(code).to.contain('function add_css(target)');
+						if (isSvelte5Plus) {
+							expect(code).to.contain('$.append_styles');
+						} else {
+							expect(code).to.contain('function add_css(target)');
+						}
 						expect(code).to.contain('/*# sourceMappingURL=');
 						expect(map).to.exist;
 					},
@@ -184,6 +213,9 @@ describe('loader', () => {
 				testLoader(
 					'test/fixtures/css.html',
 					function(err, code, map) {
+						// This compiler option is removed in Svelte 5+, sourcemaps are always generated
+						if (isSvelte5Plus) return;
+
 						expect(err).not.to.exist;
 						expect(code).to.contain('function add_css(target)');
 						expect(code).not.to.contain('/*# sourceMappingURL=');
@@ -195,6 +227,9 @@ describe('loader', () => {
 		});
 
 		describe('sveltePath', () => {
+			// This option is removed in Svelte 5+
+			if (isSvelte5Plus) return;
+
 			it(
 				'should configure sveltePath',
 				testLoader(
@@ -228,10 +263,13 @@ describe('loader', () => {
 					'test/fixtures/good.html',
 					function(err, code, map) {
 						expect(err).not.to.exist;
-
-						expect(code).to.contain('create_ssr_component');
+						if (isSvelte5Plus) {
+							expect(code).to.contain('$$payload.out');
+						} else {
+							expect(code).to.contain('create_ssr_component');
+						}
 					},
-					{ compilerOptions: { generate: 'ssr' } }
+					{ compilerOptions: { generate: isSvelte5Plus ? 'server' : 'ssr' } }
 				)
 			);
 		});
@@ -284,7 +322,12 @@ describe('loader', () => {
 					(err, code, map) => {
 						expect(err).not.to.exist;
 						expect(code).to.exist;
-						expect(code).to.contain('{width:50px;height:50px}');
+						if (isSvelte5Plus) {
+							expect(code).to.contain('width: 50px;');
+							expect(code).to.contain('height: 50px;');
+						} else {
+							expect(code).to.contain('{width:50px;height:50px}');
+						}
 						expect(map).to.exist;
 					},
 					{
@@ -320,6 +363,9 @@ describe('loader', () => {
 		});
 
 		describe('hotReload', () => {
+			// Svelte 5+ doesn't support hot reload currently
+			if (isSvelte5Plus) return;
+
 			it(
 				'should configure hotReload=false (default)',
 				testLoader(
@@ -402,6 +448,9 @@ describe('loader', () => {
 				testLoader(
 					'test/fixtures/good.html',
 					function(err, code, map) {
+						// The compiler option is removed in Svelte 5+, sourcemaps are always generated
+						if (isSvelte5Plus) return;
+
 						expect(err).not.to.exist;
 						expect(code).to.exist;
 						expect(map).not.to.exist;
@@ -412,8 +461,9 @@ describe('loader', () => {
 		});
 	});
 
-	// needs Svelte 5
-	describe.skip('Svelte 5', () => {
+	describe('Svelte 5', () => {
+		if (!isSvelte5Plus) return;
+
 		it(
 			'should compile .svelte.js/ts',
 			testLoader(
