@@ -63,6 +63,8 @@ function getMajor() {
 	return Number(svelte.VERSION.split('.')[0]);
 }
 
+const svelte_module_regex = /\.svelte(\.[^.]+)*\.(js|ts)$/
+
 module.exports = function(source, map) {
 	this.cacheable();
 
@@ -85,7 +87,7 @@ module.exports = function(source, map) {
 	};
 	const handleWarning = warning => this.emitWarning(new Error(warning));
 
-	if (getMajor() >= 5 && (this.resourcePath.endsWith('.svelte.js') || this.resourcePath.endsWith('.svelte.ts'))) {
+	if (getMajor() >= 5 && svelte_module_regex.test(this.resourcePath)) {
 		try {
 			const { js, warnings } = svelte.compileModule(
 				source,

@@ -465,9 +465,22 @@ describe('loader', () => {
 		if (!isSvelte5Plus) return;
 
 		it(
-			'should compile .svelte.js/ts',
+			'should compile .svelte.js',
 			testLoader(
 				'test/fixtures/file.svelte.js',
+				function(err, code, map) {
+					expect(err).not.to.exist;
+
+					expect(code).not.to.contain('$state');
+				},
+				{}
+			)
+		);
+
+		it(
+			'should compile .svelte.foo.ts',
+			testLoader(
+				'test/fixtures/file.svelte.foo.ts',
 				function(err, code, map) {
 					expect(err).not.to.exist;
 
