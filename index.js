@@ -63,7 +63,7 @@ function getMajor() {
 	return Number(svelte.VERSION.split('.')[0]);
 }
 
-const svelte_module_regex = /\.svelte(\.[^.]+)*\.(js|ts)$/
+const svelte_module_regex = /\.svelte(\.[^./\\]+)*\.(js|ts)$/
 
 module.exports = function(source, map) {
 	this.cacheable();

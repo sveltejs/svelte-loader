@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 3.2.3
+
+* Svelte 5: Don't compile `.svelte/.../.xxx.js/ts` files
+
 ## 3.2.2
 
 * Svelte 5: Also compile `.svelte.xxx.js/ts` files
