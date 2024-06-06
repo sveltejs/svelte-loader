@@ -7,7 +7,8 @@
   "scripts": {
     "all": "npm run lint && npm run test",
     "test": "mocha --harmony --full-trace --check-leaks",
-    "lint": "eslint index.js lib/*.js test/**/*.js"
+    "lint": "eslint index.js lib/*.js test/**/*.js",
+		"prepublishOnly": "npm run all"
   },
   "keywords": [
     "svelte",

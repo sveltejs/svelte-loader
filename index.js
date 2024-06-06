@@ -63,7 +63,7 @@ function getMajor() {
 	return Number(svelte.VERSION.split('.')[0]);
 }
 
-const svelte_module_regex = /\.svelte(\.[^./\\]+)*\.(js|ts)$/
+const svelte_module_regex = /\.svelte(\.[^./\\]+)*\.(js|ts)$/;
 
 module.exports = function(source, map) {
 	this.cacheable();
@@ -176,7 +176,7 @@ module.exports = function(source, map) {
 		// context when logging to console
 		let err_str = err.toString();
 		if (getMajor() < 5 || !err_str.startsWith('CompileError:')) {
-			err_str = `${err.name}: ${err_str}`
+			err_str = `${err.name}: ${err_str}`;
 		}
 		callback(new Error(err_str));
 	});
