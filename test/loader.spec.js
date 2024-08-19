@@ -85,10 +85,10 @@ describe('loader', () => {
 
 				if (isSvelte5Plus) {
 					expect(err.message).to.eql(d`
-						CompileError: Unexpected block closing tag
-						(block_unexpected_close)
-						test/fixtures/parse-error.html1:22
-					`);
+						CompileError: block_unexpected_close: Unexpected block closing tag
+						test/fixtures/parse-error.html:1:22
+						1: <p>Count: {count}</p>{/if}
+						                         ^`);
 				} else {
 					expect(err.message).to.eql(d`
 						ParseError: Unexpected block closing tag (1:23)
@@ -112,10 +112,13 @@ describe('loader', () => {
 
 				if (isSvelte5Plus) {
 					expect(err.message.trim().replace(/\r/g, '')).to.eql(d`
-						CompileError: A component cannot have a default export
-						(module_illegal_default_export)
-						test/fixtures/validation-error.html2:1
-					 `);
+						CompileError: module_illegal_default_export: A component cannot have a default export
+						test/fixtures/validation-error.html:2:1
+						1: <script>
+						2:   export default {};
+						                       ^
+						3: </script>
+						4:`);
 				} else {
 					expect(err.message.trim().replace(/\r/g, '')).to.eql(d`
 						ValidationError: A component cannot have a default export (2:1)
