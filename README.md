@@ -32,10 +32,16 @@ Configure inside your `webpack.config.js`:
   module: {
     rules: [
       ...
-      // This is only needed if you use Svelte 5+ with TypeScript
+      // The following two loader entries are only needed if you use Svelte 5+ with TypeScript.
+      // Also make sure your tsconfig.json includes `"target": "ESNext"` in order to not downlevel syntax
       {
         test: /\.svelte\.ts$/,
-        use: ['ts-loader', 'svelte-loader']
+        use: [ "svelte-loader", "ts-loader"],
+      },
+      // This is the config for other .ts files - the regex makes sure to not process .svelte.ts files twice
+      {
+        test: /(?<!\.svelte)\.ts$/,
+        loader: "ts-loader",
       },
       {
         // Svelte 5+:
