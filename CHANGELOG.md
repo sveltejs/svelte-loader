@@ -1,5 +1,9 @@
 # svelte-loader changelog
 
+## 3.2.4
+
+* Don't call `callback` twice, masking potential errors
+
 ## 3.2.3
 
 * Svelte 5: Don't compile `.svelte/.../.xxx.js/ts` files

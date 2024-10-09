@@ -88,24 +88,28 @@ module.exports = function(source, map) {
 	const handleWarning = warning => this.emitWarning(new Error(warning));
 
 	if (getMajor() >= 5 && svelte_module_regex.test(this.resourcePath)) {
+		let js, warnings;
+
 		try {
-			const { js, warnings } = svelte.compileModule(
+			({ js, warnings } = svelte.compileModule(
 				source,
 				{ filename: this.resourcePath, dev: compileOptions.dev, generate: compileOptions.generate }
-			);
+			));
 
 			warnings.forEach(
 				options.onwarn
 					? warning => options.onwarn(warning, handleWarning)
 					: handleWarning
 			);
-
-			callback(null, js.code, js.map);
 		} catch (err) {
 			// wrap error to provide correct
 			// context when logging to console
 			callback(new Error(`${err.name}: ${err.toString()}`));
 		}
+
+		// outside try-catch - if this fails and we catch it,
+		// calling callback again will mask the error with a "already called" error
+		callback(null, js.code, js.map);
 
 		return;
 	}
