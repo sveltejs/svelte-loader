@@ -33,7 +33,7 @@ Configure inside your `webpack.config.js`:
     rules: [
       ...
       // The following two loader entries are only needed if you use Svelte 5+ with TypeScript.
-      // Also make sure your tsconfig.json includes `"target": "ESNext"` in order to not downlevel syntax
+      // Also make sure your tsconfig.json includes `"useDefineForClassFields": true` or "target" is at least "ES2022"` in order to not downlevel class syntax
       {
         test: /\.svelte\.ts$/,
         use: [ "svelte-loader", "ts-loader"],
