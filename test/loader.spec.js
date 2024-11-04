@@ -325,12 +325,7 @@ describe('loader', () => {
 					(err, code, map) => {
 						expect(err).not.to.exist;
 						expect(code).to.exist;
-						if (isSvelte5Plus) {
-							expect(code).to.contain('width: 50px;');
-							expect(code).to.contain('height: 50px;');
-						} else {
-							expect(code).to.contain('{width:50px;height:50px}');
-						}
+						expect(code).to.contain('{width:50px;height:50px');
 						expect(map).to.exist;
 					},
 					{
