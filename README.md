@@ -36,12 +36,15 @@ Configure inside your `webpack.config.js`:
       // Also make sure your tsconfig.json includes `"useDefineForClassFields": true` or "target" is at least "ES2022"` in order to not downlevel class syntax
       {
         test: /\.svelte\.ts$/,
-        use: [ "svelte-loader", "ts-loader"],
+        use: [ "svelte-loader", { loader: "ts-loader", options: { transpileOnly: true } }],
       },
       // This is the config for other .ts files - the regex makes sure to not process .svelte.ts files twice
       {
         test: /(?<!\.svelte)\.ts$/,
         loader: "ts-loader",
+        options: {
+          transpileOnly: true, // you should use svelte-check for type checking
+        }
       },
       {
         // Svelte 5+:
