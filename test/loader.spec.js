@@ -50,7 +50,8 @@ describe('loader', () => {
 					addDependency: dependencySpy,
 					resourcePath: fileName,
 					version,
-					query
+					query,
+					emitWarning: () => {}
 				},
 				fileContents,
 				null
@@ -86,6 +87,7 @@ describe('loader', () => {
 				if (isSvelte5Plus) {
 					expect(err.message).to.eql(d`
 						CompileError: block_unexpected_close: Unexpected block closing tag
+						https://svelte.dev/e/block_unexpected_close
 						test/fixtures/parse-error.html:1:22
 						1: <p>Count: {count}</p>{/if}
 						                         ^`);
@@ -113,6 +115,7 @@ describe('loader', () => {
 				if (isSvelte5Plus) {
 					expect(err.message.trim().replace(/\r/g, '')).to.eql(d`
 						CompileError: module_illegal_default_export: A component cannot have a default export
+						https://svelte.dev/e/module_illegal_default_export
 						test/fixtures/validation-error.html:2:1
 						1: <script>
 						2:   export default {};
