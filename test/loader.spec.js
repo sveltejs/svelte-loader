@@ -270,7 +270,7 @@ describe('loader', () => {
 					function(err, code, map) {
 						expect(err).not.to.exist;
 						if (isSvelte5Plus) {
-							expect(code).to.contain('$$payload.out');
+							expect(code).to.contain('$$renderer');
 						} else {
 							expect(code).to.contain('create_ssr_component');
 						}
