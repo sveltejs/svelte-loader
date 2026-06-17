@@ -8,7 +8,7 @@
     "all": "npm run lint && npm run test",
     "test": "mocha --harmony --full-trace --check-leaks",
     "lint": "eslint index.js lib/*.js test/**/*.js",
-		"prepublishOnly": "npm run all"
+    "prepublishOnly": "npm run all"
   },
   "keywords": [
     "svelte",
@@ -39,5 +39,9 @@
   "files": [
     "lib",
     "index.js"
-  ]
+  ],
+  "bugs": {
+    "url": "git@github.com:sveltejs/svelte-loader/issues"
+  },
+  "homepage": "git@github.com:sveltejs/svelte-loader#readme"
 }
