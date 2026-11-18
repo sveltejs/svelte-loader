@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const { createHash } = require('crypto');
 const { getOptions } = require('loader-utils');
 const { buildMakeHot } = require('./lib/make-hot.js');
 const svelte = require('svelte/compiler');
@@ -12,8 +13,13 @@ function interopEsmDefault(mod) {
 	return mod && mod.__esModule && mod.default ? mod.default : mod;
 }
 
+// The styles of the compiled components, until the import which the loader
+// appends to a component picks them up (see `emitCss`).
 const virtualModules = new Map();
-let index = 0;
+
+function virtualModuleKey(resourcePath, hash) {
+	return `${posixify(resourcePath)}.${hash}.css`;
+}
 
 let configFile = 'webpack.config.js';
 for (let i = 0; i < process.argv.length; i++) {
@@ -72,9 +78,14 @@ module.exports = function(source, map) {
 	const callback = this.async();
 
 	if (options.cssPath) {
-		const css = virtualModules.get(options.cssPath);
-		virtualModules.delete(options.cssPath);
-		callback(null, css);
+		const key = virtualModuleKey(this.resourcePath, options.cssPath);
+		const virtualModule = virtualModules.get(key);
+		// Several compilers (e.g. for SSR and for the browser) may wait for
+		// the same styles, so keep them until the last one has read them.
+		if (virtualModule && --virtualModule.pending === 0) {
+			virtualModules.delete(key);
+		}
+		callback(null, virtualModule && virtualModule.code);
 		return;
 	}
 
@@ -159,13 +170,20 @@ module.exports = function(source, map) {
 		}
 
 		if (options.emitCss && css && css.code) {
-			const resource = posixify(compileOptions.filename);
-			const cssPath = `${resource}.${index++}.css`;
+			// Name the styles after their content and import them relative to
+			// the component. An absolute path or a counter in the request ends
+			// up in the ids and hashes webpack generates, which then differ
+			// between machines and between builds.
+			const hash = createHash('sha256').update(css.code).digest('hex').slice(0, 8);
+			const file = path.basename(this.resourcePath);
 			if (css.map) {
 				css.code += '\n/*# sourceMappingURL=' + css.map.toUrl() + '*/';
 			}
-			js.code += `\nimport '${cssPath}!=!svelte-loader?cssPath=${cssPath}!${resource}'\n;`;
-			virtualModules.set(cssPath, css.code);
+			js.code += `\nimport './${file}.${hash}.css!=!svelte-loader?cssPath=${hash}!./${file}'\n;`;
+
+			const key = virtualModuleKey(this.resourcePath, hash);
+			const pending = virtualModules.has(key) ? virtualModules.get(key).pending : 0;
+			virtualModules.set(key, { code: css.code, pending: pending + 1 });
 		}
 
 		callback(null, js.code, js.map);

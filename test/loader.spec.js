@@ -319,6 +319,63 @@ describe('loader', () => {
 					{ emitCss: true, compilerOptions: { enableSourcemap: { css: false, js: true } } }
 				)
 			);
+
+			function run(resourcePath, query) {
+				return new Promise((resolve, reject) => {
+					loader.call(
+						{
+							cacheable: () => {},
+							async: () => (err, code) => (err ? reject(err) : resolve(code)),
+							addDependency: () => {},
+							resourcePath,
+							query,
+							emitWarning: () => {}
+						},
+						readFile(resourcePath),
+						null
+					);
+				});
+			}
+
+			function cssImport(code) {
+				const [, file, cssPath, resource] = /import '(.+)!=!svelte-loader\?cssPath=(.+)!(.+)'/.exec(code);
+				return { file, cssPath, resource };
+			}
+
+			it('should import the css relative to the component', async () => {
+				const { file, cssPath, resource } = cssImport(
+					await run('test/fixtures/css.html', { emitCss: true })
+				);
+
+				expect(cssPath).to.match(/^[0-9a-f]{8}$/);
+				expect(file).to.equal(`./css.html.${cssPath}.css`);
+				expect(resource).to.equal('./css.html');
+			});
+
+			it('should import the same css each time the component is compiled', async () => {
+				const first = await run('test/fixtures/css.html', { emitCss: true });
+				await run('test/fixtures/good.html', { emitCss: true });
+				const second = await run('test/fixtures/css.html', { emitCss: true });
+
+				expect(cssImport(second)).to.deep.equal(cssImport(first));
+			});
+
+			it('should serve the css to every compilation of the component', async () => {
+				const compile = () => run('test/fixtures/css.html', { emitCss: true });
+				const read = () => run('test/fixtures/css.html', { cssPath });
+				const { cssPath } = cssImport(await compile());
+
+				// pick up what this and the tests above have compiled
+				while (await read());
+
+				await compile();
+				await compile();
+
+				expect(await read()).to.match(/width:\s*50px/);
+				expect(await read()).to.match(/width:\s*50px/);
+				// nothing is kept once every compilation has read its css
+				expect(await read()).not.to.exist;
+			});
 		});
 
 		describe('preprocess', () => {
